@@ -1,20 +1,90 @@
 # Delta
 
-# Reserve Protocol
+# Soroban Stuff
 
-Contracts pulled from [367f84d72fac15e2be9cc93f9aa9bbe5843ff4bb](https://github.com/reserve-protocol/protocol/commit/367f84d72fac15e2be9cc93f9aa9bbe5843ff4bb) on Dec 3
+Public key: `GAIM4S6HDNGDW4R7452E3SGOSZ3UOAXXGHXEILCDRS4U7KZHRQAMJVOZ`
 
-# IMPORTANT
+Contract: CDXJNGQNV66Q2DXAGBUSGWGFV6YKZU4EGDY4ZBRZHFTKMPMMQHTNWWFE
 
-Use: https://github.com/AlkemiNetwork/alkemi-content/blob/master/The%20Alkemi%20Network.md
+```bash
+sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6  -y
 
-# Token
+rustup target add wasm32-unknown-unknown
+cargo install --locked --version 20.0.0-rc2 soroban-cli --features opt
+echo "source <(soroban completion --shell bash)" >> ~/.bashrc
 
+cargo new --lib contracts
+
+soroban contract invoke --wasm target/wasm32-unknown-unknown/release/contracts.wasm --id 1 -- hello --to friend
+
+soroban config network add testnet --rpc-url https://soroban-testnet.stellar.org:443 --network-passphrase "Test SDF Network ; September 2015"
+soroban config identity generate alice
+
+# Build
+soroban contract build && soroban contract optimize --wasm target/wasm32-unknown-unknown/release/contracts.wasm
+
+# Deploy
+soroban contract deploy --wasm target/wasm32-unknown-unknown/release/contracts.optimized.wasm --source alice --network testnet > ../contractId
+
+# Frontend
+cargo install_soroban
+chmod +x soroban
+
+
+soroban contract bindings typescript --network testnet --contract-id $(cat contracts/.soroban/hello-id) --output-dir amorphous-soroban-client
 ```
-rDTL: 0x0751E9217a48159095F455D0856Aee13204B208b
-rMAV: 0x12A1bAd0957793b5305665f66082a2AB7e7d791D
-rFRA: 0x68053380645A49e7Ddd0203375bE10379cD59e59
-USDC: 0x9276fC221399d81a848E9d543a6FAA5e741E40A7
-USDT: 0xAE64954A904da3fD9D71945980A849B8A9F755d7
-DAI: 0x4E35fAA0c4e6BA16534aa28DE0e40f7b702642D3
+
+# Astro Starter Kit: Basics
+
+```sh
+npm create astro@latest -- --template basics
 ```
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
+[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+
+> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+
+![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+
+## 🚀 Project Structure
+
+Inside of your Astro project, you'll see the following folders and files:
+
+```text
+/
+├── public/
+│   └── favicon.svg
+├── src/
+│   ├── components/
+│   │   └── Card.astro
+│   ├── layouts/
+│   │   └── Layout.astro
+│   └── pages/
+│       └── index.astro
+└── package.json
+```
+
+Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+
+There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+
+Any static assets, like images, can be placed in the `public/` directory.
+
+## 🧞 Commands
+
+All commands are run from the root of the project, from a terminal:
+
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `npm install`             | Installs dependencies                            |
+| `npm run dev`             | Starts local dev server at `localhost:4321`      |
+| `npm run build`           | Build your production site to `./dist/`          |
+| `npm run preview`         | Preview your build locally, before deploying     |
+| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `npm run astro -- --help` | Get help using the Astro CLI                     |
+
+## 👀 Want to learn more?
+
+Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
