@@ -16,14 +16,14 @@ impl LoanManager {
         lender: Address,
         principal_asset: Address,
         collateral_asset: Address,
-        collateral_amount: i128,
-        principal_amount: i128,
-        collateral_price: i128,
+        collateral_amount: u128,
+        principal_amount: u128,
+        collateral_price: u128,
         interest_rate: u32,
-        unclaimed_borrowed_principal: i128,
+        unclaimed_borrowed_principal: u128,
     ) -> u32 {
-        increment_loan_id(&env);
-        let loan_id = get_loan_id(&env);
+        __increment_loan_id(&env);
+        let loan_id = __get_loan_id(&env);
 
         require(lender != borrower, "Invalid lender/borrower");
 
@@ -51,8 +51,8 @@ impl LoanManager {
             current_collateral: collateral_amount,
             collateral_price,
             interest_rate,
-            start_date: now as i128,
-            maturity_date: maturity_date as i128,
+            start_date: now as u128,
+            maturity_date: maturity_date as u128,
             
             num_installments_paid: 0,
 
@@ -64,8 +64,22 @@ impl LoanManager {
             repaid_on: 0,
         };
 
-        set_loan(&env, loan_id, loan);
+        __set_loan(&env, loan_id, loan);
 
         loan_id
     }
+
+    pub fn repay_loan(
+        env: Env,
+        loan_id: u32,
+        interest_paid: u128, 
+    ) {
+
+    }
+
+
+    pub fn get_loan(env: Env, loan_id: u32) -> Loan {
+        __get_loan(&env, loan_id)
+    }
+
 }
