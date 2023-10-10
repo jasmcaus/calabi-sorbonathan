@@ -1,5 +1,3 @@
-
-
 <template>
     <main>
         <div class="box">
@@ -25,7 +23,7 @@
                             <div class="label">Collateral required</div>
                             <div class="box_grid_item">
                                 <div class="images">
-                                    <img :src="`/images/${$findAsset(collateralToken).image}.png`"  />
+                                    <img :src="`/images/${$findAsset(collateralToken).image}.png`" />
                                 </div>
                                 <p>{{ $toMoney($fromWei(collateral)) }}</p>
                             </div>
@@ -36,8 +34,7 @@
                             <div class="label">Interest</div>
                             <div class="box_grid_item">
                                 <IconInterest />
-                                <p>{{ interest }} %
-                                </p>
+                                <p>{{ interest }} %</p>
                             </div>
                         </div>
                         <div>
@@ -52,7 +49,7 @@
                         <p class="label">Expires on</p>
                         <div class="expires_on_item">
                             <IconCalendar />
-                            <p> {{ getExpireDate() }}</p>
+                            <p>{{ getExpireDate() }}</p>
                         </div>
                     </div>
                     <!-- <div class="fee">
@@ -72,37 +69,44 @@
 </template>
 
 <script setup>
-import Countdown from '../../../../utils/Countdown';
-import IconCalendar from '../../../icons/IconCalendar.vue';
-import IconClock from '../../../icons/IconClock.vue';
-import IconClose from '../../../icons/IconClose.vue';
-import IconInterest from '../../../icons/IconInterest.vue';
-import PrimaryButton from '../../../PrimaryButton.vue';
+import Countdown from "../../../../utils/Countdown"
+import IconCalendar from "../../../icons/IconCalendar.vue"
+import IconClock from "../../../icons/IconClock.vue"
+import IconClose from "../../../icons/IconClose.vue"
+import IconInterest from "../../../icons/IconInterest.vue"
+import PrimaryButton from "../../../PrimaryButton.vue"
 </script>
 
 <script>
 export default {
-    props: ['interest', 'collateral', 'principal', 'principalToken', 'collateralToken', 'daysToMaturity', 'hoursToExpire'],
+    props: [
+        "interest",
+        "collateral",
+        "principal",
+        "principalToken",
+        "collateralToken",
+        "daysToMaturity",
+        "hoursToExpire",
+    ],
     methods: {
         createOffer: function () {
-            this.$emit('close')
-            this.$emit('create')
+            this.$emit("close")
+            this.$emit("create")
         },
-        getExpireDate: function() {
-            let expire = (Date.now() / 1000) + (this.hoursToExpire * 60 * 60)
-            let date =  Countdown.toDate(expire)
+        getExpireDate: function () {
+            let expire = Date.now() / 1000 + this.hoursToExpire * 60 * 60
+            let date = Countdown.toDate(expire)
             return `${date.month} ${date.date}, ${date.hour}:${date.min}`
-        }
+        },
     },
     mounted() {
-        document.body.classList.add('modal')
+        document.body.classList.add("modal")
     },
     unmounted() {
-        document.body.classList.remove('modal')
-    }
+        document.body.classList.remove("modal")
+    },
 }
 </script>
-
 
 <style scoped>
 main {
@@ -117,7 +121,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: fade_in .2s ease-in-out;
+    animation: fade_in 0.2s ease-in-out;
 }
 
 .box {
@@ -127,7 +131,7 @@ main {
     background-color: var(--bglight);
     border-radius: 6px;
     overflow: hidden;
-    animation: slide_in_up .2s ease-in-out;
+    animation: slide_in_up 0.2s ease-in-out;
 }
 
 .title {
@@ -163,18 +167,16 @@ main {
     justify-content: center;
 }
 
-
 .overflow {
     overflow-y: auto;
     max-height: 60vh;
 }
 
 .offer {
-    background-image: url('/images/request_gradient.png');
+    background-image: url("/images/request_gradient.png");
     background-repeat: no-repeat;
     background-size: cover;
 }
-
 
 .box_grid {
     display: grid;
@@ -182,7 +184,7 @@ main {
     border-bottom: 1px solid var(--background);
 }
 
-.box_grid>div {
+.box_grid > div {
     padding: 30px;
 }
 
@@ -191,7 +193,7 @@ main {
     height: 28px;
 }
 
-.box_grid>div:first-child {
+.box_grid > div:first-child {
     border-right: 1px solid var(--background);
 }
 
@@ -202,8 +204,7 @@ main {
     margin-top: 20px;
 }
 
-
-.box_grid:nth-child(1)>div:last-child {
+.box_grid:nth-child(1) > div:last-child {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -222,7 +223,7 @@ main {
     margin: 0;
 }
 
-.box_grid:nth-child(2)>div {
+.box_grid:nth-child(2) > div {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -269,7 +270,7 @@ main {
 
 .action {
     padding: 30px;
-    background-image: url('/images/subtle_gradient.png');
+    background-image: url("/images/subtle_gradient.png");
     background-color: var(--bglighter);
 }
 </style>

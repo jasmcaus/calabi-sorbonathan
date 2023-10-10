@@ -18,14 +18,12 @@
                     <td>Date</td>
                     <td>Amount</td>
                     <td>
-                        <div class="menu">
-                            Actions
-                        </div>
+                        <div class="menu">Actions</div>
                     </td>
                 </tr>
             </thead>
             <div class="tbody">
-                <tbody v-for="transfer, index in transfers" :key="transfer._id">
+                <tbody v-for="(transfer, index) in transfers" :key="transfer._id">
                     <tr>
                         <td>
                             <div>
@@ -48,14 +46,17 @@
                         </td>
                         <td>
                             <div>
-                                <p>{{ $toDate(transfer.timestamp).month + ' ' + $toDate(transfer.timestamp).date }}, <span>
-                                        {{ $toDate(transfer.timestamp).hour + ':' + $toDate(transfer.timestamp).min }}
-                                    </span></p>
+                                <p>
+                                    {{ $toDate(transfer.timestamp).month + " " + $toDate(transfer.timestamp).date }},
+                                    <span>
+                                        {{ $toDate(transfer.timestamp).hour + ":" + $toDate(transfer.timestamp).min }}
+                                    </span>
+                                </p>
                             </div>
                         </td>
                         <td>
                             <div>
-                                <img :src="`/images/${$findAsset(transfer.token).image}.png`" alt="">
+                                <img :src="`/images/${$findAsset(transfer.token).image}.png`" alt="" />
                                 <p>
                                     {{ $toMoney($fromWei(transfer.amount)) }}
                                     {{ $findAsset(transfer.token).symbol }}
@@ -71,7 +72,7 @@
                 </tbody>
             </div>
             <div class="t_empty" v-if="transfers.length == 0">
-                <img src="../../../assets/images/receipt-text.png" alt="">
+                <img src="../../../assets/images/receipt-text.png" alt="" />
                 <p>No activity.</p>
             </div>
         </table>
@@ -79,14 +80,14 @@
 </template>
 
 <script setup>
-import IconSort from '../../icons/IconSort.vue';
-import IconAddCircle from '../../icons/IconAddCircle.vue'
-import IconMinusCircle from '../../icons/IconMinusCircle.vue'
-import IconCoin from '../../icons/IconCoin.vue';
-import IconLock from '../../icons/IconLock.vue';
-import Profile from '../../../scripts/Profile';
-import IconMenu from '../../icons/IconMenu.vue';
-</script >
+import IconSort from "../../icons/IconSort.vue"
+import IconAddCircle from "../../icons/IconAddCircle.vue"
+import IconMinusCircle from "../../icons/IconMinusCircle.vue"
+import IconCoin from "../../icons/IconCoin.vue"
+import IconLock from "../../icons/IconLock.vue"
+import Profile from "../../../scripts/Profile"
+import IconMenu from "../../icons/IconMenu.vue"
+</script>
 
 <script>
 export default {
@@ -94,21 +95,21 @@ export default {
     methods: {
         generateImages: function () {
             for (let index = 0; index < this.transfers.length; index++) {
-                let el = Profile.generate(20, this.transfers[index].from);
-                let dom = document.getElementById(`img_vault${index}`);
+                let el = Profile.generate(20, this.transfers[index].from)
+                let dom = document.getElementById(`img_vault${index}`)
                 if (dom && dom.childNodes.length == 0) {
-                    dom.appendChild(el);
+                    dom.appendChild(el)
                 }
             }
-        }
+        },
     },
     mounted() {
-        this.generateImages();
+        this.generateImages()
     },
     updated() {
-        this.generateImages();
+        this.generateImages()
     },
-    components: { IconMenu }
+    components: { IconMenu },
 }
 </script>
 
@@ -120,7 +121,6 @@ export default {
     height: 40px;
     border-bottom: 1px solid var(--bglightest);
 }
-
 
 .table_head .title {
     display: flex;

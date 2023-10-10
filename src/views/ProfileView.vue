@@ -1,5 +1,5 @@
 <script setup>
-import ProfileHeader from '../components/app/profile/ProfileHeader.vue';
+import ProfileHeader from "../components/app/profile/ProfileHeader.vue"
 </script>
 
 <template>

@@ -10,7 +10,7 @@
             <div class="principal_needed">
                 <p class="label">Principal Needed</p>
                 <div class="principal_needed_token">
-                    <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
+                    <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
                     <p>
                         {{ $toMoney($fromWei(getPrincipal(requestAction.request.percentage))) }}
                         {{ $findAsset(offer.principalToken).symbol }}
@@ -45,51 +45,64 @@
                     <div class="label">Borrower's Collateral</div>
                     <div class="box_grid_item">
                         <p>{{ $toMoney($fromWei(requestAction.request.collateralAmount)) }}</p>
-                        <img class="icon" :src="`/images/${$findAsset(requestAction.request.collateralToken).image}.png`" />
+                        <img
+                            class="icon"
+                            :src="`/images/${$findAsset(requestAction.request.collateralToken).image}.png`"
+                        />
                     </div>
                 </div>
             </div>
             <div class="box_action" v-if="requestAction.action == 'reject'">
-                <PrimaryButton :progress="rejecting" :state="rejecting ? 'disable' : ''"
-                    v-on:click="!rejecting ? rejectRequest() : null" :text="'Reject Request'" :bg="'var(--accentred)'" />
+                <PrimaryButton
+                    :progress="rejecting"
+                    :state="rejecting ? 'disable' : ''"
+                    v-on:click="!rejecting ? rejectRequest() : null"
+                    :text="'Reject Request'"
+                    :bg="'var(--accentred)'"
+                />
             </div>
             <div class="box_action" v-if="requestAction.action == 'accept'">
-                <PrimaryButton :progress="accepting" :state="accepting ? 'disable' : ''"
-                    v-on:click="!accepting ? acceptRequest() : null" :text="'Accept Request'" :bg="'var(--accentgreen)'" />
+                <PrimaryButton
+                    :progress="accepting"
+                    :state="accepting ? 'disable' : ''"
+                    v-on:click="!accepting ? acceptRequest() : null"
+                    :text="'Accept Request'"
+                    :bg="'var(--accentgreen)'"
+                />
             </div>
         </div>
     </main>
 </template>
 
 <script setup>
-import LendingPoolAPI from '../../../../scripts/LendingPoolAPI';
-import IconClock from '../../../icons/IconClock.vue';
-import IconClose from '../../../icons/IconClose.vue';
-import IconInterest from '../../../icons/IconInterest.vue';
-import PrimaryButton from '../../../PrimaryButton.vue';
+import LendingPoolAPI from "../../../../scripts/LendingPoolAPI"
+import IconClock from "../../../icons/IconClock.vue"
+import IconClose from "../../../icons/IconClose.vue"
+import IconInterest from "../../../icons/IconInterest.vue"
+import PrimaryButton from "../../../PrimaryButton.vue"
 </script>
 
 <script>
-import Authentication from '../../../../scripts/Authentication';
-import { messages } from '../../../../reactives/messages';
-import Profile from '../../../../scripts/Profile';
+import Authentication from "../../../../scripts/Authentication"
+import { messages } from "../../../../reactives/messages"
+import Profile from "../../../../scripts/Profile"
 export default {
-    props: ['requestAction', 'offer'],
+    props: ["requestAction", "offer"],
     data() {
         return {
             accepting: false,
-            rejecting: false
+            rejecting: false,
         }
     },
     methods: {
         getPrincipal: function (percentage) {
-            let principal = this.offer.initialPrincipal * (percentage / 100);
-            return principal.toString();
+            let principal = this.offer.initialPrincipal * (percentage / 100)
+            return principal.toString()
         },
         getInterest: function (rate, daysToMaturity) {
-            let result = rate * daysToMaturity * 24 * 60 * 60;
-            let interest = this.$fromWei(result.toString());
-            return this.$toMoney(interest);
+            let result = rate * daysToMaturity * 24 * 60 * 60
+            let interest = this.$fromWei(result.toString())
+            return this.$toMoney(interest)
         },
         acceptRequest: async function () {
             this.accepting = true
@@ -101,22 +114,22 @@ export default {
 
             if (trx && trx.tx) {
                 messages.insertMessage({
-                    title: 'Request accept',
-                    description: 'Borrow request was successfully accepted.',
-                    type: 'success',
-                    linkTitle: 'View Trx',
-                    linkUrl: `https://testnet.ftmscan.com/tx/${trx.tx}`
+                    title: "Request accept",
+                    description: "Borrow request was successfully accepted.",
+                    type: "success",
+                    linkTitle: "View Trx",
+                    linkUrl: `https://testnet.ftmscan.com/tx/${trx.tx}`,
                 })
             } else {
                 messages.insertMessage({
-                    title: 'Accept failed',
-                    description: 'Borrow request failed to accept.',
-                    type: 'failed'
+                    title: "Accept failed",
+                    description: "Borrow request failed to accept.",
+                    type: "failed",
                 })
             }
 
-            this.$emit('done')
-            this.$emit('close')
+            this.$emit("done")
+            this.$emit("close")
 
             this.accepting = false
         },
@@ -129,22 +142,22 @@ export default {
 
             if (trx && trx.tx) {
                 messages.insertMessage({
-                    title: 'Request rejected',
-                    description: 'Borrow request was successfully rejected.',
-                    type: 'success',
-                    linkTitle: 'View Trx',
-                    linkUrl: `https://testnet.ftmscan.com/tx/${trx.tx}`
+                    title: "Request rejected",
+                    description: "Borrow request was successfully rejected.",
+                    type: "success",
+                    linkTitle: "View Trx",
+                    linkUrl: `https://testnet.ftmscan.com/tx/${trx.tx}`,
                 })
             } else {
                 messages.insertMessage({
-                    title: 'Reject failed',
-                    description: 'Borrow request failed to reject.',
-                    type: 'failed'
+                    title: "Reject failed",
+                    description: "Borrow request failed to reject.",
+                    type: "failed",
                 })
             }
 
-            this.$emit('done')
-            this.$emit('close')
+            this.$emit("done")
+            this.$emit("close")
 
             this.rejecting = false
         },
@@ -154,18 +167,18 @@ export default {
             if (dom && dom.childNodes.length == 0) {
                 dom.appendChild(el)
             }
-        }
+        },
     },
     mounted() {
         this.generateImages()
-        document.body.classList.add('modal')
+        document.body.classList.add("modal")
     },
     updated() {
         this.generateImages()
     },
     unmounted() {
-        document.body.classList.remove('modal')
-    }
+        document.body.classList.remove("modal")
+    },
 }
 </script>
 
@@ -182,7 +195,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: fade_in .2s ease-in-out;
+    animation: fade_in 0.2s ease-in-out;
 }
 
 .box {
@@ -190,10 +203,10 @@ main {
     background-repeat: no-repeat;
     background-size: cover;
     background-color: var(--bglight);
-    background-image: url('/images/request_gradient.png');
+    background-image: url("/images/request_gradient.png");
     border-radius: 6px;
     overflow: hidden;
-    animation: slide_in_up .2s ease-in-out;
+    animation: slide_in_up 0.2s ease-in-out;
 }
 
 .title {
@@ -260,15 +273,15 @@ main {
     border-bottom: 1px solid var(--background);
 }
 
-.box_grid>div {
+.box_grid > div {
     padding: 30px;
 }
 
-.box_grid>div:first-child {
+.box_grid > div:first-child {
     border-right: 1px solid var(--background);
 }
 
-.box_grid:nth-child(3)>div {
+.box_grid:nth-child(3) > div {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -309,7 +322,7 @@ main {
 
 .box_action {
     padding: 30px;
-    background-image: url('/images/subtle_gradient.png');
+    background-image: url("/images/subtle_gradient.png");
     background-color: var(--bglighter);
     margin-top: 40px;
 }

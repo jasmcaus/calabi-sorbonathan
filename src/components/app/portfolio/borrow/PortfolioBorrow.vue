@@ -9,7 +9,7 @@
         </div>
 
         <div class="lends" v-if="!fetching && userAddress != null">
-            <RouterLink v-for="offer, fIndex in offers" :to="`/portfolio/borrows/${offer._id}`" :key="offer.offerId">
+            <RouterLink v-for="(offer, fIndex) in offers" :to="`/portfolio/borrows/${offer._id}`" :key="offer.offerId">
                 <div class="lend">
                     <div class="asset">
                         <div class="label">
@@ -18,11 +18,13 @@
                         </div>
                         <div class="tokens">
                             <div>
-                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
-                                <p>{{ $fromWei(offer.currentPrincipal) }} {{ $findAsset(offer.principalToken).symbol }}</p>
+                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
+                                <p>
+                                    {{ $fromWei(offer.currentPrincipal) }} {{ $findAsset(offer.principalToken).symbol }}
+                                </p>
                             </div>
                             <div>
-                                <img src="/images/usdc.png" alt="">
+                                <img src="/images/usdc.png" alt="" />
                             </div>
                         </div>
                     </div>
@@ -38,7 +40,7 @@
                             <p>Interest</p>
                             <div>
                                 <IconInterest />
-                                <p>{{  getInterest(offer.interest, offer.daysToMaturity) }} %</p>
+                                <p>{{ getInterest(offer.interest, offer.daysToMaturity) }} %</p>
                             </div>
                         </div>
                     </div>
@@ -48,17 +50,24 @@
                     </div>
                     <div class="progress" v-else>
                         <div class="users">
-                            <div class="img" v-for="loan, index in offer.loans" :key="index"
-                                :id="`${fIndex}img_lender${index}`">
-                            </div>
+                            <div
+                                class="img"
+                                v-for="(loan, index) in offer.loans"
+                                :key="index"
+                                :id="`${fIndex}img_lender${index}`"
+                            ></div>
 
                             <div class="extra_user">{{ offer.loans.length }}</div>
                         </div>
                         <div class="needed">
                             <div class="label">
-                                <p>{{ $toMoney($fromWei(offer.currentPrincipal)) }} <span>/ {{
-                                    $toMoney($fromWei(offer.initialPrincipal)) }} {{
-        $findAsset(offer.principalToken).symbol }}</span></p>
+                                <p>
+                                    {{ $toMoney($fromWei(offer.currentPrincipal)) }}
+                                    <span
+                                        >/ {{ $toMoney($fromWei(offer.initialPrincipal)) }}
+                                        {{ $findAsset(offer.principalToken).symbol }}</span
+                                    >
+                                </p>
                                 <IconInfo />
                             </div>
                             <div class="bar">
@@ -70,72 +79,74 @@
             </RouterLink>
         </div>
         <div class="t_empty" v-if="!fetching && offers.length == 0">
-            <img src="../../../../assets/images/receipt-text.png" alt="">
+            <img src="../../../../assets/images/receipt-text.png" alt="" />
             <p>No Borrow offers found.</p>
         </div>
     </main>
 </template>
 
-
 <script setup>
-import IconClock from '../../../icons/IconClock.vue';
-import IconInfo from '../../../icons/IconInfo.vue';
-import IconInterest from '../../../icons/IconInterest.vue';
-import ProgressBox from '../../../ProgressBox.vue'
+import IconClock from "../../../icons/IconClock.vue"
+import IconInfo from "../../../icons/IconInfo.vue"
+import IconInterest from "../../../icons/IconInterest.vue"
+import ProgressBox from "../../../ProgressBox.vue"
 </script>
 
 <script>
-import Authentication from '../../../../scripts/Authentication';
-import Countdown from '../../../../utils/Countdown';
-import NoWallet from '../../../NoWallet.vue';
-import Profile from '../../../../scripts/Profile';
+import Authentication from "../../../../scripts/Authentication"
+import Countdown from "../../../../utils/Countdown"
+import NoWallet from "../../../NoWallet.vue"
+import Profile from "../../../../scripts/Profile"
 export default {
     data() {
         return {
             offers: [],
             fetching: true,
             userAddress: null,
-            authencating: true
-        };
+            authencating: true,
+        }
     },
     async created() {
-        this.userAddress = await Authentication.userAddress();
+        this.userAddress = await Authentication.userAddress()
         this.authencating = false
-        this.fetchBorrowingOffers();
+        this.fetchBorrowingOffers()
     },
     methods: {
         getInterest: function (rate, daysToMaturity) {
-            let result = rate * daysToMaturity * 24 * 60 * 60;
-            let interest = this.$fromWei(result.toString());
-            return this.$toMoney(interest);
+            let result = rate * daysToMaturity * 24 * 60 * 60
+            let interest = this.$fromWei(result.toString())
+            return this.$toMoney(interest)
         },
         getExpire: function (offer) {
-            let txt = "";
-            let due = offer.expiresAt * 1000;
+            let txt = ""
+            let due = offer.expiresAt * 1000
             Countdown.start(due, (text) => {
-                txt = text;
-            });
-            return txt;
+                txt = text
+            })
+            return txt
         },
         fetchBorrowingOffers: async function () {
-            this.fetching = true;
+            this.fetching = true
             if (this.userAddress == null) {
-                return;
+                return
             }
-            this.axios.get(`https://darshprotocol.onrender.com/offers?offerType=1&creator=${this.userAddress.toLowerCase()}`).then(response => {
-                this.offers = response.data;
-                this.fetching = false;
-            }).catch(error => {
-                console.error(error);
-                // this.fetching = false;
-            });
+            this.axios
+                .get(`https://darshprotocol.onrender.com/offers?offerType=1&creator=${this.userAddress.toLowerCase()}`)
+                .then((response) => {
+                    this.offers = response.data
+                    this.fetching = false
+                })
+                .catch((error) => {
+                    console.error(error)
+                    // this.fetching = false;
+                })
         },
         generateImages: function () {
             if (this.offers) {
                 for (let fIndex = 0; fIndex < this.offers.length; fIndex++) {
-                    const offer = this.offers[fIndex];
+                    const offer = this.offers[fIndex]
                     for (let index = 0; index < offer.loans.length; index++) {
-                        const loan = offer.loans[index];
+                        const loan = offer.loans[index]
                         let el = Profile.generate(30, loan.lender)
                         let dom = document.getElementById(`${fIndex}img_lender${index}`)
                         if (dom && dom.childNodes.length == 0) {
@@ -144,7 +155,7 @@ export default {
                     }
                 }
             }
-        }
+        },
     },
     mounted() {
         this.generateImages()
@@ -152,7 +163,7 @@ export default {
     updated() {
         this.generateImages()
     },
-    components: { NoWallet }
+    components: { NoWallet },
 }
 </script>
 
@@ -176,7 +187,7 @@ export default {
     background: var(--bglight);
     border-radius: 6px;
     overflow: hidden;
-    transition: .2s;
+    transition: 0.2s;
     /* border: 2px transparent solid; */
 }
 
@@ -190,43 +201,43 @@ export default {
     border-bottom: 1px solid var(--background);
 }
 
-.asset>div {
+.asset > div {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.asset>.label>p {
+.asset > .label > p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textdimmed);
 }
 
-.asset>.label {
+.asset > .label {
     margin-bottom: 16px;
 }
 
-.asset .tokens>div {
+.asset .tokens > div {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.asset .tokens>div p {
+.asset .tokens > div p {
     font-weight: 500;
     font-size: 16px;
     color: var(--textnormal);
 }
 
-.asset .tokens>div:first-child img {
+.asset .tokens > div:first-child img {
     width: 24px;
 }
 
-.asset .tokens>div:nth-child(2) img {
+.asset .tokens > div:nth-child(2) img {
     width: 18px;
 }
 
-.asset .tokens>div:nth-child(2) {
+.asset .tokens > div:nth-child(2) {
     height: 30px;
     width: 34px;
     background: var(--bglighter);
@@ -246,27 +257,27 @@ export default {
     border-right: 1px solid var(--background);
 }
 
-.info>div>p {
+.info > div > p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textdimmed);
 }
 
-.info>div>div {
+.info > div > div {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-top: 20px;
 }
 
-.info>div {
+.info > div {
     padding: 26px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.info>div>div p {
+.info > div > div p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textnormal);
@@ -319,19 +330,19 @@ export default {
     z-index: 1;
 }
 
-.needed>div {
+.needed > div {
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-.needed>div>p {
+.needed > div > p {
     font-weight: 500;
     font-size: 12px;
     color: var(--textnormal);
 }
 
-.needed>div>p span {
+.needed > div > p span {
     color: var(--textdimmed);
 }
 

@@ -9,7 +9,11 @@
         </div>
 
         <div class="lends" v-if="!fetching && userAddress != null">
-            <RouterLink v-for="loan in loans" :to="`/portfolio/vaults/${loan.offer[0].offerType == 0 ? 'lends' : 'borrows'}/${loan.offer[0]._id}`" :key="loan.loanId">
+            <RouterLink
+                v-for="loan in loans"
+                :to="`/portfolio/vaults/${loan.offer[0].offerType == 0 ? 'lends' : 'borrows'}/${loan.offer[0]._id}`"
+                :key="loan.loanId"
+            >
                 <div class="lend">
                     <div class="asset">
                         <div class="label">
@@ -19,16 +23,18 @@
                         <div class="tokens">
                             <!---->
                             <div v-if="loan.lender == userAddress.toLowerCase()">
-                                <img :src="`/images/${$findAsset(loan.principalToken).image}.png`" alt="">
-                                <p>{{ $toMoney($fromWei(loan.currentPrincipal)) }} {{
-                                    $findAsset(loan.principalToken).symbol
-                                }}</p>
+                                <img :src="`/images/${$findAsset(loan.principalToken).image}.png`" alt="" />
+                                <p>
+                                    {{ $toMoney($fromWei(loan.currentPrincipal)) }}
+                                    {{ $findAsset(loan.principalToken).symbol }}
+                                </p>
                             </div>
                             <div v-else>
-                                <img :src="`/images/${$findAsset(loan.collateralToken).image}.png`" alt="">
-                                <p>{{ $toMoney($fromWei(loan.currentCollateral)) }} {{
-                                    $findAsset(loan.collateralToken).symbol
-                                }}</p>
+                                <img :src="`/images/${$findAsset(loan.collateralToken).image}.png`" alt="" />
+                                <p>
+                                    {{ $toMoney($fromWei(loan.currentCollateral)) }}
+                                    {{ $findAsset(loan.collateralToken).symbol }}
+                                </p>
                             </div>
 
                             <!---->
@@ -63,10 +69,12 @@
                     </div>
                     <div class="emissions">
                         <!---->
-                        <p class="label" v-if="loan.lender == userAddress.toLowerCase()">Emissions
+                        <p class="label" v-if="loan.lender == userAddress.toLowerCase()">
+                            Emissions
                             <IconInfo />
                         </p>
-                        <p class="label" v-else>Unlocks
+                        <p class="label" v-else>
+                            Unlocks
                             <IconInfo />
                         </p>
 
@@ -74,16 +82,20 @@
                         <div class="emission_token" v-if="loan.lender == userAddress.toLowerCase()">
                             <p>~ $0.00</p>
                             <div class="emission_token_image">
-                                <img v-for="address in loan.offer[0].collateralTokens" :key="address"
-                                    :src="`/images/${$findAsset(address).image}.png`" alt="">
+                                <img
+                                    v-for="address in loan.offer[0].collateralTokens"
+                                    :key="address"
+                                    :src="`/images/${$findAsset(address).image}.png`"
+                                    alt=""
+                                />
                             </div>
                         </div>
                         <div class="emission_token emission_token2" v-else>
                             <div class="emission_token_image">
-                                <img :src="`/images/${$findAsset(loan.collateralToken).image}.png`" alt="">
+                                <img :src="`/images/${$findAsset(loan.collateralToken).image}.png`" alt="" />
                             </div>
                             <p>
-                                {{ $toMoney($fromWei(loan.unClaimedCollateral)) }} 
+                                {{ $toMoney($fromWei(loan.unClaimedCollateral)) }}
                                 {{ $findAsset(loan.collateralToken).symbol }}
                             </p>
                         </div>
@@ -92,71 +104,73 @@
             </RouterLink>
         </div>
         <div class="t_empty" v-if="!fetching && loans.length == 0">
-            <img src="../../../../assets/images/receipt-text.png" alt="">
+            <img src="../../../../assets/images/receipt-text.png" alt="" />
             <p>No Vaults found.</p>
         </div>
     </main>
 </template>
 
-
 <script setup>
-import IconClock from '../../../icons/IconClock.vue';
-import IconInfo from '../../../icons/IconInfo.vue';
-import ProgressBox from '../../../ProgressBox.vue'
+import IconClock from "../../../icons/IconClock.vue"
+import IconInfo from "../../../icons/IconInfo.vue"
+import ProgressBox from "../../../ProgressBox.vue"
 </script>
 
 <script>
-import Countdown from '../../../../utils/Countdown'
-import Authentication from '../../../../scripts/Authentication';
-import IconChart from '../../../icons/IconChart.vue';
-import NoWallet from '../../../NoWallet.vue';
+import Countdown from "../../../../utils/Countdown"
+import Authentication from "../../../../scripts/Authentication"
+import IconChart from "../../../icons/IconChart.vue"
+import NoWallet from "../../../NoWallet.vue"
 export default {
     data() {
         return {
             loans: [],
             fetching: true,
             userAddress: null,
-            authencating: true
-        };
+            authencating: true,
+        }
     },
     async created() {
-        this.userAddress = await Authentication.userAddress();
+        this.userAddress = await Authentication.userAddress()
         this.authencating = false
-        this.fetchLendingOffers();
+        this.fetchLendingOffers()
     },
     methods: {
         countdown: function (expiresAt) {
-            let txt = "";
-            let due = expiresAt * 1000;
+            let txt = ""
+            let due = expiresAt * 1000
             Countdown.start(due, function (text) {
-                txt = text;
-            });
-            return txt;
+                txt = text
+            })
+            return txt
         },
         getLockTime: function (start, end) {
-            let duration = (end - start)
+            let duration = end - start
             return duration / 24 / 60 / 60
         },
         getInterest: function (rate, daysToMaturity) {
-            let result = rate * daysToMaturity * 24 * 60 * 60;
-            let interest = this.$fromWei(result.toString());
-            return this.$toMoney(interest);
+            let result = rate * daysToMaturity * 24 * 60 * 60
+            let interest = this.$fromWei(result.toString())
+            return this.$toMoney(interest)
         },
         fetchLendingOffers: async function () {
-            this.fetching = true;
+            this.fetching = true
             if (this.userAddress == null) {
-                return;
+                return
             }
-            this.axios.get(`https://darshprotocol.onrender.com/loans/vault?address=${this.userAddress.toLowerCase()}`).then(response => {
-                this.loans = response.data;
-                this.fetching = false;
-            }).catch(error => {
-                console.error(error);
-                this.fetching = false;
-            });
-        }
+            this.axios
+                .get(`https://darshprotocol.onrender.com/loans/vault?address=${this.userAddress.toLowerCase()}`)
+                .then((response) => {
+                    this.loans = response.data
+                    this.fetching = false
+                })
+                .catch((error) => {
+                    console.error(error)
+                    this.fetching = false
+                })
+        },
     },
-    components: { IconChart, NoWallet }
+    components: { IconChart, NoWallet },
 }
 </script>
 
@@ -180,7 +194,7 @@ export default {
     background: var(--bglight);
     border-radius: 6px;
     overflow: hidden;
-    transition: .2s;
+    transition: 0.2s;
     /* border: 2px transparent solid; */
 }
 
@@ -194,43 +208,43 @@ export default {
     border-bottom: 1px solid var(--background);
 }
 
-.asset>div {
+.asset > div {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.asset>.label>p {
+.asset > .label > p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textdimmed);
 }
 
-.asset>.label {
+.asset > .label {
     margin-bottom: 16px;
 }
 
-.asset .tokens>div {
+.asset .tokens > div {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.asset .tokens>div p {
+.asset .tokens > div p {
     font-size: 16px;
     color: var(--textnormal);
 }
 
-.asset .tokens>div:first-child img {
+.asset .tokens > div:first-child img {
     width: 24px;
 }
 
-.asset .tokens>div:nth-child(2) img {
+.asset .tokens > div:nth-child(2) img {
     width: 18px;
     margin-left: -18px;
 }
 
-.asset .tokens>div:nth-child(2) {
+.asset .tokens > div:nth-child(2) {
     padding: 0 10px;
     height: 30px;
     background: var(--bglighter);
@@ -240,7 +254,7 @@ export default {
     border-radius: 4px;
 }
 
-.asset .tokens>div:nth-child(2) p {
+.asset .tokens > div:nth-child(2) p {
     font-size: 12px;
 }
 
@@ -259,32 +273,31 @@ export default {
     border-right: 1px solid var(--background);
 }
 
-.info>div>p {
+.info > div > p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textdimmed);
 }
 
-.info>div>div {
+.info > div > div {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-top: 20px;
 }
 
-.info>div {
+.info > div {
     padding: 26px 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.info>div>div p {
+.info > div > div p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textnormal);
 }
-
 
 .emissions {
     display: flex;
@@ -312,7 +325,7 @@ export default {
     gap: 8px;
 }
 
-.emission_token>p {
+.emission_token > p {
     font-size: 12px;
     color: var(--textnormal);
 }
@@ -331,7 +344,6 @@ export default {
 .emission_token_image img:first-child {
     margin: 0;
 }
-
 
 .t_empty {
     width: 100%;

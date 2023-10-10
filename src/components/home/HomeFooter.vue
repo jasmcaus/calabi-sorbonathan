@@ -3,7 +3,7 @@
         <div class="home-width">
             <div class="footer">
                 <div class="project">
-                    <img src="/images/logo3.png" alt="">
+                    <img src="/images/logo3.png" alt="" />
                     <div class="socials">
                         <a href="#">
                             <div class="social_icon">
@@ -14,11 +14,13 @@
                             <div class="social_icon">
                                 <IconHomeMedium />
                             </div>
-                        </a> <a href="#">
+                        </a>
+                        <a href="#">
                             <div class="social_icon">
                                 <IconHomeDiscord />
                             </div>
-                        </a> <a href="#">
+                        </a>
+                        <a href="#">
                             <div class="social_icon">
                                 <IconHomeTwitter />
                             </div>
@@ -67,17 +69,17 @@
 </template>
 
 <script setup>
-import IconHomeTwitter from '../icons/IconHomeTwitter.vue';
-import IconHomeTelegram from '../icons/IconHomeTelegram.vue';
-import IconHomeMedium from '../icons/IconHomeMedium.vue';
-import IconHomeDiscord from '../icons/IconHomeDiscord.vue';
+import IconHomeTwitter from "../icons/IconHomeTwitter.vue"
+import IconHomeTelegram from "../icons/IconHomeTelegram.vue"
+import IconHomeMedium from "../icons/IconHomeMedium.vue"
+import IconHomeDiscord from "../icons/IconHomeDiscord.vue"
 </script>
 
 <style scoped>
 main {
     display: flex;
     justify-content: center;
-    background-image: linear-gradient(to top, #F5F7F9, transparent, transparent);
+    background-image: linear-gradient(to top, #f5f7f9, transparent, transparent);
 }
 
 .home-width {
@@ -106,8 +108,8 @@ main {
 .social_icon {
     width: 30px;
     height: 30px;
-    background: #FFFFFF;
-    border: 1px solid #F1F1F1;
+    background: #ffffff;
+    border: 1px solid #f1f1f1;
     border-radius: 4px;
     display: flex;
     align-items: center;
@@ -117,14 +119,14 @@ main {
 .page h3 {
     font-weight: 600;
     font-size: 16px;
-    color: #39375C;
+    color: #39375c;
     margin-bottom: 24px;
 }
 
 .page p {
     font-size: 16px;
     font-weight: 500;
-    color: #39375C;
+    color: #39375c;
     padding: 10px 0;
 }
 </style>

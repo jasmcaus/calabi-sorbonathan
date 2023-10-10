@@ -1,7 +1,7 @@
 <template>
     <main>
         <div class="box">
-            <img src="/images/linear_gradient_background.png" alt="">
+            <img src="/images/linear_gradient_background.png" alt="" />
             <div class="box_item">
                 <div class="icon">
                     <div>
@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import IconTimer from '../../icons/IconTimer.vue';
+import IconTimer from "../../icons/IconTimer.vue"
 </script>
 
 >
@@ -61,7 +61,7 @@ img {
     padding: 10px;
 }
 
-.icon>div {
+.icon > div {
     width: 80px;
     height: 80px;
     background: rgba(105, 54, 245, 0.2);
@@ -69,7 +69,7 @@ img {
     padding: 10px;
 }
 
-.icon>div>div {
+.icon > div > div {
     width: 60px;
     height: 60px;
     background: var(--primary);

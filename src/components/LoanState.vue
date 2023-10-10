@@ -4,12 +4,12 @@
         <p v-if="state == 'repaid'">Repaid</p>
         <p v-if="state == 'defaulting'">Defaulting</p>
         <p v-if="state == 'defaulted'">Defaulted</p>
-</div>
+    </div>
 </template>
 
 <script>
 export default {
-    props: ['state', 'height']
+    props: ["state", "height"],
 }
 </script>
 
@@ -46,10 +46,10 @@ export default {
 }
 
 .defaulting_state p {
-    color: #E94703;
+    color: #e94703;
 }
 
 .defaulted_state {
-    background: #E94703;
+    background: #e94703;
 }
 </style>

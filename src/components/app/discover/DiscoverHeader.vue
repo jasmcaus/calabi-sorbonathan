@@ -43,9 +43,9 @@
 </template>
 
 <script setup>
-import IconInfo from '../../icons/IconInfo.vue';
-import IconSort from '../../icons/IconSort.vue';
-import IconFilter from '../../icons/IconFilter.vue';
+import IconInfo from "../../icons/IconInfo.vue"
+import IconSort from "../../icons/IconSort.vue"
+import IconFilter from "../../icons/IconFilter.vue"
 </script>
 
 <style scoped>
@@ -161,8 +161,6 @@ main {
 }
 
 .filter p {
-    
-    
     font-weight: 500;
     font-size: 14px;
     color: var(--textnormal);

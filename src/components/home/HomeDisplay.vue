@@ -4,19 +4,19 @@
             <div class="container">
                 <div class="display">
                     <div class="low_stack"></div>
-                    <img src="/images/display_image.png" alt="" class="high_stack">
-                    <img src="/images/display_image_1.png" alt="" data-speed="-1" class="layer high_stack1">
-                    <img src="/images/display_image_2.png" alt="" data-speed="1.4" class="layer high_stack2">
+                    <img src="/images/display_image.png" alt="" class="high_stack" />
+                    <img src="/images/display_image_1.png" alt="" data-speed="-1" class="layer high_stack1" />
+                    <img src="/images/display_image_2.png" alt="" data-speed="1.4" class="layer high_stack2" />
                 </div>
             </div>
 
             <div class="built">
                 <p>Built Using</p>
                 <div class="images">
-                    <img src="/images/chainlink.png" alt="">
-                    <img src="/images/covalent.png" alt="">
-                    <img src="/images/fantom.png" alt="">
-                    <img src="/images/cred.png" alt="">
+                    <img src="/images/chainlink.png" alt="" />
+                    <img src="/images/covalent.png" alt="" />
+                    <img src="/images/fantom.png" alt="" />
+                    <img src="/images/cred.png" alt="" />
                 </div>
             </div>
         </div>
@@ -26,18 +26,18 @@
 <script>
 export default {
     mounted() {
-        const layers = document.querySelectorAll('.layer')
-        window.addEventListener('mousemove', function (e) {
+        const layers = document.querySelectorAll(".layer")
+        window.addEventListener("mousemove", function (e) {
             if (window.innerWidth > 1100) {
-                layers.forEach(layer => {
-                    const speed = layer.getAttribute('data-speed')
+                layers.forEach((layer) => {
+                    const speed = layer.getAttribute("data-speed")
                     const x = (window.innerWidth - e.pageX * speed) / 150
                     const y = (window.innerHeight - e.pageY * speed) / 150
                     layer.style.transform = `translateX(${x}px) translateY(${y}px)`
                 })
             }
-        });
-    }
+        })
+    },
 }
 </script>
 
@@ -102,7 +102,7 @@ main {
 }
 
 .built p {
-    color: #ABADAE;
+    color: #abadae;
     text-align: center;
     font-size: 16px;
 }

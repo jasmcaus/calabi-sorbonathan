@@ -10,7 +10,8 @@
             <div class="wallet">
                 <IconMetamask class="wallet_icon" />
                 <div class="wallet_address">
-                    <p class="address">{{ $shortAddress(userAddress, 6) }}
+                    <p class="address">
+                        {{ $shortAddress(userAddress, 6) }}
                         <IconCopy />
                     </p>
                     <div class="chain">
@@ -29,7 +30,7 @@
                 <div class="assets">
                     <div class="asset" v-for="asset in $assets()" :key="asset.id">
                         <div class="detail">
-                            <img :src="`/images/${asset.image}.png`" alt="">
+                            <img :src="`/images/${asset.image}.png`" alt="" />
                             <div class="detail_info">
                                 <p>{{ asset.symbol }}</p>
                                 <p>{{ asset.name }}</p>
@@ -51,56 +52,56 @@
 </template>
 
 <script setup>
-import IconClose from './icons/IconClose.vue';
-import IconCopy from './icons/IconCopy.vue';
-import IconMenu from './icons/IconMenu.vue';
-import IconMetamask from './icons/IconMetamask.vue';
-import IconLogout from './icons/IconLogout.vue';
+import IconClose from "./icons/IconClose.vue"
+import IconCopy from "./icons/IconCopy.vue"
+import IconMenu from "./icons/IconMenu.vue"
+import IconMetamask from "./icons/IconMetamask.vue"
+import IconLogout from "./icons/IconLogout.vue"
 </script>
 
 <script>
-import CovalentAPI from '../utils/CovalentAPI'
-import Authentication from '../scripts/Authentication';
+import CovalentAPI from "../utils/CovalentAPI"
+import Authentication from "../scripts/Authentication"
 export default {
     props: ["userAddress"],
     data() {
         return {
-            tokenBalances: []
+            tokenBalances: [],
         }
     },
     methods: {
         getTokenBalances: async function () {
-            let response = await CovalentAPI.getTokenBalances(this.userAddress);
-            if (!response)
-                return;
-            this.tokenBalances = response.data.items;
+            let response = await CovalentAPI.getTokenBalances(this.userAddress)
+            if (!response) return
+            this.tokenBalances = response.data.items
         },
         findTokenBalance: function (address) {
             if (this.tokenBalances.length == 0) return
 
             if (address == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
-                address = "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83";
+                address = "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83"
             }
 
-            let token = this.tokenBalances.find(token => token.contract_address.toLowerCase() == address.toLowerCase());
+            let token = this.tokenBalances.find(
+                (token) => token.contract_address.toLowerCase() == address.toLowerCase()
+            )
 
-            if (!token)
-                return "0.00";
+            if (!token) return "0.00"
 
-            return this.$toMoney(this.$fromWei(token.balance));
+            return this.$toMoney(this.$fromWei(token.balance))
         },
         logOut: function () {
             Authentication.logOut()
             this.$router.go()
-        }
+        },
     },
     mounted() {
         this.getTokenBalances()
-        document.body.classList.add('modal')
+        document.body.classList.add("modal")
     },
     unmounted() {
-        document.body.classList.remove('modal')
-    }
+        document.body.classList.remove("modal")
+    },
 }
 </script>
 
@@ -118,7 +119,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    animation: fade_in .2s ease-in-out;
+    animation: fade_in 0.2s ease-in-out;
 }
 
 .box {
@@ -129,9 +130,8 @@ main {
     background-color: var(--bglight);
     border-radius: 6px;
     overflow: hidden;
-    animation: slide_in_left .2s ease-in-out;
+    animation: slide_in_left 0.2s ease-in-out;
 }
-
 
 .title {
     height: 90px;
@@ -203,7 +203,7 @@ main {
     color: var(--textnormal);
 }
 
-.wallet_address .chain>div {
+.wallet_address .chain > div {
     background: #6936f542;
     width: 12px;
     height: 12px;
@@ -213,8 +213,7 @@ main {
     border-radius: 6px;
 }
 
-
-.wallet_address .chain>div>div {
+.wallet_address .chain > div > div {
     background: var(--primary);
     width: 6px;
     height: 6px;
@@ -296,4 +295,5 @@ main {
 
 .mark_all svg {
     margin-top: -4px;
-}</style>
+}
+</style>

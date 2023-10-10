@@ -6,8 +6,10 @@
                     <div class="box">
                         <div class="text">
                             <h3>Control earnings on supplied asset.</h3>
-                            <p>As a lender, Create lend offer and control earnings to be earned on supplied assets by
-                                setting loan terms.</p>
+                            <p>
+                                As a lender, Create lend offer and control earnings to be earned on supplied assets by
+                                setting loan terms.
+                            </p>
                             <RouterLink to="/portfolio/lends/create">
                                 <div class="action">
                                     <div class="div"></div>
@@ -16,19 +18,21 @@
                             </RouterLink>
                         </div>
                         <div class="image">
-                            <img src="/images/lending.png" alt="">
+                            <img src="/images/lending.png" alt="" />
                         </div>
                     </div>
                 </div>
                 <div class="feature">
                     <div class="box">
                         <div class="image">
-                            <img src="/images/borrowing.png" alt="">
+                            <img src="/images/borrowing.png" alt="" />
                         </div>
                         <div class="text">
                             <h3>Access Fixed-Term Loans on-chain.</h3>
-                            <p>Borrow loans with predictable terms, to be paid back anytime within the loan duration
-                                assigned.</p>
+                            <p>
+                                Borrow loans with predictable terms, to be paid back anytime within the loan duration
+                                assigned.
+                            </p>
                             <RouterLink to="/discover">
                                 <div class="action">
                                     <div class="div"></div>
@@ -43,9 +47,14 @@
                     <div class="box">
                         <div class="text">
                             <h3>Earn emissions on supplied assets.</h3>
-                            <p>Idle assets Supplied on Darsh, earns yield from trusted third party liquidity protocol, while
-                                being matched to a borrower.</p>
-                            <a target="_blank" href="https://darshprotocol.gitbook.io/product-docs/product-guide/lending">
+                            <p>
+                                Idle assets Supplied on Darsh, earns yield from trusted third party liquidity protocol,
+                                while being matched to a borrower.
+                            </p>
+                            <a
+                                target="_blank"
+                                href="https://darshprotocol.gitbook.io/product-docs/product-guide/lending"
+                            >
                                 <div class="action">
                                     <div class="div"></div>
                                     <p>Learn More</p>
@@ -53,7 +62,7 @@
                             </a>
                         </div>
                         <div class="image">
-                            <img src="/images/emission.png" alt="">
+                            <img src="/images/emission.png" alt="" />
                         </div>
                     </div>
                 </div>
@@ -88,7 +97,7 @@ main {
     width: 1050px;
     display: flex;
     flex-wrap: wrap;
-    background: #FFFFFF;
+    background: #ffffff;
 }
 
 .box .text,
@@ -107,24 +116,24 @@ main {
 }
 
 .feature:nth-child(odd) .text {
-    border-right: 1px solid #F1F1F1;
+    border-right: 1px solid #f1f1f1;
 }
 
 .feature:nth-child(even) .text {
-    border-left: 1px solid #F1F1F1;
+    border-left: 1px solid #f1f1f1;
 }
 
 .text h3 {
-    font-family: 'Axiforma Bold';
+    font-family: "Axiforma Bold";
     font-weight: 600;
     font-size: 38px;
-    color: #39375C;
+    color: #39375c;
 }
 
 .text p {
     font-weight: 500;
     font-size: 16px;
-    color: #ABADAE;
+    color: #abadae;
     margin-top: 20px;
     margin-bottom: 50px;
 }
@@ -144,7 +153,7 @@ main {
     font-size: 16px;
     color: var(--primary);
     width: 100%;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .action div {
@@ -153,11 +162,11 @@ main {
     height: 50px;
     position: absolute;
     bottom: -50px;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .action:hover p {
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
 .action:hover div {
@@ -180,7 +189,7 @@ main {
 
 .soon {
     height: 30px;
-    background: #6936F5;
+    background: #6936f5;
     border-radius: 2px 2px 0px 0px;
     position: absolute;
     padding: 0 20px;

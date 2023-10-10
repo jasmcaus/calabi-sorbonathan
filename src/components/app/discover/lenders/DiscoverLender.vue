@@ -5,7 +5,7 @@
         </div>
 
         <div class="lends" v-else>
-            <RouterLink v-for="offer, fIndex in offers" :to="`/discover/lenders/${offer._id}`" :key="offer.offerId">
+            <RouterLink v-for="(offer, fIndex) in offers" :to="`/discover/lenders/${offer._id}`" :key="offer.offerId">
                 <div class="lend">
                     <div class="asset">
                         <div class="label">
@@ -14,14 +14,19 @@
                         </div>
                         <div class="tokens">
                             <div>
-                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
-                                <p>{{ $toMoney($fromWei(offer.currentPrincipal)) }} {{
-                                    $findAsset(offer.principalToken).symbol
-                                }}</p>
+                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
+                                <p>
+                                    {{ $toMoney($fromWei(offer.currentPrincipal)) }}
+                                    {{ $findAsset(offer.principalToken).symbol }}
+                                </p>
                             </div>
                             <div>
-                                <img v-for="asset in offer.collateralTokens" :src="`/images/${$findAsset(asset).image}.png`"
-                                    :key="asset.id" alt="">
+                                <img
+                                    v-for="asset in offer.collateralTokens"
+                                    :src="`/images/${$findAsset(asset).image}.png`"
+                                    :key="asset.id"
+                                    alt=""
+                                />
                             </div>
                         </div>
                     </div>
@@ -51,18 +56,24 @@
                             <div class="extra_user">0</div>
                         </div>
                         <div class="users" v-else>
-                            <div class="img" v-for="loan, index in offer.loans" :key="index"
-                                :id="`${fIndex}img_borrower${index}`">
-                            </div>
+                            <div
+                                class="img"
+                                v-for="(loan, index) in offer.loans"
+                                :key="index"
+                                :id="`${fIndex}img_borrower${index}`"
+                            ></div>
                             <div class="extra_user">{{ offer.loans.length }}</div>
                         </div>
 
                         <div class="needed">
                             <div class="label">
-                                <p>{{ $toMoney($fromWei(offer.currentPrincipal)) }} <span>/ {{
-                                    $toMoney($fromWei(offer.initialPrincipal)) }} {{
-        $findAsset(offer.principalToken).symbol
-    }}</span></p>
+                                <p>
+                                    {{ $toMoney($fromWei(offer.currentPrincipal)) }}
+                                    <span
+                                        >/ {{ $toMoney($fromWei(offer.initialPrincipal)) }}
+                                        {{ $findAsset(offer.principalToken).symbol }}</span
+                                    >
+                                </p>
                                 <IconInfo />
                             </div>
                             <div class="bar">
@@ -75,28 +86,27 @@
         </div>
 
         <div class="t_empty" v-if="!fetching && offers.length == 0">
-            <img src="../../../../assets/images/receipt-text.png" alt="">
+            <img src="../../../../assets/images/receipt-text.png" alt="" />
             <p>No Lenders found.</p>
         </div>
     </main>
 </template>
 
-
 <script setup>
-import IconClock from '../../../icons/IconClock.vue';
-import IconInfo from '../../../icons/IconInfo.vue';
-import IconInterest from '../../../icons/IconInterest.vue';
-import ProgressBox from '../../../ProgressBox.vue'
-</script >
+import IconClock from "../../../icons/IconClock.vue"
+import IconInfo from "../../../icons/IconInfo.vue"
+import IconInterest from "../../../icons/IconInterest.vue"
+import ProgressBox from "../../../ProgressBox.vue"
+</script>
 
 <script>
-import Profile from '../../../../scripts/Profile'
-import Countdown from '../../../../utils/Countdown'
+import Profile from "../../../../scripts/Profile"
+import Countdown from "../../../../utils/Countdown"
 export default {
     data() {
         return {
             offers: [],
-            fetching: true
+            fetching: true,
         }
     },
     created() {
@@ -104,7 +114,7 @@ export default {
     },
     methods: {
         countdown: function (expiresAt) {
-            let txt = ''
+            let txt = ""
             let due = expiresAt * 1000
             Countdown.start(due, function (text) {
                 txt = text
@@ -118,32 +128,35 @@ export default {
         },
         fetchLendingOffers: function () {
             this.fetching = true
-            this.axios.get(`https://darshprotocol.onrender.com/offers?offerType=0`).then(response => {
-                const offers = response.data
-                const now = (Date.now() / 1000).toFixed(0)
+            this.axios
+                .get(`https://darshprotocol.onrender.com/offers?offerType=0`)
+                .then((response) => {
+                    const offers = response.data
+                    const now = (Date.now() / 1000).toFixed(0)
 
-                this.offers = offers.filter(offer => {
-                    if (offer.currentPrincipal == 0 || offer.initialPrincipal == 0) {
-                        return false
-                    } else if (offer.loans.length == 0) {
-                        return offer.expiresAt > now
-                    } else {
-                        return true
-                    }
+                    this.offers = offers.filter((offer) => {
+                        if (offer.currentPrincipal == 0 || offer.initialPrincipal == 0) {
+                            return false
+                        } else if (offer.loans.length == 0) {
+                            return offer.expiresAt > now
+                        } else {
+                            return true
+                        }
+                    })
+
+                    this.fetching = false
                 })
-
-                this.fetching = false
-            }).catch(error => {
-                console.error(error);
-                this.fetching = false
-            })
+                .catch((error) => {
+                    console.error(error)
+                    this.fetching = false
+                })
         },
         generateImages: function () {
             if (this.offers) {
                 for (let fIndex = 0; fIndex < this.offers.length; fIndex++) {
-                    const offer = this.offers[fIndex];
+                    const offer = this.offers[fIndex]
                     for (let index = 0; index < offer.loans.length; index++) {
-                        const loan = offer.loans[index];
+                        const loan = offer.loans[index]
                         let el = Profile.generate(30, loan.borrower)
                         let dom = document.getElementById(`${fIndex}img_borrower${index}`)
                         if (dom && dom.childNodes.length == 0) {
@@ -152,14 +165,14 @@ export default {
                     }
                 }
             }
-        }
+        },
     },
     mounted() {
         this.generateImages()
     },
     updated() {
         this.generateImages()
-    }
+    },
 }
 </script>
 
@@ -183,7 +196,7 @@ export default {
     background: var(--bglight);
     border-radius: 6px;
     overflow: hidden;
-    transition: .2s;
+    transition: 0.2s;
     /* border: 2px transparent solid; */
 }
 
@@ -197,49 +210,49 @@ export default {
     border-bottom: 1px solid var(--background);
 }
 
-.asset>div {
+.asset > div {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.asset>.label>p {
+.asset > .label > p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textdimmed);
 }
 
-.asset>.label {
+.asset > .label {
     margin-bottom: 16px;
 }
 
-.asset .tokens>div {
+.asset .tokens > div {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.asset .tokens>div p {
-    font-family: 'Axiforma SemiBold';
+.asset .tokens > div p {
+    font-family: "Axiforma SemiBold";
     font-weight: 500;
     font-size: 16px;
     color: var(--textnormal);
 }
 
-.asset .tokens>div:first-child img {
+.asset .tokens > div:first-child img {
     width: 24px;
 }
 
-.asset .tokens>div:nth-child(2) img {
+.asset .tokens > div:nth-child(2) img {
     width: 18px;
     margin-left: -18px;
 }
 
-.asset .tokens>div:nth-child(2) img:first-child {
+.asset .tokens > div:nth-child(2) img:first-child {
     margin-left: 0;
 }
 
-.asset .tokens>div:nth-child(2) {
+.asset .tokens > div:nth-child(2) {
     width: 58px;
     height: 30px;
     background: var(--bglighter);
@@ -259,27 +272,27 @@ export default {
     border-right: 1px solid var(--background);
 }
 
-.info>div>p {
+.info > div > p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textdimmed);
 }
 
-.info>div>div {
+.info > div > div {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-top: 20px;
 }
 
-.info>div {
+.info > div {
     padding: 26px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.info>div>div p {
+.info > div > div p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textnormal);
@@ -332,19 +345,19 @@ export default {
     z-index: 1;
 }
 
-.needed>div {
+.needed > div {
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-.needed>div>p {
+.needed > div > p {
     font-weight: 500;
     font-size: 12px;
     color: var(--textnormal);
 }
 
-.needed>div>p span {
+.needed > div > p span {
     color: var(--textdimmed);
 }
 

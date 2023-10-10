@@ -6,8 +6,8 @@
 </template>
 
 <script setup>
-import ProgressBoxWhite from './ProgressBoxWhite.vue';
-</script >
+import ProgressBoxWhite from "./ProgressBoxWhite.vue"
+</script>
 
 <script>
 export default {
@@ -27,13 +27,12 @@ export default {
     justify-content: center;
     cursor: pointer;
     user-select: none;
-    transition: .2s;
+    transition: 0.2s;
 }
 
 .button:hover {
     transform: translateY(-2px);
 }
-
 
 p {
     font-weight: 500;
@@ -49,7 +48,7 @@ p {
 
 .disable:hover {
     transform: translateY(0);
-    animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
+    animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
     perspective: 1000px;

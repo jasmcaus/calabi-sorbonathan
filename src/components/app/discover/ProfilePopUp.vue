@@ -36,7 +36,8 @@
                                 <p>Last updated: <span>Feb 20</span></p>
                                 <p>1000</p>
                             </div>
-                            <h3>On-Chain Credit Score
+                            <h3>
+                                On-Chain Credit Score
                                 <IconInfo />
                             </h3>
                         </div>
@@ -67,9 +68,13 @@
                         <div class="label">
                             <p class="label_title">Total Loans Volume</p>
                             <div class="label_options">
-                                <p>${{ $nFormat(
-                                    Number($fromWei(user.borrowedVolume)) + Number($fromWei(user.lentVolume))
-                                ) }}</p>
+                                <p>
+                                    ${{
+                                        $nFormat(
+                                            Number($fromWei(user.borrowedVolume)) + Number($fromWei(user.lentVolume))
+                                        )
+                                    }}
+                                </p>
                                 <IconInfo />
                             </div>
                         </div>
@@ -96,23 +101,23 @@
 </template>
 
 <script setup>
-import IconClose from '../../icons/IconClose.vue';
-import IconInfo from '../../icons/IconInfo.vue';
-import IconOut from '../../icons/IconOut.vue';
+import IconClose from "../../icons/IconClose.vue"
+import IconInfo from "../../icons/IconInfo.vue"
+import IconOut from "../../icons/IconOut.vue"
 </script>
 
 <script>
-import ArcProgress from 'arc-progress';
-import ProgressBox from '../../ProgressBox.vue';
-import Profile from '../../../scripts/Profile';
+import ArcProgress from "arc-progress"
+import ProgressBox from "../../ProgressBox.vue"
+import Profile from "../../../scripts/Profile"
 export default {
     props: ["address", "userType"],
     data() {
         return {
             user: null,
             fetching: true,
-            arc: null
-        };
+            arc: null,
+        }
     },
     methods: {
         loadArc: function () {
@@ -128,8 +133,8 @@ export default {
                     arcEnd: 360,
                     fillColor: "#6936F5",
                     emptyColor: "#141416",
-                    lineCap: "square"
-                });
+                    lineCap: "square",
+                })
                 new ArcProgress({
                     el: "#progress-container-border",
                     progress: 1,
@@ -140,47 +145,50 @@ export default {
                     arcEnd: 360,
                     fillColor: "rgba(20, 20, 22, 0.4)",
                     emptyColor: "rgba(20, 20, 22, 0.4)",
-                    lineCap: "square"
-                });
+                    lineCap: "square",
+                })
             }
         },
         generateImages: function () {
             if (this.address) {
                 let el = Profile.generate(36, this.address)
-                let dom = document.getElementById('img_profile')
+                let dom = document.getElementById("img_profile")
                 if (dom && dom.childNodes.length == 0) {
                     dom.appendChild(el)
                 }
             }
         },
         getProfile: async function () {
-            this.fetching = true;
+            this.fetching = true
             if (this.address == null) {
-                return;
+                return
             }
-            this.axios.get(`https://darshprotocol.onrender.com/users/${this.address}`).then(response => {
-                this.user = response.data;
-                this.fetching = false;
-            }).catch(error => {
-                console.error(error);
-                this.fetching = false;
-            });
+            this.axios
+                .get(`https://darshprotocol.onrender.com/users/${this.address}`)
+                .then((response) => {
+                    this.user = response.data
+                    this.fetching = false
+                })
+                .catch((error) => {
+                    console.error(error)
+                    this.fetching = false
+                })
         },
     },
     mounted() {
         this.generateImages()
         this.getProfile()
         this.loadArc()
-        document.body.classList.add("modal");
+        document.body.classList.add("modal")
     },
     updated() {
         this.generateImages()
         this.loadArc()
     },
     unmounted() {
-        document.body.classList.remove("modal");
+        document.body.classList.remove("modal")
     },
-    components: { ProgressBox }
+    components: { ProgressBox },
 }
 </script>
 
@@ -197,7 +205,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: fade_in .2s ease-in-out;
+    animation: fade_in 0.2s ease-in-out;
 }
 
 .p_box {
@@ -209,7 +217,7 @@ main {
     background: var(--bglight);
     border-radius: 6px;
     overflow: hidden;
-    animation: slide_in_up .2s ease-in-out;
+    animation: slide_in_up 0.2s ease-in-out;
 }
 
 .p_box2 {
@@ -259,7 +267,6 @@ main {
     justify-content: center;
 }
 
-
 .overflow {
     overflow-y: auto;
     height: 55vh;
@@ -268,7 +275,6 @@ main {
 .stats {
     background: var(--bglight);
 }
-
 
 .chart {
     height: 260px;
@@ -324,7 +330,7 @@ p:last-child {
     color: var(--textnormal);
 }
 
-.arc>div {
+.arc > div {
     position: absolute;
     top: 0;
 }

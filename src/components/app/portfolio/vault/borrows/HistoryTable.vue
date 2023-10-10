@@ -22,7 +22,7 @@
                 </tr>
             </thead>
             <div class="tbody">
-                <tbody v-for="transfer, index in sortActivities(offer.transfers)" :key="transfer._id">
+                <tbody v-for="(transfer, index) in sortActivities(offer.transfers)" :key="transfer._id">
                     <tr>
                         <td>
                             <div>
@@ -53,14 +53,17 @@
                         </td>
                         <td>
                             <div>
-                                <p>{{ $toDate(transfer.timestamp).month + ' ' + $toDate(transfer.timestamp).date }}, <span>
-                                        {{ $toDate(transfer.timestamp).hour + ':' + $toDate(transfer.timestamp).min }}
-                                    </span></p>
+                                <p>
+                                    {{ $toDate(transfer.timestamp).month + " " + $toDate(transfer.timestamp).date }},
+                                    <span>
+                                        {{ $toDate(transfer.timestamp).hour + ":" + $toDate(transfer.timestamp).min }}
+                                    </span>
+                                </p>
                             </div>
                         </td>
                         <td>
                             <div>
-                                <img :src="`/images/${$findAsset(transfer.token).image}.png`" alt="">
+                                <img :src="`/images/${$findAsset(transfer.token).image}.png`" alt="" />
                                 <p>
                                     {{ $toMoney($fromWei(transfer.amount)) }}
                                     {{ $findAsset(transfer.token).symbol }}
@@ -79,7 +82,7 @@
                 </tbody>
             </div>
             <div class="t_empty" v-if="offer.transfers.length == 0">
-                <img src="../../../../../assets/images/receipt-text.png" alt="">
+                <img src="../../../../../assets/images/receipt-text.png" alt="" />
                 <p>No activity.</p>
             </div>
         </table>
@@ -87,14 +90,14 @@
 </template>
 
 <script setup>
-import IconOut from '../../../../icons/IconOut.vue';
-import IconSort from '../../../../icons/IconSort.vue';
-import IconAddCircle from '../../../../icons/IconAddCircle.vue'
-import IconMinusCircle from '../../../../icons/IconMinusCircle.vue'
-import IconCoin from '../../../../icons/IconCoin.vue';
-import IconLock from '../../../../icons/IconLock.vue';
-import Profile from '../../../../../scripts/Profile';
-</script >
+import IconOut from "../../../../icons/IconOut.vue"
+import IconSort from "../../../../icons/IconSort.vue"
+import IconAddCircle from "../../../../icons/IconAddCircle.vue"
+import IconMinusCircle from "../../../../icons/IconMinusCircle.vue"
+import IconCoin from "../../../../icons/IconCoin.vue"
+import IconLock from "../../../../icons/IconLock.vue"
+import Profile from "../../../../../scripts/Profile"
+</script>
 
 <script>
 export default {
@@ -104,7 +107,7 @@ export default {
             if (this.offer.creator == this.userAddress.toLowerCase()) {
                 return activities
             } else {
-                return activities.filter(activity => activity.from == this.userAddress.toLowerCase())
+                return activities.filter((activity) => activity.from == this.userAddress.toLowerCase())
             }
         },
         generateImages: function () {
@@ -117,14 +120,14 @@ export default {
                     dom.appendChild(el)
                 }
             }
-        }
+        },
     },
     mounted() {
         this.generateImages()
     },
     updated() {
         this.generateImages()
-    }
+    },
 }
 </script>
 
@@ -136,7 +139,6 @@ export default {
     height: 40px;
     border-bottom: 1px solid var(--bglightest);
 }
-
 
 .table_head .title {
     display: flex;

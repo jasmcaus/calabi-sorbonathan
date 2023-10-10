@@ -12,22 +12,24 @@
                 <!-- <p>Trust Score</p> -->
                 <div>
                     <IconBadge />
-                    <p><span>{{ score ? score.score : 0 }}</span> of 100</p>
+                    <p>
+                        <span>{{ score ? score.score : 0 }}</span> of 100
+                    </p>
                 </div>
             </div>
-            <div>{{ score ? score.label : '' }}</div>
+            <div>{{ score ? score.label : "" }}</div>
         </div>
     </div>
 </template>
 
 <script setup>
-import IconInformation from '../../../icons/IconInformation.vue'
-import IconBadge from '../../../icons/IconBadge.vue'
+import IconInformation from "../../../icons/IconInformation.vue"
+import IconBadge from "../../../icons/IconBadge.vue"
 </script>
 
 <script>
 export default {
-    props: ['score']
+    props: ["score"],
 }
 </script>
 
@@ -40,7 +42,7 @@ export default {
     overflow: hidden;
 }
 
-.stats>div {
+.stats > div {
     padding: 30px;
 }
 
@@ -85,18 +87,18 @@ export default {
 }
 
 .bad {
-    background-image: url('/images/score_img_bad.png');
+    background-image: url("/images/score_img_bad.png");
 }
 
 .good {
-    background-image: url('/images/score_img_good.png');
+    background-image: url("/images/score_img_good.png");
 }
 
 .excellent {
-    background-image: url('/images/score_img_excellent.png');
+    background-image: url("/images/score_img_excellent.png");
 }
 
-.score>div:nth-child(2) {
+.score > div:nth-child(2) {
     width: 80px;
     height: 30px;
     display: flex;
@@ -107,41 +109,41 @@ export default {
     font-size: 14px;
 }
 
-.bad>div:nth-child(2) {
+.bad > div:nth-child(2) {
     background: rgba(233, 71, 3, 0.1);
     color: var(--accentred);
 }
 
-.good>div:nth-child(2) {
+.good > div:nth-child(2) {
     background: rgba(139, 187, 37, 0.1);
     color: var(--accentgreen);
 }
 
-.excellent>div:nth-child(2) {
+.excellent > div:nth-child(2) {
     background: rgba(105, 54, 245, 0.1);
     color: var(--primary);
 }
 
-.score>div:first-child>div {
+.score > div:first-child > div {
     display: flex;
     /* margin-top: 12px; */
     align-items: center;
     gap: 10px;
 }
 
-.score>div:first-child p:first-child {
+.score > div:first-child p:first-child {
     font-weight: 500;
     font-size: 14px;
     color: var(--textdimmed);
 }
 
-.score>div:first-child p:nth-child(2) {
+.score > div:first-child p:nth-child(2) {
     font-weight: 700;
     font-size: 16px;
     color: var(--textdimmed);
 }
 
-.score>div:first-child span {
+.score > div:first-child span {
     color: var(--textnormal);
 }
 </style>

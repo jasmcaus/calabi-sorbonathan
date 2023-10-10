@@ -7,13 +7,19 @@
                 <div class="total_loans">
                     <div class="total_loans_joined">
                         <p>Total Loans Joined</p>
-                        <p>{{ user ? (user.borrowedTimes + user.lentTimes) : 0 }}</p>
+                        <p>{{ user ? user.borrowedTimes + user.lentTimes : 0 }}</p>
                     </div>
                     <div class="total_loans_volume">
                         <p>Total Loans Volume</p>
-                        <p>${{ user ? $nFormat(
-                            Number($fromWei(user.borrowedVolume)) + Number($fromWei(user.lentVolume))
-                        ) : 0 }}</p>
+                        <p>
+                            ${{
+                                user
+                                    ? $nFormat(
+                                          Number($fromWei(user.borrowedVolume)) + Number($fromWei(user.lentVolume))
+                                      )
+                                    : 0
+                            }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -23,11 +29,16 @@
                     <div class="toolbar">
                         <div class="toolbar_label">
                             <p>Total Value Locked</p>
-                            <p>${{ user ? $nFormat(
-                                Number($fromWei(user.borrowedVolume)) + Number($fromWei(user.lentVolume))
-                            ) : 0 }} <span>
-                                    <IconArrowDown :color="'var(--accentgreen)'" /> +10%
-                                </span></p>
+                            <p>
+                                ${{
+                                    user
+                                        ? $nFormat(
+                                              Number($fromWei(user.borrowedVolume)) + Number($fromWei(user.lentVolume))
+                                          )
+                                        : 0
+                                }}
+                                <span> <IconArrowDown :color="'var(--accentgreen)'" /> +10% </span>
+                            </p>
                         </div>
                         <div class="dates">
                             <div>1D</div>
@@ -55,21 +66,24 @@
                         <p v-if="tabIndex == 0" class="tag">Total Value Lent</p>
                         <p v-else class="tag">Total Value Borrowed</p>
 
-                        <p class="amount" v-if="user">${{
-                            tabIndex == 0 ? $toMoney($fromWei(user.lentVolume)) :
-                            $toMoney($fromWei(user.borrowedVolume))
-                        }}</p>
+                        <p class="amount" v-if="user">
+                            ${{
+                                tabIndex == 0
+                                    ? $toMoney($fromWei(user.lentVolume))
+                                    : $toMoney($fromWei(user.borrowedVolume))
+                            }}
+                        </p>
                         <p class="amount" v-else>$0</p>
 
                         <div class="natives">
                             <div class="tokens">
                                 <div class="images">
-                                    <img src="/images/ftm.png" alt="">
-                                    <img src="/images/btc.png" alt="">
-                                    <img src="/images/eth.png" alt="">
+                                    <img src="/images/ftm.png" alt="" />
+                                    <img src="/images/btc.png" alt="" />
+                                    <img src="/images/eth.png" alt="" />
                                     <p>Natives</p>
                                 </div>
-                                <div class="percent">{{ getProgress('native') }}%</div>
+                                <div class="percent">{{ getProgress("native") }}%</div>
                             </div>
                             <div class="progress_bar">
                                 <div :style="`width: ${getProgress('native')}%`" class="progress"></div>
@@ -80,12 +94,12 @@
                         <div class="stables">
                             <div class="tokens">
                                 <div class="images">
-                                    <img src="/images/usdc.png" alt="">
-                                    <img src="/images/usdt.png" alt="">
-                                    <img src="/images/dai.png" alt="">
+                                    <img src="/images/usdc.png" alt="" />
+                                    <img src="/images/usdt.png" alt="" />
+                                    <img src="/images/dai.png" alt="" />
                                     <p>Stables</p>
                                 </div>
-                                <div class="percent">{{ getProgress('stable') }}%</div>
+                                <div class="percent">{{ getProgress("stable") }}%</div>
                             </div>
                             <div class="progress_bar">
                                 <div :style="`width: ${getProgress('stable')}%`" class="progress"></div>
@@ -102,14 +116,14 @@
 </template>
 
 <script setup>
-import IconArrowDown from '../../icons/IconArrowDown.vue';
-import ActivityTable from './ActivityTable.vue';
+import IconArrowDown from "../../icons/IconArrowDown.vue"
+import ActivityTable from "./ActivityTable.vue"
 </script>
 
 <script>
-import ApexCharts from 'apexcharts'
-import NoWallet from '../../NoWallet.vue';
-import Authentication from '../../../scripts/Authentication';
+import ApexCharts from "apexcharts"
+import NoWallet from "../../NoWallet.vue"
+import Authentication from "../../../scripts/Authentication"
 export default {
     data() {
         return {
@@ -121,7 +135,7 @@ export default {
             loans: [],
             transfers: [],
             natives: { lent: 0, borrowed: 0 },
-            stables: { lent: 0, borrowed: 0 }
+            stables: { lent: 0, borrowed: 0 },
         }
     },
     methods: {
@@ -130,46 +144,46 @@ export default {
                 stroke: {
                     curve: "smooth",
                     width: 2,
-                    colors: ["#6936F5"]
+                    colors: ["#6936F5"],
                 },
                 grid: {
                     xaxis: {
                         lines: {
-                            show: false
-                        }
+                            show: false,
+                        },
                     },
                     yaxis: {
                         lines: {
-                            show: false
-                        }
+                            show: false,
+                        },
                     },
                     padding: {
                         top: -28,
                         right: 0,
                         bottom: 0,
-                        left: -9
-                    }
+                        left: -9,
+                    },
                 },
                 chart: {
                     type: "area",
                     toolbar: { show: false },
                     height: 205,
                     width: "100%",
-                    zoom: { enabled: false }
+                    zoom: { enabled: false },
                 },
                 tooltip: {
                     x: { show: false },
                     marker: { show: false },
                     style: {
                         fontSize: "12px",
-                        fontFamily: "Axiforma"
-                    }
+                        fontFamily: "Axiforma",
+                    },
                 },
                 markers: {
                     strokeColors: "#6936F5",
                     colors: ["#EEF1F8"],
                     strokeWidth: 4,
-                    radius: 2
+                    radius: 2,
                 },
                 fill: {
                     type: "gradient",
@@ -178,16 +192,18 @@ export default {
                         gradientToColors: ["#6936F5", "#6936F5"],
                         inverseColors: true,
                         opacityFrom: 0.5,
-                        opacityTo: 0.05
-                    }
+                        opacityTo: 0.05,
+                    },
                 },
                 dataLabels: {
-                    enabled: false
+                    enabled: false,
                 },
-                series: [{
-                    name: "TVL",
-                    data: [34, 35, 31, 38, 40, 35, 42, 38, 34, 38, 80],
-                }],
+                series: [
+                    {
+                        name: "TVL",
+                        data: [34, 35, 31, 38, 40, 35, 42, 38, 34, 38, 80],
+                    },
+                ],
                 xaxis: {
                     categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"],
                     labels: { show: false },
@@ -196,82 +212,88 @@ export default {
                     tooltip: {
                         style: {
                             fontSize: "12px",
-                            fontFamily: "Axiforma"
-                        }
-                    }
+                            fontFamily: "Axiforma",
+                        },
+                    },
                 },
                 yaxis: {
                     labels: { show: false },
                     axisBorder: { show: false },
                     axisTicks: { show: false },
                 },
-                legend: { show: false }
-            };
+                legend: { show: false },
+            }
             let dom = document.querySelector("#chart")
             if (dom && !this.chart) {
-                this.chart = new ApexCharts(dom, options);
-                this.chart.render();
+                this.chart = new ApexCharts(dom, options)
+                this.chart.render()
             }
         },
         getLoans: function () {
             if (!this.userAddress) return
-            this.axios.get(`https://darshprotocol.onrender.com/loans/vault?address=${this.userAddress.toLowerCase()}`).then(response => {
-                this.loans = response.data;
+            this.axios
+                .get(`https://darshprotocol.onrender.com/loans/vault?address=${this.userAddress.toLowerCase()}`)
+                .then((response) => {
+                    this.loans = response.data
 
-                for (let index = 0; index < this.loans.length; index++) {
-                    const loan = this.loans[index];
-                    let principalType = this.$findAsset(loan.principalToken).type
+                    for (let index = 0; index < this.loans.length; index++) {
+                        const loan = this.loans[index]
+                        let principalType = this.$findAsset(loan.principalToken).type
 
-                    
-                    if (loan.lender == this.userAddress.toLowerCase()) {
-                        if (principalType == 'native') {
-                            this.natives.lent += 1
-                        } else {
-                            this.stables.lent += 1
+                        if (loan.lender == this.userAddress.toLowerCase()) {
+                            if (principalType == "native") {
+                                this.natives.lent += 1
+                            } else {
+                                this.stables.lent += 1
+                            }
+                        } else if (loan.borrower == this.userAddress.toLowerCase()) {
+                            if (principalType == "native") {
+                                this.natives.borrowed += 1
+                            } else {
+                                this.stables.borrowed += 1
+                            }
                         }
                     }
-                    else if (loan.borrower == this.userAddress.toLowerCase()) {
-                        if (principalType == 'native') {
-                            this.natives.borrowed += 1
-                        } else {
-                            this.stables.borrowed += 1
-                        }
-                    }
-                }
-
-            }).catch(error => {
-                console.error(error);
-            });
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
         },
         getProgress: function (type) {
             if (this.tabIndex == 0) {
-                if (type == 'native') {
-                    return ((this.natives.lent / (this.natives.lent + this.stables.lent)) * 100)
+                if (type == "native") {
+                    return (this.natives.lent / (this.natives.lent + this.stables.lent)) * 100
                 }
-                return ((this.stables.lent / (this.natives.lent + this.stables.lent)) * 100)
+                return (this.stables.lent / (this.natives.lent + this.stables.lent)) * 100
             }
 
-            if (type == 'native') {
-                return ((this.natives.borrowed / (this.natives.borrowed + this.stables.borrowed)) * 100)
+            if (type == "native") {
+                return (this.natives.borrowed / (this.natives.borrowed + this.stables.borrowed)) * 100
             }
-            return ((this.stables.borrowed / (this.natives.borrowed + this.stables.borrowed)) * 100)
+            return (this.stables.borrowed / (this.natives.borrowed + this.stables.borrowed)) * 100
         },
         getProfile: async function () {
             if (!this.userAddress) return
-            this.axios.get(`https://darshprotocol.onrender.com/users/${this.userAddress.toLowerCase()}`).then(response => {
-                this.user = response.data;
-            }).catch(error => {
-                console.error(error);
-            });
+            this.axios
+                .get(`https://darshprotocol.onrender.com/users/${this.userAddress.toLowerCase()}`)
+                .then((response) => {
+                    this.user = response.data
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
         },
-        getTransfers: function() {
+        getTransfers: function () {
             if (!this.userAddress) return
-            this.axios.get(`https://darshprotocol.onrender.com/transfers?from=${this.userAddress.toLowerCase()}`).then(response => {
-                this.transfers = response.data;
-            }).catch(error => {
-                console.error(error);
-            });
-        }
+            this.axios
+                .get(`https://darshprotocol.onrender.com/transfers?from=${this.userAddress.toLowerCase()}`)
+                .then((response) => {
+                    this.transfers = response.data
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+        },
     },
     updated() {
         this.renderChart()
@@ -282,7 +304,7 @@ export default {
         this.getLoans()
         this.getTransfers()
         this.authenticating = false
-    }
+    },
 }
 </script>
 
@@ -309,7 +331,7 @@ export default {
     align-items: center;
 }
 
-.total_loans>div {
+.total_loans > div {
     width: 180px;
     display: flex;
     flex-direction: column;

@@ -10,7 +10,7 @@
             <div class="principal_needed">
                 <p class="label">Principal needed</p>
                 <div class="principal_needed_token">
-                    <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
+                    <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
                     <p>
                         {{ $toMoney($fromWei(getPrincipal(request.percentage))) }}
                         {{ $findAsset(offer.principalToken).symbol }}
@@ -50,41 +50,45 @@
                 </div>
             </div>
             <div class="box_action">
-                <PrimaryButton :text="'Claim'" :progress="claiming" :state="claiming ? 'disable' : ''"
-                    v-on:click="!claiming ? claimRequest() : null" />
+                <PrimaryButton
+                    :text="'Claim'"
+                    :progress="claiming"
+                    :state="claiming ? 'disable' : ''"
+                    v-on:click="!claiming ? claimRequest() : null"
+                />
             </div>
         </div>
     </main>
 </template>
 
 <script setup>
-import { messages } from '../../../../reactives/messages';
-import Authentication from '../../../../scripts/Authentication';
-import LendingPoolAPI from '../../../../scripts/LendingPoolAPI';
-import Profile from '../../../../scripts/Profile';
-import IconClock from '../../../icons/IconClock.vue';
-import IconClose from '../../../icons/IconClose.vue';
-import IconInterest from '../../../icons/IconInterest.vue';
-import PrimaryButton from '../../../PrimaryButton.vue';
+import { messages } from "../../../../reactives/messages"
+import Authentication from "../../../../scripts/Authentication"
+import LendingPoolAPI from "../../../../scripts/LendingPoolAPI"
+import Profile from "../../../../scripts/Profile"
+import IconClock from "../../../icons/IconClock.vue"
+import IconClose from "../../../icons/IconClose.vue"
+import IconInterest from "../../../icons/IconInterest.vue"
+import PrimaryButton from "../../../PrimaryButton.vue"
 </script>
 
 <script>
 export default {
-    props: ['request', 'offer', 'borrowerLoan'],
+    props: ["request", "offer", "borrowerLoan"],
     data() {
         return {
-            claiming: false
+            claiming: false,
         }
     },
     methods: {
         getPrincipal: function (percentage) {
-            let principal = this.offer.initialPrincipal * (percentage / 100);
-            return principal.toString();
+            let principal = this.offer.initialPrincipal * (percentage / 100)
+            return principal.toString()
         },
         getInterest: function (rate, daysToMaturity) {
-            let result = rate * daysToMaturity * 24 * 60 * 60;
-            let interest = this.$fromWei(result.toString());
-            return this.$toMoney(interest);
+            let result = rate * daysToMaturity * 24 * 60 * 60
+            let interest = this.$fromWei(result.toString())
+            return this.$toMoney(interest)
         },
         claimRequest: async function () {
             this.claiming = true
@@ -96,23 +100,23 @@ export default {
 
             if (trx && trx.tx) {
                 messages.insertMessage({
-                    title: 'Principal claimed',
-                    description: 'Loan principal was successfully claimed.',
-                    type: 'success',
-                    linkTitle: 'View Trx',
-                    linkUrl: `https://testnet.ftmscan.com/tx/${trx.tx}`
+                    title: "Principal claimed",
+                    description: "Loan principal was successfully claimed.",
+                    type: "success",
+                    linkTitle: "View Trx",
+                    linkUrl: `https://testnet.ftmscan.com/tx/${trx.tx}`,
                 })
-                this.$emit('close')
+                this.$emit("close")
             } else {
                 messages.insertMessage({
-                    title: 'Claiming failed',
-                    description: 'Loan principal failed to claim.',
-                    type: 'failed'
+                    title: "Claiming failed",
+                    description: "Loan principal failed to claim.",
+                    type: "failed",
                 })
             }
 
-            this.$emit('done')
-            this.$emit('close')
+            this.$emit("done")
+            this.$emit("close")
 
             this.claiming = false
         },
@@ -122,17 +126,18 @@ export default {
             if (dom && dom.childNodes.length == 0) {
                 dom.appendChild(el)
             }
-        }
+        },
     },
     mounted() {
-        document.body.classList.add('modal')
+        document.body.classList.add("modal")
         this.generateImages()
-    }, updated() {
+    },
+    updated() {
         this.generateImages()
     },
     unmounted() {
-        document.body.classList.remove('modal')
-    }
+        document.body.classList.remove("modal")
+    },
 }
 </script>
 
@@ -149,7 +154,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: fade_in .2s ease-in-out;
+    animation: fade_in 0.2s ease-in-out;
 }
 
 .box {
@@ -157,10 +162,10 @@ main {
     background-repeat: no-repeat;
     background-size: cover;
     background-color: var(--bglight);
-    background-image: url('/images/request_gradient.png');
+    background-image: url("/images/request_gradient.png");
     border-radius: 6px;
     overflow: hidden;
-    animation: slide_in_up .2s ease-in-out;
+    animation: slide_in_up 0.2s ease-in-out;
 }
 
 .title {
@@ -227,15 +232,15 @@ main {
     border-bottom: 1px solid var(--background);
 }
 
-.box_grid>div {
+.box_grid > div {
     padding: 30px;
 }
 
-.box_grid>div:first-child {
+.box_grid > div:first-child {
     border-right: 1px solid var(--background);
 }
 
-.box_grid:nth-child(3)>div {
+.box_grid:nth-child(3) > div {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -276,7 +281,7 @@ main {
 
 .box_action {
     padding: 30px;
-    background-image: url('/images/subtle_gradient.png');
+    background-image: url("/images/subtle_gradient.png");
     background-color: var(--bglighter);
     margin-top: 40px;
 }

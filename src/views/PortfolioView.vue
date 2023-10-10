@@ -1,5 +1,5 @@
 <script setup>
-import PortfolioHeader from '../components/app/portfolio/PortfolioHeader.vue';
+import PortfolioHeader from "../components/app/portfolio/PortfolioHeader.vue"
 </script>
 
 <template>

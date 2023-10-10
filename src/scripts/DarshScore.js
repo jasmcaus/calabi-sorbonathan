@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
-import contract from 'truffle-contract'
-import DarshScoreABI from '../contracts/DarshScore.json'
-import Web3 from 'web3'
+import contract from "truffle-contract"
+import DarshScoreABI from "../contracts/DarshScore.json"
+import Web3 from "web3"
 
 const LtvAPI = {
     instance: null,
@@ -9,14 +9,14 @@ const LtvAPI = {
         if (this.instance != null) return this.instance
 
         const DarshScore = contract(DarshScoreABI)
-        const web3 = new Web3('https://fantom-testnet.public.blastapi.io');
+        const web3 = new Web3("https://fantom-testnet.public.blastapi.io")
         DarshScore.setProvider(web3.currentProvider)
 
         try {
             this.instance = await DarshScore.deployed()
             return this.instance
         } catch (error) {
-            console.error(error);
+            console.error(error)
             return null
         }
     },
@@ -28,27 +28,27 @@ const LtvAPI = {
             score = 99
         }
 
-        let nScore = (100 - score)
-        let label = ''
-        let tag = ''
+        let nScore = 100 - score
+        let label = ""
+        let tag = ""
 
         if (nScore <= 40) {
-            label = 'Poor'
-            tag = 'bad'
+            label = "Poor"
+            tag = "bad"
         } else if (nScore <= 80) {
-            label = 'Good'
-            tag = 'good'
+            label = "Good"
+            tag = "good"
         } else {
-            label = 'Excellent'
-            tag = 'excellent'
+            label = "Excellent"
+            tag = "excellent"
         }
 
         return {
             score: nScore,
             label: label,
-            tag: tag
+            tag: tag,
         }
-    }
+    },
 }
 
 export default LtvAPI

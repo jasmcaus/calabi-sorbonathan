@@ -12,17 +12,24 @@
                 <div class="notifications icon_badge" v-on:click="$emit('notification')">
                     <IconNotification />
                     <div class="new_notification">
-                        <IconInformation :color="'var(--primary)'" :stripe="'var(--textnormal)'"
-                            v-if="unReadNotifications.length > 0" />
+                        <IconInformation
+                            :color="'var(--primary)'"
+                            :stripe="'var(--textnormal)'"
+                            v-if="unReadNotifications.length > 0"
+                        />
                     </div>
                 </div>
-                <div :class="userAddress ? 'connected connect_wallet' : 'connect_wallet'" v-on:click="authenticate(true)">
+                <div
+                    :class="userAddress ? 'connected connect_wallet' : 'connect_wallet'"
+                    v-on:click="authenticate(true)"
+                >
                     <IconMetamask v-if="userAddress" />
                     <IconWallet v-else />
-                    <p v-if="userAddress">{{ userAddress.substring(0, 5) }}•••{{
-                        userAddress.substring(userAddress.length - 5,
-                            userAddress.length)
-                    }}</p>
+                    <p v-if="userAddress">
+                        {{ userAddress.substring(0, 5) }}•••{{
+                            userAddress.substring(userAddress.length - 5, userAddress.length)
+                        }}
+                    </p>
                     <p v-else>Connect Wallet</p>
                 </div>
                 <div class="settings icon_badge">
@@ -34,64 +41,65 @@
 </template>
 
 <script setup>
-import IconNotification from '../icons/IconNotification.vue';
-import IconMetamask from '../icons/IconMetamask.vue';
-import IconSettings from '../icons/IconSettings.vue';
+import IconNotification from "../icons/IconNotification.vue"
+import IconMetamask from "../icons/IconMetamask.vue"
+import IconSettings from "../icons/IconSettings.vue"
 </script>
 
 <script>
-import Authentication from '../../scripts/Authentication'
-import IconWallet from '../icons/IconWallet.vue';
-import { messages } from '../../reactives/messages';
-import IconInformation from '../icons/IconInformation.vue';
+import Authentication from "../../scripts/Authentication"
+import IconWallet from "../icons/IconWallet.vue"
+import { messages } from "../../reactives/messages"
+import IconInformation from "../icons/IconInformation.vue"
 export default {
     props: ["userAddress"],
     data() {
         return {
-            unReadNotifications: []
+            unReadNotifications: [],
         }
     },
     watch: {
-        $route: function() {
+        $route: function () {
             this.checkNotification()
-        }
+        },
     },
     methods: {
         authenticate: async function (request = false) {
             if (this.userAddress) {
-                this.$emit("wallet");
-                return;
+                this.$emit("wallet")
+                return
             }
             const userAddress = await Authentication.userAddress(request, () => {
                 this.$router.go()
-            });
+            })
             if (request && !userAddress) {
                 messages.insertMessage({
                     title: "Failed to connect wallet",
                     description: "Please check your network, refresh or try again.",
-                    type: "failed"
-                });
+                    type: "failed",
+                })
+            } else if (userAddress && request) {
+                this.$router.go()
             }
-            else if (userAddress && request) {
-                this.$router.go();
-            }
-            this.checkNotification(userAddress);
-            this.$emit("connected", userAddress);
+            this.checkNotification(userAddress)
+            this.$emit("connected", userAddress)
         },
         checkNotification: function (userAddress) {
-            if (!userAddress)
-                return;
-            this.axios.get(`https://darshprotocol.onrender.com/notifications?to=${userAddress.toLowerCase()}&readAt=0`).then(response => {
-                this.unReadNotifications = response.data;
-            }).catch(error => {
-                console.error(error);
-            });
-        }
+            if (!userAddress) return
+            this.axios
+                .get(`https://darshprotocol.onrender.com/notifications?to=${userAddress.toLowerCase()}&readAt=0`)
+                .then((response) => {
+                    this.unReadNotifications = response.data
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+        },
     },
     mounted() {
-        this.authenticate();
+        this.authenticate()
     },
-    components: { IconInformation }
+    components: { IconInformation },
 }
 </script>
 
@@ -148,7 +156,7 @@ main {
     border-radius: 4px;
     cursor: pointer;
     user-select: none;
-    transition: .2s;
+    transition: 0.2s;
 }
 
 .connected {
@@ -177,7 +185,7 @@ main {
     justify-content: center;
     cursor: pointer;
     user-select: none;
-    transition: .2s;
+    transition: 0.2s;
     position: relative;
 }
 

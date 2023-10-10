@@ -14,7 +14,7 @@
                         <div>
                             <p>{{ $toMoney($fromWei(getPrincipal())) }}</p>
                             <div class="click_1">
-                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
+                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
                                 <p>{{ $findAsset(offer.principalToken).symbol }}</p>
                             </div>
                         </div>
@@ -26,8 +26,15 @@
                         <p>Duration</p>
                         <div>
                             <div class="input">
-                                <input type="number" disabled :style="getInputWidth(daysToMaturity)" placeholder="0" min="5"
-                                    max="60" v-model="daysToMaturity">
+                                <input
+                                    type="number"
+                                    disabled
+                                    :style="getInputWidth(daysToMaturity)"
+                                    placeholder="0"
+                                    min="5"
+                                    max="60"
+                                    v-model="daysToMaturity"
+                                />
                                 <span>days</span>
                             </div>
                             <div class="clicks">
@@ -44,8 +51,15 @@
                         <p>Interest</p>
                         <div>
                             <div class="input">
-                                <input type="number" disabled :style="getInputWidth(interest)" placeholder="0" min="1" max="50"
-                                    v-model="interest">
+                                <input
+                                    type="number"
+                                    disabled
+                                    :style="getInputWidth(interest)"
+                                    placeholder="0"
+                                    min="1"
+                                    max="50"
+                                    v-model="interest"
+                                />
                                 <span>%</span>
                             </div>
                             <div class="clicks">
@@ -63,13 +77,17 @@
                         <div>
                             <p>{{ $toMoney($fromWei(collateralAmount)) }}</p>
                             <div class="click_1" v-on:click="dropDown = !dropDown">
-                                <img :src="`/images/${$findAsset(collateralToken).image}.png`" alt="">
+                                <img :src="`/images/${$findAsset(collateralToken).image}.png`" alt="" />
                                 <p>{{ $findAsset(collateralToken).symbol }}</p>
                                 <IconArrowDown />
                                 <div class="drop_down" v-show="dropDown">
-                                    <div class="drop_item" v-for="address in collateralTokens()" :key="address"
-                                        v-on:click="collateralToken = address">
-                                        <img :src="`/images/${$findAsset(address).image}.png`" alt="">
+                                    <div
+                                        class="drop_item"
+                                        v-for="address in collateralTokens()"
+                                        :key="address"
+                                        v-on:click="collateralToken = address"
+                                    >
+                                        <img :src="`/images/${$findAsset(address).image}.png`" alt="" />
                                         <p>{{ $findAsset(address).symbol }}</p>
                                     </div>
                                 </div>
@@ -80,8 +98,14 @@
                         <p>Request Expires in</p>
                         <div>
                             <div class="input">
-                                <input type="number" disabled :style="getInputWidth(hoursToExpire)" placeholder="0" min="0"
-                                    v-model="hoursToExpire">
+                                <input
+                                    type="number"
+                                    disabled
+                                    :style="getInputWidth(hoursToExpire)"
+                                    placeholder="0"
+                                    min="0"
+                                    v-model="hoursToExpire"
+                                />
                                 <span>hrs</span>
                             </div>
                             <div class="clicks">
@@ -94,18 +118,26 @@
                             </div>
                         </div>
                         <div>
-                            <input type="checkbox" name="" id="">
+                            <input type="checkbox" name="" id="" />
                             <p>Read and Agreed to our <a href="" target="_blank">Terms & Policy?</a></p>
                         </div>
                     </div>
                     <div>
-                        <PrimaryButton :progress="fetchingPrice || approving" :state="(fetchingPrice || approving) ? 'disable' : ''"
-                            v-on:click="!(fetchingPrice || approving) ? approve() : null" :text="'Approve'"
-                            v-if="Number($fromWei(allowance)) < Number($fromWei(collateralAmount))" />
+                        <PrimaryButton
+                            :progress="fetchingPrice || approving"
+                            :state="fetchingPrice || approving ? 'disable' : ''"
+                            v-on:click="!(fetchingPrice || approving) ? approve() : null"
+                            :text="'Approve'"
+                            v-if="Number($fromWei(allowance)) < Number($fromWei(collateralAmount))"
+                        />
 
-                        <PrimaryButton :progress="fetchingPrice || requesting" :state="(fetchingPrice || requesting) ? 'disable' : ''"
-                            v-else v-on:click="!(fetchingPrice || requesting) ? createRequest() : null"
-                            :text="'Make Request'" />
+                        <PrimaryButton
+                            :progress="fetchingPrice || requesting"
+                            :state="fetchingPrice || requesting ? 'disable' : ''"
+                            v-else
+                            v-on:click="!(fetchingPrice || requesting) ? createRequest() : null"
+                            :text="'Make Request'"
+                        />
                     </div>
                 </div>
             </div>
@@ -114,50 +146,50 @@
 </template>
 
 <script setup>
-import Slider from '@vueform/slider'
-import IconClose from '../../../icons/IconClose.vue';
-import IconMinus from '../../../icons/IconMinus.vue';
-import IconPlus from '../../../icons/IconPlus.vue';
-import PrimaryButton from '../../../PrimaryButton.vue';
-import IconArrowDown from '../../../icons/IconArrowDown.vue';
+import Slider from "@vueform/slider"
+import IconClose from "../../../icons/IconClose.vue"
+import IconMinus from "../../../icons/IconMinus.vue"
+import IconPlus from "../../../icons/IconPlus.vue"
+import PrimaryButton from "../../../PrimaryButton.vue"
+import IconArrowDown from "../../../icons/IconArrowDown.vue"
 </script>
 
 <script>
-import LtvAPI from '../../../../scripts/LtvAPI';
-import Authentication from '../../../../scripts/Authentication'
-import LendingPoolAPI from '../../../../scripts/LendingPoolAPI'
-import { messages } from '../../../../reactives/messages';
+import LtvAPI from "../../../../scripts/LtvAPI"
+import Authentication from "../../../../scripts/Authentication"
+import LendingPoolAPI from "../../../../scripts/LendingPoolAPI"
+import { messages } from "../../../../reactives/messages"
 export default {
-    props: ['offer'],
+    props: ["offer"],
     data() {
         return {
             percentage: 25,
             collateralToken: this.offer.collateralTokens[0],
-            allowance: '0',
-            collateralAmount: '0',
+            allowance: "0",
+            collateralAmount: "0",
             interest: 0,
             daysToMaturity: this.offer.daysToMaturity,
             hoursToExpire: 24,
             fetchingPrice: false,
             approving: false,
             requesting: false,
-            dropDown: false
+            dropDown: false,
         }
     },
     watch: {
         hoursToExpire: function (value) {
             if (value > 24) {
-                this.hoursToExpire = 24;
+                this.hoursToExpire = 24
             }
         },
         daysToMaturity: function (value) {
             if (value > 60) {
-                this.daysToMaturity = 60;
+                this.daysToMaturity = 60
             }
         },
         interest: function (value) {
             if (value > 50) {
-                this.interest = 50;
+                this.interest = 50
             }
         },
         percentage: function () {
@@ -165,12 +197,12 @@ export default {
         },
         collateralToken: function () {
             this.getCollateralAmount()
-        }
+        },
     },
     methods: {
         collateralTokens: function () {
             let tokens = []
-            this.offer.collateralTokens.forEach(token => {
+            this.offer.collateralTokens.forEach((token) => {
                 if (token != this.collateralToken) {
                     tokens.push(token)
                 }
@@ -206,11 +238,7 @@ export default {
         },
         approve: async function () {
             this.approving = true
-            await this.$approve(
-                await Authentication.userAddress(),
-                this.collateralToken,
-                LendingPoolAPI.address
-            )
+            await this.$approve(await Authentication.userAddress(), this.collateralToken, LendingPoolAPI.address)
             this.approving = false
             this.getAllowance()
         },
@@ -223,10 +251,10 @@ export default {
         },
         createRequest: async function () {
             this.requesting = true
-            
+
             let principalAmount = this.$fromWei(this.getPrincipal())
             let targetProfit = (this.interest / 100) * principalAmount
-            let targetDurationInSecs = this.daysToMaturity * 24 * 60 * 60;
+            let targetDurationInSecs = this.daysToMaturity * 24 * 60 * 60
             let calcInterest = (targetProfit * 100) / (principalAmount * targetDurationInSecs)
 
             const trx = await LendingPoolAPI.createBorrowingRequest(
@@ -242,77 +270,73 @@ export default {
 
             if (trx && trx.tx) {
                 messages.insertMessage({
-                    title: 'Request placed',
-                    description: 'Borrow request successfully created.',
-                    type: 'success',
-                    linkTitle: 'View Trx',
-                    linkUrl: `https://testnet.ftmscan.com/tx/${trx.tx}`
+                    title: "Request placed",
+                    description: "Borrow request successfully created.",
+                    type: "success",
+                    linkTitle: "View Trx",
+                    linkUrl: `https://testnet.ftmscan.com/tx/${trx.tx}`,
                 })
             } else {
                 messages.insertMessage({
-                    title: 'Request failed',
-                    description: 'Borrow request failed to create.',
-                    type: 'failed'
+                    title: "Request failed",
+                    description: "Borrow request failed to create.",
+                    type: "failed",
                 })
             }
-            
-            this.$emit('done')
-            this.$emit('close')
-            
+
+            this.$emit("done")
+            this.$emit("close")
+
             this.requesting = false
         },
         incrementDuration: function () {
             if (this.daysToMaturity < 60) {
-                this.daysToMaturity += 5;
+                this.daysToMaturity += 5
             }
         },
         decrementDuration: function () {
             if (this.daysToMaturity > 5) {
-                this.daysToMaturity -= 5;
+                this.daysToMaturity -= 5
             }
         },
         incrementExpire: function () {
             if (this.hoursToExpire < 24) {
-                this.hoursToExpire += 1;
+                this.hoursToExpire += 1
             }
         },
         decrementExpire: function () {
             if (this.hoursToExpire > 1) {
-                this.hoursToExpire -= 1;
+                this.hoursToExpire -= 1
             }
         },
         incrementInterest: function () {
             if (this.interest < 50) {
-                this.interest += 0.5;
+                this.interest += 0.5
             }
         },
         decrementInterest: function () {
             if (this.interest > 1) {
-                this.interest -= 0.5;
+                this.interest -= 0.5
             }
         },
         getInputWidth: function (value) {
-            let minWidth = 25;
-            let spacePerLength = 20;
-            let calWidth = value.toString().length * spacePerLength;
-            if (calWidth < minWidth)
-                calWidth = minWidth;
-            return `width: ${calWidth}px;`;
-        }
+            let minWidth = 25
+            let spacePerLength = 20
+            let calWidth = value.toString().length * spacePerLength
+            if (calWidth < minWidth) calWidth = minWidth
+            return `width: ${calWidth}px;`
+        },
     },
     mounted() {
         this.getCollateralAmount()
-        let interest = this.getInterest(
-            this.offer.interest, 
-            this.offer.daysToMaturity
-        )
+        let interest = this.getInterest(this.offer.interest, this.offer.daysToMaturity)
         this.interest = Number(interest)
-        
-        document.body.classList.add('modal')
+
+        document.body.classList.add("modal")
     },
     unmounted() {
-        document.body.classList.remove('modal')
-    }
+        document.body.classList.remove("modal")
+    },
 }
 </script>
 
@@ -330,15 +354,14 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: fade_in .2s ease-in-out;
+    animation: fade_in 0.2s ease-in-out;
 }
-
 
 .scroll {
     border-radius: 6px;
     overflow: hidden;
     position: relative;
-    animation: slide_in_up .2s ease-in-out;
+    animation: slide_in_up 0.2s ease-in-out;
 }
 
 .scroll_box {
@@ -370,8 +393,6 @@ main {
 }
 
 .title h3 {
-
-
     font-weight: 500;
     font-size: 16px;
     color: var(--textnormal);
@@ -388,7 +409,7 @@ main {
     justify-content: center;
 }
 
-.box>div:nth-child(2) {
+.box > div:nth-child(2) {
     margin: 0 30px;
     padding-top: 30px;
     margin-bottom: 40px;
@@ -406,14 +427,12 @@ main {
     margin-bottom: 20px;
 }
 
-
 .input {
     display: flex;
     align-items: center;
 }
 
-.option>div:nth-child(2) input {
-
+.option > div:nth-child(2) input {
     background: transparent;
     border: none;
     outline: none;
@@ -423,20 +442,18 @@ main {
     color: var(--textnormal);
 }
 
-.option>div:nth-child(2) .input span {
+.option > div:nth-child(2) .input span {
     color: var(--textdimmed);
     font-size: 25px;
 }
 
-.option>p {
-
-
+.option > p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textdimmed);
 }
 
-.option>div:nth-child(2) {
+.option > div:nth-child(2) {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -444,13 +461,13 @@ main {
     border-bottom: 1px solid var(--background);
 }
 
-.option>div:nth-child(2) .clicks {
+.option > div:nth-child(2) .clicks {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.option>div:nth-child(2) .click {
+.option > div:nth-child(2) .click {
     height: 50px;
     width: 50px;
     background: var(--bglighter);
@@ -462,7 +479,7 @@ main {
     user-select: none;
 }
 
-.option>div:nth-child(2) .click_1 {
+.option > div:nth-child(2) .click_1 {
     height: 50px;
     padding: 0 20px;
     background: var(--bglighter);
@@ -476,63 +493,55 @@ main {
     position: relative;
 }
 
-.option>div:nth-child(2) img {
+.option > div:nth-child(2) img {
     width: 24px;
     height: 24px;
 }
 
-.option>div:nth-child(2) p:first-child {
-
-
+.option > div:nth-child(2) p:first-child {
     font-weight: 500;
     font-size: 25px;
     color: var(--textnormal);
 }
 
-.option>div:nth-child(2) p:first-child span {
+.option > div:nth-child(2) p:first-child span {
     color: var(--textdimmed);
 }
 
-.option>div:nth-child(2)>div>p {
-
-
+.option > div:nth-child(2) > div > p {
     font-weight: 400;
     font-size: 14px;
     color: var(--textnormal);
 }
 
-.option>div:nth-child(3) {
+.option > div:nth-child(3) {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-top: 50px;
 }
 
-.option>div:nth-child(3) p {
-
-
+.option > div:nth-child(3) p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textdimmed);
 }
 
-
-.option>div:nth-child(3) a {
+.option > div:nth-child(3) a {
     color: var(--primary);
     border-bottom: 1px var(--primary) solid;
 }
 
-.box>div:nth-child(8) {
+.box > div:nth-child(8) {
     width: 100%;
     padding: 30px;
-    background-image: url('/images/subtle_gradient.png');
+    background-image: url("/images/subtle_gradient.png");
     background-size: cover;
     background-repeat: no-repeat;
     position: absolute;
     bottom: 0;
     left: 0;
 }
-
 
 .drop_down {
     position: absolute;
@@ -567,8 +576,6 @@ main {
 }
 
 .drop_item p {
-
-
     font-weight: 400;
     font-size: 14px;
     color: var(--textnormal);

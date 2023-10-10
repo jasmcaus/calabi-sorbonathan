@@ -29,7 +29,7 @@
                     <tr>
                         <td>
                             <div>
-                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
+                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
                                 <p>{{ $toMoney($fromWei(getPrincipal(request.percentage))) }}</p>
                             </div>
                         </td>
@@ -41,7 +41,7 @@
                         </td>
                         <td>
                             <div>
-                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
+                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
                                 <p>{{ $toMoney(getPayback(request)) }}</p>
                             </div>
                         </td>
@@ -53,7 +53,7 @@
                         </td>
                         <td>
                             <div>
-                                <img :src="`/images/${$findAsset(request.collateralToken).image}.png`" alt="">
+                                <img :src="`/images/${$findAsset(request.collateralToken).image}.png`" alt="" />
                                 <p>{{ $toMoney($fromWei(request.collateralAmount), 3) }}</p>
                             </div>
                         </td>
@@ -61,8 +61,7 @@
                             <p>{{ getExpire(request) }} hours</p>
                         </td>
                         <td>
-                            <div v-on:click="setRequestAction('accept', request)" class="action accept">
-                                Accept</div>
+                            <div v-on:click="setRequestAction('accept', request)" class="action accept">Accept</div>
                         </td>
                         <td>
                             <div v-on:click="setRequestAction('reject', request)" class="action reject">Reject</div>
@@ -79,24 +78,29 @@
                 </tbody>
             </div>
             <div class="t_empty" v-if="sortRequests(offer.requests).length == 0">
-                <img src="../../../../assets/images/receipt-text.png" alt="">
+                <img src="../../../../assets/images/receipt-text.png" alt="" />
                 <p>No Borrow Requests found.</p>
             </div>
         </table>
 
-        <RequestPopUpInfo :offer="offer" v-on:done="$emit('done')" :requestAction="requestAction" v-if="requestAction"
-            v-on:close="requestAction = null" />
+        <RequestPopUpInfo
+            :offer="offer"
+            v-on:done="$emit('done')"
+            :requestAction="requestAction"
+            v-if="requestAction"
+            v-on:close="requestAction = null"
+        />
     </main>
 </template>
 
 <script setup>
-import Authentication from '../../../../scripts/Authentication';
-import IconClock from '../../../icons/IconClock.vue';
-import IconInterest from '../../../icons/IconInterest.vue';
-import IconOut from '../../../icons/IconOut.vue';
-import IconSort from '../../../icons/IconSort.vue';
-import RequestPopUpInfo from '../../discover/lenders/RequestPopUpInfo.vue';
-</script >
+import Authentication from "../../../../scripts/Authentication"
+import IconClock from "../../../icons/IconClock.vue"
+import IconInterest from "../../../icons/IconInterest.vue"
+import IconOut from "../../../icons/IconOut.vue"
+import IconSort from "../../../icons/IconSort.vue"
+import RequestPopUpInfo from "../../discover/lenders/RequestPopUpInfo.vue"
+</script>
 
 <script>
 export default {
@@ -106,53 +110,52 @@ export default {
             activeRequest: "",
             userAddress: "",
             requestAction: null,
-            accepting: -1
-        };
+            accepting: -1,
+        }
     },
     methods: {
         sortRequests: function (requests) {
-            return requests.filter(request => request.state == 0);
+            return requests.filter((request) => request.state == 0)
         },
         setRequestAction: function (action, request) {
             this.requestAction = {
                 action: action,
-                request: request
-            };
+                request: request,
+            }
         },
         getPrincipal: function (percentage) {
-            let principal = this.offer.initialPrincipal * (percentage / 100);
-            return principal.toString();
+            let principal = this.offer.initialPrincipal * (percentage / 100)
+            return principal.toString()
         },
         getPayback: function (request) {
-            let accrued = this.$fromWei(this.getAccrued(request));
-            let principal = this.$fromWei(this.getPrincipal(request.percentage));
-            return Number(accrued) + Number(principal);
+            let accrued = this.$fromWei(this.getAccrued(request))
+            let principal = this.$fromWei(this.getPrincipal(request.percentage))
+            return Number(accrued) + Number(principal)
         },
         getAccrued: function (request) {
-            let duration = request.daysToMaturity * 24 * 60 * 60;
-            let interest = this.$fromWei(request.interest);
-            let principalAmount = (this.getPrincipal(request.percentage));
-            let accrued = (principalAmount * interest * duration) / 100;
-            return accrued;
+            let duration = request.daysToMaturity * 24 * 60 * 60
+            let interest = this.$fromWei(request.interest)
+            let principalAmount = this.getPrincipal(request.percentage)
+            let accrued = (principalAmount * interest * duration) / 100
+            return accrued
         },
         getInterest: function (rate, daysToMaturity) {
-            let result = rate * daysToMaturity * 24 * 60 * 60;
-            let interest = this.$fromWei(result.toString());
-            return this.$toMoney(interest);
+            let result = rate * daysToMaturity * 24 * 60 * 60
+            let interest = this.$fromWei(result.toString())
+            return this.$toMoney(interest)
         },
         getExpire: function (request) {
-            let expire = request.expiresAt;
-            let now = Date.now() / 1000;
-            let elasped = expire - now;
-            if (elasped <= 0)
-                return 0;
-            return (elasped / 60 / 60).toFixed(0);
+            let expire = request.expiresAt
+            let now = Date.now() / 1000
+            let elasped = expire - now
+            if (elasped <= 0) return 0
+            return (elasped / 60 / 60).toFixed(0)
         },
     },
     async created() {
-        this.userAddress = await Authentication.userAddress();
+        this.userAddress = await Authentication.userAddress()
     },
-    components: { IconClock, IconInterest }
+    components: { IconClock, IconInterest },
 }
 </script>
 
@@ -164,7 +167,6 @@ export default {
     height: 40px;
     border-bottom: 1px solid var(--bglightest);
 }
-
 
 .table_head .title {
     display: flex;

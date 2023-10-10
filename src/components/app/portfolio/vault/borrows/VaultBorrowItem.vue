@@ -1,7 +1,7 @@
 <template>
     <p v-if="!userAddress && !authenticating">Connect Wallet</p>
 
-    <div class="progress_box" v-if="(authenticating || fetching && userAddress != null)">
+    <div class="progress_box" v-if="authenticating || (fetching && userAddress != null)">
         <ProgressBox />
     </div>
 
@@ -13,7 +13,7 @@
                 <div class="principal" v-if="loan.lender == userAddress.toLowerCase()">
                     <p class="label">Principal Locked</p>
                     <div>
-                        <img :src="`/images/${$findAsset(loan.principalToken).image}.png`" alt="">
+                        <img :src="`/images/${$findAsset(loan.principalToken).image}.png`" alt="" />
                         <p>
                             {{ $toMoney($fromWei(loan.currentPrincipal)) }}
                             {{ $findAsset(loan.principalToken).symbol }}
@@ -24,14 +24,13 @@
                 <div class="principal" v-else-if="offer.creator == userAddress.toLowerCase()">
                     <p class="label">Collateral Locked</p>
                     <div>
-                        <img :src="`/images/${$findAsset(offer.collateralToken).image}.png`" alt="">
+                        <img :src="`/images/${$findAsset(offer.collateralToken).image}.png`" alt="" />
                         <p>
                             {{ $toMoney($fromWei(offer.initialCollateral)) }}
                             {{ $findAsset(offer.collateralToken).symbol }}
                         </p>
                     </div>
                 </div>
-
 
                 <!---->
                 <div class="apy" v-if="loan.lender == userAddress.toLowerCase()">
@@ -68,18 +67,16 @@
                             <p class="light_text">Time Locked</p>
                         </div>
 
-
                         <!---->
                         <div>
                             <IconChart />
-                            <p class="deep_text">{{
-                                $nFormat(
-                                    ($fromWei(loan.initialPrincipal)) -
-                                    ($fromWei(loan.currentPrincipal))
-                                )
-                            }}<span>/{{ $nFormat($fromWei(loan.initialPrincipal)) }}
+                            <p class="deep_text">
+                                {{ $nFormat($fromWei(loan.initialPrincipal) - $fromWei(loan.currentPrincipal))
+                                }}<span
+                                    >/{{ $nFormat($fromWei(loan.initialPrincipal)) }}
                                     {{ $findAsset(loan.principalToken).symbol }}
-                                </span></p>
+                                </span>
+                            </p>
                             <p class="light_text">Amount Locked</p>
                         </div>
                     </div>
@@ -87,7 +84,7 @@
                         <div class="total_emitted">
                             <div class="total_emitted_tokens">
                                 <div class="images">
-                                    <img :src="`/images/${$findAsset(loan.collateralToken).image}.png`" alt="">
+                                    <img :src="`/images/${$findAsset(loan.collateralToken).image}.png`" alt="" />
                                 </div>
                                 <p>~ $0.00</p>
                             </div>
@@ -110,15 +107,15 @@
                         <div>
                             <p class="emission_grid_label">Principal's</p>
                             <div class="emission_grid_token">
-                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
+                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
                                 <p>0.00</p>
                             </div>
                         </div>
                         <div>
                             <p class="emission_grid_label">Collateral's</p>
                             <div class="emission_grid_token">
-                                <p>0.00 </p>
-                                <img :src="`/images/${$findAsset(offer.collateralToken).image}.png`" alt="">
+                                <p>0.00</p>
+                                <img :src="`/images/${$findAsset(offer.collateralToken).image}.png`" alt="" />
                             </div>
                         </div>
                     </div>
@@ -142,11 +139,13 @@
                         </div>
                         <div>
                             <IconChart />
-                            <p class="deep_text">{{
-                                $nFormat($fromWei(offer.currentCollateral))
-                            }}<span>/{{ $nFormat($fromWei(offer.initialCollateral)) }}
+                            <p class="deep_text">
+                                {{ $nFormat($fromWei(offer.currentCollateral))
+                                }}<span
+                                    >/{{ $nFormat($fromWei(offer.initialCollateral)) }}
                                     {{ $findAsset(offer.collateralToken).symbol }}
-                                </span></p>
+                                </span>
+                            </p>
                             <p class="light_text">Amount Locked</p>
                         </div>
                     </div>
@@ -154,23 +153,32 @@
             </div>
             <div class="second_box">
                 <div class="emission">
-                    <h3 class="emission_title">Unlocked
+                    <h3 class="emission_title">
+                        Unlocked
                         <IconInformation :color="'var(--textdimmed)'" :stripe="'var(--textnormal)'" />
                     </h3>
                     <div class="emission_grid">
                         <div>
                             <p class="emission_grid_label">Collateral</p>
                             <div class="emission_grid_token">
-                                <img :src="`/images/${$findAsset(offer.collateralToken).image}.png`" alt="">
-                                <p>{{ $toMoney($fromWei(allLoans.unClaimedCollateral)) }} {{
-                                    $findAsset(offer.collateralToken).symbol }}</p>
+                                <img :src="`/images/${$findAsset(offer.collateralToken).image}.png`" alt="" />
+                                <p>
+                                    {{ $toMoney($fromWei(allLoans.unClaimedCollateral)) }}
+                                    {{ $findAsset(offer.collateralToken).symbol }}
+                                </p>
                             </div>
                         </div>
                         <div class="emission_action2">
-                            <PrimaryButton :progress="claimingCollateral"
-                                :state="(claimingCollateral || allLoans.unClaimedCollateral == 0) ? 'disable' : ''"
-                                v-on:click="!(claimingCollateral || allLoans.unClaimedCollateral == 0) ? claimCollateral() : null"
-                                :text="'Claim'" />
+                            <PrimaryButton
+                                :progress="claimingCollateral"
+                                :state="claimingCollateral || allLoans.unClaimedCollateral == 0 ? 'disable' : ''"
+                                v-on:click="
+                                    !(claimingCollateral || allLoans.unClaimedCollateral == 0)
+                                        ? claimCollateral()
+                                        : null
+                                "
+                                :text="'Claim'"
+                            />
                         </div>
                     </div>
                 </div>
@@ -182,68 +190,70 @@
 </template>
 
 <script setup>
-import IconChart from '../../../../icons/IconChart.vue';
-import IconClock from '../../../../icons/IconClock.vue';
-import IconInfo from '../../../../icons/IconInfo.vue';
-import IconInformation from '../../../../icons/IconInformation.vue';
-import IconOut from '../../../../icons/IconOut.vue';
-import PrimaryButton from '../../../../PrimaryButton.vue';
-import HistoryTable from './HistoryTable.vue'
-import ProgressBox from '../../../../ProgressBox.vue';
+import IconChart from "../../../../icons/IconChart.vue"
+import IconClock from "../../../../icons/IconClock.vue"
+import IconInfo from "../../../../icons/IconInfo.vue"
+import IconInformation from "../../../../icons/IconInformation.vue"
+import IconOut from "../../../../icons/IconOut.vue"
+import PrimaryButton from "../../../../PrimaryButton.vue"
+import HistoryTable from "./HistoryTable.vue"
+import ProgressBox from "../../../../ProgressBox.vue"
 </script>
 
 <script>
-import Authentication from '../../../../../scripts/Authentication';
-import IconCalendar from '../../../../icons/IconCalendar.vue';
-import LendingPoolAPI from '../../../../../scripts/LendingPoolAPI';
-import { messages } from '../../../../../reactives/messages';
+import Authentication from "../../../../../scripts/Authentication"
+import IconCalendar from "../../../../icons/IconCalendar.vue"
+import LendingPoolAPI from "../../../../../scripts/LendingPoolAPI"
+import { messages } from "../../../../../reactives/messages"
 export default {
     data() {
         return {
             userAddress: null,
             fetching: true,
             offer: null,
-            daysAgoForLaon: '',
-            daysAgoForOffer: '',
+            daysAgoForLaon: "",
+            daysAgoForOffer: "",
             authenticating: true,
             loan: false,
             claimingCollateral: false,
             allLoans: {
-                unClaimedCollateral: 0
-            }
-        };
+                unClaimedCollateral: 0,
+            },
+        }
     },
     methods: {
         fetchOffer: async function (fetching) {
-            let id = this.$route.params.id;
-            this.fetching = fetching;
+            let id = this.$route.params.id
+            this.fetching = fetching
             if (this.userAddress == null) {
-                return;
+                return
             }
 
-            this.axios.get(`https://darshprotocol.onrender.com/offers/${id}?creator=${this.userAddress.toLowerCase()}`).then(response => {
-                this.offer = response.data;
-                this.fetching = false;
+            this.axios
+                .get(`https://darshprotocol.onrender.com/offers/${id}?creator=${this.userAddress.toLowerCase()}`)
+                .then((response) => {
+                    this.offer = response.data
+                    this.fetching = false
 
-                this.daysAgoForOffer = this.getDaysAgo(this.offer.createdAt)
+                    this.daysAgoForOffer = this.getDaysAgo(this.offer.createdAt)
 
-                if (this.offer.creator != this.userAddress.toLowerCase()) {
-                    this.offer.loans.forEach(loan => {
-                        if (loan.lender == this.userAddress.toLowerCase()) {
-                            this.loan = loan
-                            this.daysAgoForLaon = this.getDaysAgo(this.loan.startDate)
-                        }
+                    if (this.offer.creator != this.userAddress.toLowerCase()) {
+                        this.offer.loans.forEach((loan) => {
+                            if (loan.lender == this.userAddress.toLowerCase()) {
+                                this.loan = loan
+                                this.daysAgoForLaon = this.getDaysAgo(this.loan.startDate)
+                            }
+                        })
+                    }
+
+                    this.allLoans.unClaimedCollateral = 0
+                    this.offer.loans.forEach((loan) => {
+                        this.allLoans.unClaimedCollateral += loan.unClaimedCollateral
                     })
-                }
-
-                this.allLoans.unClaimedCollateral = 0
-                this.offer.loans.forEach(loan => {
-                    this.allLoans.unClaimedCollateral += loan.unClaimedCollateral
                 })
-
-            }).catch(error => {
-                console.error(error);
-            });
+                .catch((error) => {
+                    console.error(error)
+                })
         },
         getDaysAgo: function (createdAt) {
             let now = Date.now() / 1000
@@ -258,41 +268,38 @@ export default {
             this.claimingCollateral = true
 
             for (let index = 0; index < this.offer.loans.length; index++) {
-                const loan = this.offer.loans[index];
+                const loan = this.offer.loans[index]
 
                 if (loan.unClaimedCollateral == 0) continue
 
-                const trx = await LendingPoolAPI.claimCollateral(
-                    loan.loanId,
-                    await Authentication.userAddress()
-                )
+                const trx = await LendingPoolAPI.claimCollateral(loan.loanId, await Authentication.userAddress())
 
                 if (trx && trx.tx) {
                     messages.insertMessage({
-                        title: 'Collateral claimed',
-                        description: 'Collateral was successfully claimed.',
-                        type: 'success',
-                        linkTitle: 'View Trx',
-                        linkUrl: `https://testnet.ftmscan.com/tx/${trx.tx}`
+                        title: "Collateral claimed",
+                        description: "Collateral was successfully claimed.",
+                        type: "success",
+                        linkTitle: "View Trx",
+                        linkUrl: `https://testnet.ftmscan.com/tx/${trx.tx}`,
                     })
                 } else {
                     messages.insertMessage({
-                        title: 'Claim failed',
-                        description: 'Collateral failed to claim.',
-                        type: 'failed'
+                        title: "Claim failed",
+                        description: "Collateral failed to claim.",
+                        type: "failed",
                     })
                 }
             }
 
             this.fetchOffer(false)
             this.claimingCollateral = false
-        }
+        },
     },
     async created() {
-        this.userAddress = await Authentication.userAddress();
+        this.userAddress = await Authentication.userAddress()
         this.authenticating = false
-        this.fetchOffer(true);
-    }
+        this.fetchOffer(true)
+    },
 }
 </script>
 
@@ -332,22 +339,22 @@ main {
     color: var(--textdimmed);
 }
 
-.principal>div {
+.principal > div {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-top: 16px;
 }
 
-.principal>div img {
+.principal > div img {
     width: 34px;
     height: 34px;
 }
 
-.principal>div p {
+.principal > div p {
     font-size: 25px;
     color: var(--textnormal);
-    font-family: 'Axiforma SemiBold';
+    font-family: "Axiforma SemiBold";
 }
 
 .apy {
@@ -356,7 +363,7 @@ main {
     align-items: flex-end;
 }
 
-.apy>div {
+.apy > div {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -367,7 +374,7 @@ main {
     margin-top: 16px;
 }
 
-.apy>div p {
+.apy > div p {
     font-size: 14px;
     color: var(--textnormal);
 }
@@ -384,7 +391,6 @@ main {
     gap: 20px;
     margin-top: 34px;
 }
-
 
 .go_to_vault {
     display: flex;
@@ -424,11 +430,11 @@ main {
     border-bottom: 2px solid var(--background);
 }
 
-.offer .first_row>div:first-child {
+.offer .first_row > div:first-child {
     border-right: 2px solid var(--background);
 }
 
-.offer .first_row>div {
+.offer .first_row > div {
     padding: 30px 10px;
     display: flex;
     flex-direction: column;
@@ -525,7 +531,7 @@ main {
     background-color: var(--bglight);
     border-radius: 6px;
     overflow: hidden;
-    background-image: url('/images/vault_emission.png');
+    background-image: url("/images/vault_emission.png");
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -548,18 +554,18 @@ main {
     border-bottom: 2px solid var(--background);
 }
 
-.emission_grid>div {
+.emission_grid > div {
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding: 20px 30px;
 }
 
-.emission_grid>div:first-child {
+.emission_grid > div:first-child {
     padding-right: 4px;
 }
 
-.emission_grid>div:last-child {
+.emission_grid > div:last-child {
     align-items: flex-end;
     border-left: 2px solid var(--background);
 }
@@ -589,7 +595,7 @@ main {
 .emission_action {
     padding: 30px;
     background-color: var(--bglighter);
-    background-image: url('/images/subtle_gradient.png');
+    background-image: url("/images/subtle_gradient.png");
 }
 
 .table {
@@ -606,7 +612,7 @@ main {
     border: none;
 }
 
-.dashboard2 .emission_grid>div {
+.dashboard2 .emission_grid > div {
     padding: 15px 30px;
 }
 </style>

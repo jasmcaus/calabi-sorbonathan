@@ -17,13 +17,14 @@
                     </div>
                     <div class="tokens">
                         <div>
-                            <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
-                            <p>{{ $toMoney($fromWei(offer.initialPrincipal)) }} {{
-                                $findAsset(offer.principalToken).symbol
-                            }}</p>
+                            <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
+                            <p>
+                                {{ $toMoney($fromWei(offer.initialPrincipal)) }}
+                                {{ $findAsset(offer.principalToken).symbol }}
+                            </p>
                         </div>
                         <div>
-                            <img :src="`/images/${$findAsset(offer.collateralToken).image}.png`" alt="">
+                            <img :src="`/images/${$findAsset(offer.collateralToken).image}.png`" alt="" />
                             <p>{{ $toMoney($fromWei(offer.initialCollateral)) }}</p>
                         </div>
                     </div>
@@ -47,9 +48,12 @@
                         <div class="borrowed">
                             <div>
                                 <IconChart class="icon" />
-                                <p><span>{{ $toMoney($fromWei(offer.initialPrincipal - offer.currentPrincipal)) }}</span>/
-                                    {{
-                                        $toMoney($fromWei(offer.initialPrincipal)) }}</p>
+                                <p>
+                                    <span>{{
+                                        $toMoney($fromWei(offer.initialPrincipal - offer.currentPrincipal))
+                                    }}</span
+                                    >/ {{ $toMoney($fromWei(offer.initialPrincipal)) }}
+                                </p>
                             </div>
                             <p>Lent</p>
                         </div>
@@ -63,9 +67,12 @@
                                     <div class="extra_user">0</div>
                                 </div>
                                 <div class="users" v-else>
-                                    <div class="img" v-for="loan, index in offer.loans" :id="`img_lender${index}`"
-                                        :key="index">
-                                    </div>
+                                    <div
+                                        class="img"
+                                        v-for="(loan, index) in offer.loans"
+                                        :id="`img_lender${index}`"
+                                        :key="index"
+                                    ></div>
                                     <div class="extra_user">{{ offer.loans.length }}</div>
                                 </div>
 
@@ -81,7 +88,11 @@
                             </div>
                         </div>
                         <div class="borrow">
-                            <PrimaryButton v-if="lenderLoan || userType != 'lender'" :text="'Lend'" :state="'disable'" />
+                            <PrimaryButton
+                                v-if="lenderLoan || userType != 'lender'"
+                                :text="'Lend'"
+                                :state="'disable'"
+                            />
                             <PrimaryButton v-else v-on:click="onLend()" :text="'Lend'" />
                         </div>
                     </div>
@@ -94,8 +105,11 @@
                                 <IconSort />
                                 <p>Sort By</p>
                             </div>
-                            <div class="request_button" v-if="!lenderLoan && userType == 'lender' && !lenderRequest"
-                                v-on:click="request = true">
+                            <div
+                                class="request_button"
+                                v-if="!lenderLoan && userType == 'lender' && !lenderRequest"
+                                v-on:click="request = true"
+                            >
                                 <IconAdd />
                                 <p>Request</p>
                             </div>
@@ -107,7 +121,7 @@
                     </div>
                     <RequestTable :offer="offer" />
                     <div class="t_empty" v-if="sortRequests(offer.requests).length == 0">
-                        <img src="../../../../assets/images/receipt-text.png" alt="">
+                        <img src="../../../../assets/images/receipt-text.png" alt="" />
                         <p>No Lend Requests found.</p>
                     </div>
                 </div>
@@ -129,8 +143,14 @@
                             <PrimaryButton class="manage_offer_button" :text="'Manage Offer'" />
                         </RouterLink>
                     </div>
-                    <LoanBoxes v-on:payback="payback = $event" v-on:info="loanInfo = $event" :offer="offer"
-                        :lenderLoan="lenderLoan" :userType="userType" v-on:done="fetchBorrowingOffer(false)" />
+                    <LoanBoxes
+                        v-on:payback="payback = $event"
+                        v-on:info="loanInfo = $event"
+                        :offer="offer"
+                        :lenderLoan="lenderLoan"
+                        :userType="userType"
+                        v-on:done="fetchBorrowingOffer(false)"
+                    />
 
                     <BorrowerStats v-if="userType != 'borrower'" v-on:profile="profile = true" :score="lenderScore" />
                 </div>
@@ -139,44 +159,58 @@
 
         <ProfilePopUp :userType="'Borrower'" :address="offer.creator" v-if="profile" v-on:close="profile = false" />
 
-        <LendRequestPopUp v-on:done="fetchBorrowingOffer(false)" :offer="offer" v-if="request"
-            v-on:close="request = false" />
+        <LendRequestPopUp
+            v-on:done="fetchBorrowingOffer(false)"
+            :offer="offer"
+            v-if="request"
+            v-on:close="request = false"
+        />
 
-        <LoanPayBackPopUp v-on:done="fetchBorrowingOffer(false)" :loan="payback" v-if="payback"
-            v-on:close="payback = false" />
+        <LoanPayBackPopUp
+            v-on:done="fetchBorrowingOffer(false)"
+            :loan="payback"
+            v-if="payback"
+            v-on:close="payback = false"
+        />
 
         <LendPopUp v-on:done="fetchBorrowingOffer(false)" v-if="lend" :offer="offer" v-on:close="lend = false" />
 
-        <LoanInfoPopUp :claimer="userType == 'borrower'" v-on:payback="paybackCall()" v-on:done="fetchBorrowingOffer(false)" :loan="loanInfo" v-if="loanInfo"
-            v-on:close="loanInfo = false" />
+        <LoanInfoPopUp
+            :claimer="userType == 'borrower'"
+            v-on:payback="paybackCall()"
+            v-on:done="fetchBorrowingOffer(false)"
+            :loan="loanInfo"
+            v-if="loanInfo"
+            v-on:close="loanInfo = false"
+        />
     </main>
 </template>
 
 <script setup>
-import LendPopUp from './LendPopUp.vue'
-import LoanInfoPopUp from '../LoanInfoPopUp.vue'
-import IconClock from '../../../icons/IconClock.vue';
-import IconAdd from '../../../icons/IconAdd.vue'
-import IconChart from '../../../icons/IconChart.vue'
-import RequestTable from './RequestTable.vue'
-import PrimaryButton from '../../../PrimaryButton.vue';
-import IconInterest from '../../../icons/IconInterest.vue';
-import ProgressBox from '../../../ProgressBox.vue'
-import IconSort from '../../../icons/IconSort.vue';
-import LoanPayBackPopUp from '../LoanPayBackPopUp.vue';
-import LendRequestPopUp from './LendRequestPopUp.vue';
-import LoanBoxes from './LoanBoxes.vue';
-import BorrowerStats from './BorrowerStats.vue';
+import LendPopUp from "./LendPopUp.vue"
+import LoanInfoPopUp from "../LoanInfoPopUp.vue"
+import IconClock from "../../../icons/IconClock.vue"
+import IconAdd from "../../../icons/IconAdd.vue"
+import IconChart from "../../../icons/IconChart.vue"
+import RequestTable from "./RequestTable.vue"
+import PrimaryButton from "../../../PrimaryButton.vue"
+import IconInterest from "../../../icons/IconInterest.vue"
+import ProgressBox from "../../../ProgressBox.vue"
+import IconSort from "../../../icons/IconSort.vue"
+import LoanPayBackPopUp from "../LoanPayBackPopUp.vue"
+import LendRequestPopUp from "./LendRequestPopUp.vue"
+import LoanBoxes from "./LoanBoxes.vue"
+import BorrowerStats from "./BorrowerStats.vue"
 </script>
 
 <script>
-import { messages } from '../../../../reactives/messages';
-import Countdown from '../../../../utils/Countdown';
-import Authentication from '../../../../scripts/Authentication';
-import DarshScore from '../../../../scripts/DarshScore'
-import IconInformation from '../../../icons/IconInformation.vue';
-import Profile from '../../../../scripts/Profile';
-import ProfilePopUp from '../ProfilePopUp.vue';
+import { messages } from "../../../../reactives/messages"
+import Countdown from "../../../../utils/Countdown"
+import Authentication from "../../../../scripts/Authentication"
+import DarshScore from "../../../../scripts/DarshScore"
+import IconInformation from "../../../icons/IconInformation.vue"
+import Profile from "../../../../scripts/Profile"
+import ProfilePopUp from "../ProfilePopUp.vue"
 export default {
     components: {
         LendPopUp,
@@ -194,24 +228,24 @@ export default {
         LoanBoxes,
         BorrowerStats,
         IconInformation,
-        ProfilePopUp
+        ProfilePopUp,
     },
     data() {
         return {
             offer: null,
-            countdown: '',
+            countdown: "",
             fetching: true,
-            userType: 'none',
+            userType: "none",
             lenderLoan: null,
             lenderRequest: null,
             userAddress: null,
             loanInfo: null,
-            lenderScore: '•••',
+            lenderScore: "•••",
             lend: false,
             payback: false,
             request: false,
-            profile: false
-        };
+            profile: false,
+        }
     },
     async created() {
         this.fetchBorrowingOffer()
@@ -221,9 +255,9 @@ export default {
         onLend: function () {
             if (this.lenderRequest) {
                 messages.insertMessage({
-                    title: 'Action failed',
-                    description: 'Cancel Lend Request to Lend a loan.',
-                    type: 'failed'
+                    title: "Action failed",
+                    description: "Cancel Lend Request to Lend a loan.",
+                    type: "failed",
                 })
                 return
             }
@@ -242,41 +276,41 @@ export default {
             return this.$toMoney(interest)
         },
         fetchBorrowingOffer: async function (fetching = true) {
-            this.fetching = fetching;
-            let id = this.$route.params.id;
+            this.fetching = fetching
+            let id = this.$route.params.id
             try {
                 let response = await this.axios.get(`https://darshprotocol.onrender.com/offers/${id}`)
                 this.offer = response.data
 
                 if (this.userAddress) {
                     if (this.offer.creator.toLowerCase() == this.userAddress.toLowerCase()) {
-                        this.userType = 'borrower'
+                        this.userType = "borrower"
                     } else {
-                        this.userType = 'lender'
+                        this.userType = "lender"
                     }
 
-                    this.offer.loans.forEach(loan => {
+                    this.offer.loans.forEach((loan) => {
                         if (loan.lender.toLowerCase() == this.userAddress) {
                             this.lenderLoan = loan
                             return
                         }
                     })
-                    this.offer.requests.forEach(request => {
+                    this.offer.requests.forEach((request) => {
                         if (request.creator.toLowerCase() == this.userAddress) {
                             this.lenderRequest = request
                             return
                         }
                     })
                 } else {
-                    this.userType = 'none'
+                    this.userType = "none"
                 }
 
-                this.fetching = false;
+                this.fetching = false
                 this.startCountdown()
                 this.getBorrowerScore(this.offer.creator)
                 this.generateImages()
             } catch (error) {
-                console.error(error);
+                console.error(error)
             }
         },
         paybackCall: function () {
@@ -287,18 +321,18 @@ export default {
             this.lenderScore = await DarshScore.getDarshScore(address)
         },
         sortRequests: function (requests) {
-            return requests.filter(request => request.state == 0);
+            return requests.filter((request) => request.state == 0)
         },
         generateImages: function () {
             if (this.offer) {
                 let el = Profile.generate(36, this.offer.creator)
-                let dom = document.getElementById('img_borrower')
+                let dom = document.getElementById("img_borrower")
                 if (dom && dom.childNodes.length == 0) {
                     dom.appendChild(el)
                 }
 
                 for (let index = 0; index < this.offer.loans.length; index++) {
-                    const loan = this.offer.loans[index];
+                    const loan = this.offer.loans[index]
                     let elx = Profile.generate(32, loan.lender)
                     let domx = document.getElementById(`img_lender${index}`)
                     if (domx && domx.childNodes.length == 0) {
@@ -306,14 +340,14 @@ export default {
                     }
                 }
             }
-        }
+        },
     },
     mounted() {
         this.generateImages()
     },
     updated() {
         this.generateImages()
-    }
+    },
 }
 </script>
 
@@ -333,45 +367,45 @@ export default {
     margin-top: 60px;
 }
 
-.asset>div {
+.asset > div {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.asset>.label>p {
+.asset > .label > p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textdimmed);
 }
 
-.asset>.label {
+.asset > .label {
     margin-bottom: 16px;
 }
 
-.asset .tokens>div {
+.asset .tokens > div {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.asset .tokens>div p {
-    font-family: 'Axiforma SemiBold';
+.asset .tokens > div p {
+    font-family: "Axiforma SemiBold";
     font-weight: 500;
     font-size: 25px;
     margin-top: 6px;
     color: var(--textnormal);
 }
 
-.asset .tokens>div:first-child img {
+.asset .tokens > div:first-child img {
     width: 34px;
 }
 
-.asset .tokens>div:nth-child(2) img {
+.asset .tokens > div:nth-child(2) img {
     width: 18px;
 }
 
-.asset .tokens>div:nth-child(2) {
+.asset .tokens > div:nth-child(2) {
     padding: 0 8px;
     gap: 8px;
     height: 30px;
@@ -382,7 +416,7 @@ export default {
     border-radius: 4px;
 }
 
-.asset .tokens>div:nth-child(2) p {
+.asset .tokens > div:nth-child(2) p {
     font-weight: 400;
     font-size: 14px;
 }
@@ -395,7 +429,7 @@ export default {
     overflow: hidden;
 }
 
-.info>div:first-child {
+.info > div:first-child {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     border-bottom: 2px solid var(--background);
@@ -411,44 +445,42 @@ export default {
     height: 25px;
 }
 
-.info>div>div>p {
+.info > div > div > p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textdimmed);
     margin-top: 10px;
 }
 
-.info>div:first-child>div>div {
+.info > div:first-child > div > div {
     display: flex;
     align-items: center;
     flex-direction: column;
     gap: 16px;
 }
 
-
-.info>div>div {
+.info > div > div {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.info>div:first-child>div {
+.info > div:first-child > div {
     padding: 30px;
 }
 
-.info>div:nth-child(2)>div {
+.info > div:nth-child(2) > div {
     padding: 26px;
 }
 
-.info>div>div>div p,
-.info>div>div>div span {
+.info > div > div > div p,
+.info > div > div > div span {
     font-weight: 500;
     font-size: 20px;
     color: var(--textnormal);
 }
 
-
-.info>div .borrowed>div p {
+.info > div .borrowed > div p {
     color: var(--textdimmed);
     font-size: 14px;
 }
@@ -460,7 +492,7 @@ export default {
     grid-template-columns: 400px 200px;
 }
 
-.expire>div:first-child {
+.expire > div:first-child {
     border-right: 2px solid var(--background);
 }
 
@@ -558,13 +590,13 @@ export default {
     color: var(--textnormal);
 }
 
-.request_toolbar>div {
+.request_toolbar > div {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
-.request_toolbar>div>div {
+.request_toolbar > div > div {
     gap: 10px;
     padding: 10px 20px;
     background: var(--bglight);
@@ -574,7 +606,7 @@ export default {
     justify-content: center;
 }
 
-.request_toolbar>div>div p {
+.request_toolbar > div > div p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textnormal);
@@ -606,13 +638,13 @@ export default {
     align-items: flex-end;
 }
 
-.created>p {
+.created > p {
     font-weight: 500;
     font-size: 12px;
     color: var(--textdimmed);
 }
 
-.created>div {
+.created > div {
     height: 56px;
     margin-top: 10px;
     background: var(--bglight);
@@ -623,7 +655,7 @@ export default {
     padding: 0 20px;
 }
 
-.created>div>div {
+.created > div > div {
     text-align: right;
 }
 
@@ -637,7 +669,7 @@ export default {
     width: 200px;
 }
 
-.created>div>div p:first-child {
+.created > div > div p:first-child {
     font-weight: 500;
     font-size: 12px;
     color: var(--textnormal);
@@ -648,7 +680,7 @@ export default {
     height: 36px;
 }
 
-.created>div>div p:nth-child(2) {
+.created > div > div p:nth-child(2) {
     font-weight: 500;
     font-size: 12px;
     color: var(--textdimmed);

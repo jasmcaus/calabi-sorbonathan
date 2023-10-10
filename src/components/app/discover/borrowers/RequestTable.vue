@@ -15,13 +15,15 @@
                 </tr>
             </thead>
             <div class="tbody">
-                <tbody v-for="request in sortRequests(offer.requests)"
-                    :class="(request.creator == userAddress.toLowerCase() ? 'owned ' + ('state' + request.state) : '')"
-                    :key="request._id">
+                <tbody
+                    v-for="request in sortRequests(offer.requests)"
+                    :class="request.creator == userAddress.toLowerCase() ? 'owned ' + ('state' + request.state) : ''"
+                    :key="request._id"
+                >
                     <tr>
                         <td>
                             <div>
-                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
+                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
                                 <p>{{ $toMoney($fromWei(getPrincipal(request.percentage))) }}</p>
                             </div>
                         </td>
@@ -33,7 +35,7 @@
                         </td>
                         <td>
                             <div>
-                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
+                                <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
                                 <p>{{ $toMoney(getPayback(request)) }}</p>
                             </div>
                         </td>
@@ -45,7 +47,7 @@
                         </td>
                         <td>
                             <div>
-                                <img :src="`/images/${$findAsset(offer.collateralToken).image}.png`" alt="">
+                                <img :src="`/images/${$findAsset(offer.collateralToken).image}.png`" alt="" />
                                 <p>{{ $toMoney($fromWei(getCollateralAmount(request))) }}</p>
                             </div>
                         </td>
@@ -96,23 +98,33 @@
             </div>
         </table>
 
-        <RequestPopUpInfo :offer="offer" :requestAction="requestAction" v-if="requestAction"
-            v-on:close="requestAction = null" v-on:done="$emit('done')" />
+        <RequestPopUpInfo
+            :offer="offer"
+            :requestAction="requestAction"
+            v-if="requestAction"
+            v-on:close="requestAction = null"
+            v-on:done="$emit('done')"
+        />
 
-        <RequestPopUpInfoCancel :offer="offer" :request="cancelRequest" v-on:done="$emit('done')" v-if="cancelRequest"
-            v-on:close="cancelRequest = null" />
+        <RequestPopUpInfoCancel
+            :offer="offer"
+            :request="cancelRequest"
+            v-on:done="$emit('done')"
+            v-if="cancelRequest"
+            v-on:close="cancelRequest = null"
+        />
     </main>
 </template>
 
 <script setup>
-import Authentication from '../../../../scripts/Authentication';
-import IconClock from '../../../icons/IconClock.vue';
-import IconClose from '../../../icons/IconClose.vue';
-import IconInterest from '../../../icons/IconInterest.vue';
-import IconMenu from '../../../icons/IconMenu.vue'
-import IconOut from '../../../icons/IconOut.vue';
-import RequestPopUpInfo from './RequestPopUpInfo.vue';
-import RequestPopUpInfoCancel from './RequestPopUpInfoCancel.vue';
+import Authentication from "../../../../scripts/Authentication"
+import IconClock from "../../../icons/IconClock.vue"
+import IconClose from "../../../icons/IconClose.vue"
+import IconInterest from "../../../icons/IconInterest.vue"
+import IconMenu from "../../../icons/IconMenu.vue"
+import IconOut from "../../../icons/IconOut.vue"
+import RequestPopUpInfo from "./RequestPopUpInfo.vue"
+import RequestPopUpInfoCancel from "./RequestPopUpInfoCancel.vue"
 </script>
 
 <script>
@@ -125,24 +137,26 @@ export default {
             userAddress: "",
             requestAction: null,
             cancelRequest: null,
-            claimRequest: null
-        };
+            claimRequest: null,
+        }
     },
     methods: {
         sortRequests: function (requests) {
             if (this.userAddress == null || this.offer.creator == this.userAddress.toLowerCase()) {
-                return requests.filter(request => request.state == 0);
-            }
-            else {
-                const result = requests.filter(request => request.state == 0)
-                return result.sort((a, b) => (b.creator == this.userAddress.toLowerCase()) - (a.creator == this.userAddress.toLowerCase()));
+                return requests.filter((request) => request.state == 0)
+            } else {
+                const result = requests.filter((request) => request.state == 0)
+                return result.sort(
+                    (a, b) =>
+                        (b.creator == this.userAddress.toLowerCase()) - (a.creator == this.userAddress.toLowerCase())
+                )
             }
         },
         setRequestAction: function (action, request) {
             this.requestAction = {
                 action: action,
-                request: request
-            };
+                request: request,
+            }
         },
         openMenu: function (request) {
             if (request.state == 0) {
@@ -154,47 +168,46 @@ export default {
             }
         },
         isCreator: function () {
-            return this.userAddress && this.offer.creator.toLowerCase() == this.userAddress.toLowerCase();
+            return this.userAddress && this.offer.creator.toLowerCase() == this.userAddress.toLowerCase()
         },
         isLender: function (request) {
-            return this.userAddress && request.creator.toLowerCase() == this.userAddress.toLowerCase();
+            return this.userAddress && request.creator.toLowerCase() == this.userAddress.toLowerCase()
         },
         getPrincipal: function (percentage) {
-            let principal = this.offer.initialPrincipal * (percentage / 100);
-            return principal.toString();
+            let principal = this.offer.initialPrincipal * (percentage / 100)
+            return principal.toString()
         },
         getInterest: function (rate, daysToMaturity) {
-            let result = rate * daysToMaturity * 24 * 60 * 60;
-            let interest = this.$fromWei(result.toString());
-            return this.$toMoney(interest);
+            let result = rate * daysToMaturity * 24 * 60 * 60
+            let interest = this.$fromWei(result.toString())
+            return this.$toMoney(interest)
         },
         getAccrued: function (request) {
-            let duration = request.daysToMaturity * 24 * 60 * 60;
-            let interest = this.$fromWei(request.interest);
-            let principalAmount = (this.getPrincipal(request.percentage));
-            let accrued = (principalAmount * interest * duration) / 100;
-            return accrued;
+            let duration = request.daysToMaturity * 24 * 60 * 60
+            let interest = this.$fromWei(request.interest)
+            let principalAmount = this.getPrincipal(request.percentage)
+            let accrued = (principalAmount * interest * duration) / 100
+            return accrued
         },
         getExpire: function (request) {
-            let expire = request.expiresAt;
-            let now = Date.now() / 1000;
-            let elasped = expire - now;
-            if (elasped <= 0)
-                return 0;
-            return (elasped / 60 / 60).toFixed(0);
+            let expire = request.expiresAt
+            let now = Date.now() / 1000
+            let elasped = expire - now
+            if (elasped <= 0) return 0
+            return (elasped / 60 / 60).toFixed(0)
         },
         getPayback: function (request) {
-            let accrued = this.$fromWei(this.getAccrued(request));
-            let principal = this.$fromWei(this.getPrincipal(request.percentage));
-            return Number(accrued) + Number(principal);
+            let accrued = this.$fromWei(this.getAccrued(request))
+            let principal = this.$fromWei(this.getPrincipal(request.percentage))
+            return Number(accrued) + Number(principal)
         },
         getCollateralAmount: function (request) {
-            let collateral = this.offer.initialCollateral * (request.percentage / 100);
-            return collateral.toString();
-        }
+            let collateral = this.offer.initialCollateral * (request.percentage / 100)
+            return collateral.toString()
+        },
     },
     async created() {
-        this.userAddress = await Authentication.userAddress();
+        this.userAddress = await Authentication.userAddress()
     },
 }
 </script>
@@ -285,7 +298,7 @@ tbody:nth-child(even) {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: .2s;
+    transition: 0.2s;
 }
 
 .request_table .menu:hover {
@@ -322,18 +335,17 @@ tbody:nth-child(even) .overlay {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
 }
 
-.overlay>div {
+.overlay > div {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.overlay>div:first-child {
+.overlay > div:first-child {
     border-right: 1px solid var(--background);
 }
 
-
-.overlay_1>div:nth-child(2) {
+.overlay_1 > div:nth-child(2) {
     border-right: 1px solid var(--background);
 }
 
@@ -341,7 +353,7 @@ tbody:nth-child(even) .overlay {
     gap: 8px;
 }
 
-.overlay>div div {
+.overlay > div div {
     height: 26px;
     border-radius: 4px;
     padding: 0 20px;
@@ -352,19 +364,19 @@ tbody:nth-child(even) .overlay {
     color: var(--textnormal);
 }
 
-.overlay>div:first-child .action {
+.overlay > div:first-child .action {
     background: rgba(108, 110, 115, 0.1);
 }
 
-.overlay>div:nth-child(2) .action {
+.overlay > div:nth-child(2) .action {
     background: rgba(105, 54, 245, 0.1);
 }
 
-.overlay_1>div:first-child .action {
+.overlay_1 > div:first-child .action {
     background: rgba(139, 187, 37, 0.08);
 }
 
-.overlay_1>div:nth-child(2) .action {
+.overlay_1 > div:nth-child(2) .action {
     background: rgba(233, 71, 3, 0.08);
 }
 
@@ -387,19 +399,18 @@ tbody:nth-child(even) .overlay {
     cursor: pointer;
 }
 
-
 /* state */
 .owned .menu {
     background: var(--primary);
 }
 
 .state0 {
-    background: #1C172C !important;
+    background: #1c172c !important;
     border-bottom: 1px solid var(--primary);
 }
 
 .state0 .overlay {
-    background: #1C172C;
+    background: #1c172c;
 }
 
 .state1 {

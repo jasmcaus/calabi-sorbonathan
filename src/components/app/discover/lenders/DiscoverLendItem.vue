@@ -13,14 +13,19 @@
                     </div>
                     <div class="tokens">
                         <div>
-                            <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
-                            <p>{{ $toMoney($fromWei(offer.initialPrincipal)) }} {{
-                                $findAsset(offer.principalToken).symbol
-                            }}</p>
+                            <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
+                            <p>
+                                {{ $toMoney($fromWei(offer.initialPrincipal)) }}
+                                {{ $findAsset(offer.principalToken).symbol }}
+                            </p>
                         </div>
                         <div>
-                            <img v-for="address in offer.collateralTokens" :src="`/images/${$findAsset(address).image}.png`"
-                                :key="address" alt="">
+                            <img
+                                v-for="address in offer.collateralTokens"
+                                :src="`/images/${$findAsset(address).image}.png`"
+                                :key="address"
+                                alt=""
+                            />
                         </div>
                     </div>
                 </div>
@@ -43,8 +48,12 @@
                         <div class="borrowed">
                             <div>
                                 <IconChart class="icon" />
-                                <p><span>{{ $toMoney($fromWei(offer.initialPrincipal - offer.currentPrincipal)) }}</span>/{{
-                                    $toMoney($fromWei(offer.initialPrincipal)) }}</p>
+                                <p>
+                                    <span>{{
+                                        $toMoney($fromWei(offer.initialPrincipal - offer.currentPrincipal))
+                                    }}</span
+                                    >/{{ $toMoney($fromWei(offer.initialPrincipal)) }}
+                                </p>
                             </div>
                             <p>Borrowed</p>
                         </div>
@@ -58,9 +67,12 @@
                                     <div class="extra_user">0</div>
                                 </div>
                                 <div class="users" v-else>
-                                    <div class="img" v-for="loan, index in offer.loans" :id="`img_borrower${index}`"
-                                        :key="index">
-                                    </div>
+                                    <div
+                                        class="img"
+                                        v-for="(loan, index) in offer.loans"
+                                        :id="`img_borrower${index}`"
+                                        :key="index"
+                                    ></div>
                                     <div class="extra_user">{{ offer.loans.length }}</div>
                                 </div>
 
@@ -76,8 +88,11 @@
                             </div>
                         </div>
                         <div class="borrow">
-                            <PrimaryButton v-if="borrowerLoan || userType != 'borrower'" :text="'Borrow'"
-                                :state="'disable'" />
+                            <PrimaryButton
+                                v-if="borrowerLoan || userType != 'borrower'"
+                                :text="'Borrow'"
+                                :state="'disable'"
+                            />
                             <PrimaryButton v-else v-on:click="onBorrow()" :text="'Borrow'" />
                         </div>
                     </div>
@@ -90,8 +105,11 @@
                                 <IconSort />
                                 <p>Sort By</p>
                             </div>
-                            <div class="request_button" v-if="!borrowerLoan && userType == 'borrower' && !borrowerRequest"
-                                v-on:click="request = true">
+                            <div
+                                class="request_button"
+                                v-if="!borrowerLoan && userType == 'borrower' && !borrowerRequest"
+                                v-on:click="request = true"
+                            >
                                 <IconAdd />
                                 <p>Request</p>
                             </div>
@@ -108,17 +126,20 @@
                 <div class="sticky">
                     <div class="vault" v-if="borrowerLoan && borrowerLoan.unClaimedCollateral > 0">
                         <RouterLink :to="`/portfolio/vaults/lends/${$route.params.id}`">
-                        <div class="go_to_vault">
-                            <div>
-                                <p class="vault_title">Unclaimed collateral</p>
-                                <div class="vault_token">
-                                    <img :src="`/images/${$findAsset(borrowerLoan.collateralToken).image}.png`" alt="">
-                                    <p>{{ $toMoney($fromWei(borrowerLoan.unClaimedCollateral)) }}</p>
+                            <div class="go_to_vault">
+                                <div>
+                                    <p class="vault_title">Unclaimed collateral</p>
+                                    <div class="vault_token">
+                                        <img
+                                            :src="`/images/${$findAsset(borrowerLoan.collateralToken).image}.png`"
+                                            alt=""
+                                        />
+                                        <p>{{ $toMoney($fromWei(borrowerLoan.unClaimedCollateral)) }}</p>
+                                    </div>
                                 </div>
+                                <IconOut :color="'var(--textnormal)'" />
                             </div>
-                            <IconOut :color="'var(--textnormal)'" />
-                        </div>
-                    </RouterLink>
+                        </RouterLink>
                     </div>
                     <div class="created" v-else-if="userType != 'lender'">
                         <p>Owned by</p>
@@ -136,8 +157,15 @@
                         </RouterLink>
                     </div>
 
-                    <LoanBoxes refs="loanBoxes" v-on:payback="payback = true" v-on:info="loanInfo = $event" :offer="offer"
-                        :borrowerLoan="borrowerLoan" :userType="userType" v-on:done="fetchLendingOffer(false)" />
+                    <LoanBoxes
+                        refs="loanBoxes"
+                        v-on:payback="payback = true"
+                        v-on:info="loanInfo = $event"
+                        :offer="offer"
+                        :borrowerLoan="borrowerLoan"
+                        :userType="userType"
+                        v-on:done="fetchLendingOffer(false)"
+                    />
 
                     <BorrowerStats v-on:profile="profile = true" v-if="userType != 'lender'" :score="lenderScore" />
                 </div>
@@ -146,45 +174,59 @@
 
         <ProfilePopUp :userType="'Lender'" :address="offer.creator" v-if="profile" v-on:close="profile = false" />
 
-        <BorrowRequestPopUp v-on:done="fetchLendingOffer(false)" :offer="offer" v-if="request"
-            v-on:close="request = false" />
+        <BorrowRequestPopUp
+            v-on:done="fetchLendingOffer(false)"
+            :offer="offer"
+            v-if="request"
+            v-on:close="request = false"
+        />
 
-        <LoanPayBackPopUp :loan="borrowerLoan" v-if="payback" v-on:done="fetchLendingOffer(false)"
-            v-on:close="payback = false" />
+        <LoanPayBackPopUp
+            :loan="borrowerLoan"
+            v-if="payback"
+            v-on:done="fetchLendingOffer(false)"
+            v-on:close="payback = false"
+        />
 
         <BorrowPopUp v-on:done="fetchLendingOffer(false)" v-if="borrow" :offer="offer" v-on:close="borrow = false" />
 
-        <LoanInfoPopUp :claimer="userType == 'lender'" v-on:payback="paybackCall()" v-on:done="fetchLendingOffer(false)" :loan="loanInfo"
-            v-if="loanInfo" v-on:close="loanInfo = false" />
+        <LoanInfoPopUp
+            :claimer="userType == 'lender'"
+            v-on:payback="paybackCall()"
+            v-on:done="fetchLendingOffer(false)"
+            :loan="loanInfo"
+            v-if="loanInfo"
+            v-on:close="loanInfo = false"
+        />
     </main>
 </template>
 
 <script setup>
-import BorrowPopUp from '../lenders/BorrowPopUp.vue'
-import LoanInfoPopUp from '../LoanInfoPopUp.vue'
-import IconClock from '../../../icons/IconClock.vue';
-import IconAdd from '../../../icons/IconAdd.vue'
-import IconChart from '../../../icons/IconChart.vue'
-import RequestTable from '../lenders/RequestTable.vue'
-import PrimaryButton from '../../../PrimaryButton.vue';
-import IconInterest from '../../../icons/IconInterest.vue';
-import ProgressBox from '../../../ProgressBox.vue'
-import IconSort from '../../../icons/IconSort.vue';
-import LoanPayBackPopUp from '../LoanPayBackPopUp.vue';
-import BorrowRequestPopUp from './BorrowRequestPopUp.vue';
-import BorrowerStats from './LenderStats.vue';
-import IconInformation from '../../../icons/IconInformation.vue';
-import LoanBoxes from './LoanBoxes.vue';
-import ProfilePopUp from '../ProfilePopUp.vue';
-</script >
+import BorrowPopUp from "../lenders/BorrowPopUp.vue"
+import LoanInfoPopUp from "../LoanInfoPopUp.vue"
+import IconClock from "../../../icons/IconClock.vue"
+import IconAdd from "../../../icons/IconAdd.vue"
+import IconChart from "../../../icons/IconChart.vue"
+import RequestTable from "../lenders/RequestTable.vue"
+import PrimaryButton from "../../../PrimaryButton.vue"
+import IconInterest from "../../../icons/IconInterest.vue"
+import ProgressBox from "../../../ProgressBox.vue"
+import IconSort from "../../../icons/IconSort.vue"
+import LoanPayBackPopUp from "../LoanPayBackPopUp.vue"
+import BorrowRequestPopUp from "./BorrowRequestPopUp.vue"
+import BorrowerStats from "./LenderStats.vue"
+import IconInformation from "../../../icons/IconInformation.vue"
+import LoanBoxes from "./LoanBoxes.vue"
+import ProfilePopUp from "../ProfilePopUp.vue"
+</script>
 
 <script>
-import Countdown from '../../../../utils/Countdown';
-import Authentication from '../../../../scripts/Authentication';
-import DarshScore from '../../../../scripts/DarshScore'
-import { messages } from '../../../../reactives/messages';
-import Profile from '../../../../scripts/Profile';
-import IconOut from '../../../icons/IconOut.vue';
+import Countdown from "../../../../utils/Countdown"
+import Authentication from "../../../../scripts/Authentication"
+import DarshScore from "../../../../scripts/DarshScore"
+import { messages } from "../../../../reactives/messages"
+import Profile from "../../../../scripts/Profile"
+import IconOut from "../../../icons/IconOut.vue"
 export default {
     data() {
         return {
@@ -200,12 +242,12 @@ export default {
             borrow: false,
             payback: false,
             request: false,
-            profile: false
-        };
+            profile: false,
+        }
     },
     async created() {
-        this.fetchLendingOffer();
-        this.userAddress = await Authentication.userAddress();
+        this.fetchLendingOffer()
+        this.userAddress = await Authentication.userAddress()
     },
     methods: {
         onBorrow: function () {
@@ -213,94 +255,91 @@ export default {
                 messages.insertMessage({
                     title: "Action failed",
                     description: "Cancel Borrow Request to Borrow a loan.",
-                    type: "failed"
-                });
-                return;
+                    type: "failed",
+                })
+                return
             }
-            this.borrow = true;
+            this.borrow = true
         },
         startCountdown: function () {
-            let to = this.offer.expiresAt * 1000;
-            let _this = this;
+            let to = this.offer.expiresAt * 1000
+            let _this = this
             Countdown.start(to, (countdown) => {
-                _this.countdown = countdown;
-            });
+                _this.countdown = countdown
+            })
         },
         getInterest: function (rate) {
-            let result = rate * this.offer.daysToMaturity * 24 * 60 * 60;
-            let interest = this.$fromWei(result.toString());
-            return this.$toMoney(interest);
+            let result = rate * this.offer.daysToMaturity * 24 * 60 * 60
+            let interest = this.$fromWei(result.toString())
+            return this.$toMoney(interest)
         },
         fetchLendingOffer: async function (fetching = true) {
-            this.fetching = fetching;
-            let id = this.$route.params.id;
+            this.fetching = fetching
+            let id = this.$route.params.id
             try {
-                let response = await this.axios.get(`https://darshprotocol.onrender.com/offers/${id}`);
-                this.offer = response.data;
+                let response = await this.axios.get(`https://darshprotocol.onrender.com/offers/${id}`)
+                this.offer = response.data
                 if (this.userAddress) {
                     if (this.offer.creator != this.userAddress) {
-                        this.userType = "borrower";
+                        this.userType = "borrower"
+                    } else {
+                        this.userType = "lender"
                     }
-                    else {
-                        this.userType = "lender";
-                    }
-                    this.offer.loans.forEach(loan => {
+                    this.offer.loans.forEach((loan) => {
                         if (loan.borrower.toLowerCase() == this.userAddress) {
-                            this.borrowerLoan = loan;
-                            return;
+                            this.borrowerLoan = loan
+                            return
                         }
-                    });
-                    this.offer.requests.forEach(request => {
+                    })
+                    this.offer.requests.forEach((request) => {
                         if (request.creator.toLowerCase() == this.userAddress && request.state != 3) {
-                            this.borrowerRequest = request;
-                            return;
+                            this.borrowerRequest = request
+                            return
                         }
-                    });
+                    })
+                } else {
+                    this.userType = "none"
                 }
-                else {
-                    this.userType = "none";
-                }
-                this.fetching = false;
-                this.startCountdown();
-                this.getLenderScore(this.offer.creator);
-                this.generateImages();
-            }
-            catch (error) {
-                console.error(error);
+                this.fetching = false
+                this.startCountdown()
+                this.getLenderScore(this.offer.creator)
+                this.generateImages()
+            } catch (error) {
+                console.error(error)
             }
         },
         paybackCall: function () {
-            this.loanInfo = null;
-            this.payback = true;
+            this.loanInfo = null
+            this.payback = true
         },
         getLenderScore: async function (address) {
-            this.lenderScore = await DarshScore.getDarshScore(address);
+            this.lenderScore = await DarshScore.getDarshScore(address)
         },
         generateImages: function () {
             if (this.offer) {
-                let el = Profile.generate(36, this.offer.creator);
-                let dom = document.getElementById("img_lender");
+                let el = Profile.generate(36, this.offer.creator)
+                let dom = document.getElementById("img_lender")
                 if (dom && dom.childNodes.length == 0) {
-                    dom.appendChild(el);
+                    dom.appendChild(el)
                 }
                 for (let index = 0; index < this.offer.loans.length; index++) {
-                    const loan = this.offer.loans[index];
-                    let elx = Profile.generate(32, loan.borrower);
-                    let domx = document.getElementById(`img_borrower${index}`);
+                    const loan = this.offer.loans[index]
+                    let elx = Profile.generate(32, loan.borrower)
+                    let domx = document.getElementById(`img_borrower${index}`)
                     if (domx && domx.childNodes.length == 0) {
-                        domx.appendChild(elx);
+                        domx.appendChild(elx)
                     }
                 }
             }
-        }
+        },
     },
     mounted() {
         this.generateImages()
     },
     updated() {
-        this.generateImages();
+        this.generateImages()
     },
-    components: { IconOut }
+    components: { IconOut },
 }
 </script>
 
@@ -320,50 +359,50 @@ export default {
     margin-top: 60px;
 }
 
-.asset>div {
+.asset > div {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.asset>.label>p {
+.asset > .label > p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textdimmed);
 }
 
-.asset>.label {
+.asset > .label {
     margin-bottom: 16px;
 }
 
-.asset .tokens>div {
+.asset .tokens > div {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.asset .tokens>div p {
-    font-family: 'Axiforma SemiBold';
+.asset .tokens > div p {
+    font-family: "Axiforma SemiBold";
     font-weight: 500;
     font-size: 25px;
     margin-top: 6px;
     color: var(--textnormal);
 }
 
-.asset .tokens>div:first-child img {
+.asset .tokens > div:first-child img {
     width: 34px;
 }
 
-.asset .tokens>div:nth-child(2) img {
+.asset .tokens > div:nth-child(2) img {
     width: 18px;
     margin-left: -18px;
 }
 
-.asset .tokens>div:nth-child(2) img:first-child {
+.asset .tokens > div:nth-child(2) img:first-child {
     margin-left: 0;
 }
 
-.asset .tokens>div:nth-child(2) {
+.asset .tokens > div:nth-child(2) {
     width: 58px;
     height: 30px;
     background: var(--bglighter);
@@ -381,7 +420,7 @@ export default {
     overflow: hidden;
 }
 
-.info>div:first-child {
+.info > div:first-child {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     border-bottom: 2px solid var(--background);
@@ -397,46 +436,42 @@ export default {
     height: 25px;
 }
 
-.info>div>div>p {
+.info > div > div > p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textdimmed);
     margin-top: 10px;
 }
 
-.info>div:first-child>div>div {
+.info > div:first-child > div > div {
     display: flex;
     align-items: center;
     flex-direction: column;
     gap: 16px;
 }
 
-
-.info>div>div {
+.info > div > div {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.info>div:first-child>div {
+.info > div:first-child > div {
     padding: 30px;
 }
 
-.info>div:nth-child(2)>div {
+.info > div:nth-child(2) > div {
     padding: 26px;
 }
 
-.info>div>div>div p,
-.info>div>div>div span {
-
-
+.info > div > div > div p,
+.info > div > div > div span {
     font-weight: 500;
     font-size: 20px;
     color: var(--textnormal);
 }
 
-
-.info>div .borrowed>div p {
+.info > div .borrowed > div p {
     color: var(--textdimmed);
     font-size: 14px;
 }
@@ -448,7 +483,7 @@ export default {
     grid-template-columns: 400px 200px;
 }
 
-.expire>div:first-child {
+.expire > div:first-child {
     border-right: 2px solid var(--background);
 }
 
@@ -527,7 +562,6 @@ export default {
     z-index: 1;
 }
 
-
 /* request_section */
 
 .request_section {
@@ -549,13 +583,13 @@ export default {
     color: var(--textnormal);
 }
 
-.request_toolbar>div {
+.request_toolbar > div {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
-.request_toolbar>div>div {
+.request_toolbar > div > div {
     gap: 10px;
     padding: 10px 20px;
     background: var(--bglight);
@@ -565,7 +599,7 @@ export default {
     justify-content: center;
 }
 
-.request_toolbar>div>div p {
+.request_toolbar > div > div p {
     font-weight: 500;
     font-size: 14px;
     color: var(--textnormal);
@@ -590,7 +624,6 @@ export default {
     top: 150px;
 }
 
-
 .vault {
     display: flex;
     justify-content: flex-end;
@@ -613,7 +646,7 @@ export default {
     padding: 10px;
 }
 
-.go_to_vault>div {
+.go_to_vault > div {
     padding: 0 30px;
 }
 .vault_title {
@@ -645,13 +678,13 @@ export default {
     align-items: flex-end;
 }
 
-.created>p {
+.created > p {
     font-weight: 500;
     font-size: 12px;
     color: var(--textdimmed);
 }
 
-.created>div {
+.created > div {
     height: 56px;
     margin-top: 10px;
     background: var(--bglight);
@@ -662,7 +695,7 @@ export default {
     padding: 0 20px;
 }
 
-.created>div>div {
+.created > div > div {
     text-align: right;
 }
 
@@ -676,7 +709,7 @@ export default {
     width: 200px;
 }
 
-.created>div>div p:first-child {
+.created > div > div p:first-child {
     font-weight: 500;
     font-size: 12px;
     color: var(--textnormal);
@@ -687,7 +720,7 @@ export default {
     height: 36px;
 }
 
-.created>div>div p:nth-child(2) {
+.created > div > div p:nth-child(2) {
     font-weight: 500;
     font-size: 12px;
     color: var(--textdimmed);

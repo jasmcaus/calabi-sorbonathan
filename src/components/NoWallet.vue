@@ -1,7 +1,7 @@
 <template>
     <main>
         <div class="box">
-            <img src="/images/linear_gradient_background.png" alt="">
+            <img src="/images/linear_gradient_background.png" alt="" />
             <div class="box_item">
                 <div class="icon">
                     <div>
@@ -23,28 +23,28 @@
 </template>
 
 <script setup>
-import { messages } from '../reactives/messages';
-import Authentication from '../scripts/Authentication';
-import IconWallet from './icons/IconWallet.vue';
-import PrimaryButton from './PrimaryButton.vue';
+import { messages } from "../reactives/messages"
+import Authentication from "../scripts/Authentication"
+import IconWallet from "./icons/IconWallet.vue"
+import PrimaryButton from "./PrimaryButton.vue"
 </script>
 
 <script>
 export default {
     methods: {
         authenticate: async function () {
-            const userAddress = await Authentication.userAddress(true);
+            const userAddress = await Authentication.userAddress(true)
             if (!userAddress) {
                 messages.insertMessage({
-                    title: 'Failed to connect wallet',
-                    description: 'Please check your network, refresh or try again.',
-                    type: 'failed'
+                    title: "Failed to connect wallet",
+                    description: "Please check your network, refresh or try again.",
+                    type: "failed",
                 })
             } else {
-                this.$router.go();
+                this.$router.go()
             }
-        }
-    }
+        },
+    },
 }
 </script>
 
@@ -84,7 +84,7 @@ img {
     padding: 10px;
 }
 
-.icon>div {
+.icon > div {
     width: 80px;
     height: 80px;
     background: rgba(105, 54, 245, 0.2);
@@ -92,7 +92,7 @@ img {
     padding: 10px;
 }
 
-.icon>div>div {
+.icon > div > div {
     width: 60px;
     height: 60px;
     background: var(--primary);

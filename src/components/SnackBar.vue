@@ -11,16 +11,23 @@
                 </div>
                 <IconClose class="close" v-on:click="removeIndex(index)" />
 
-                <a target="_blank" v-if="message.linkUrl && message.linkUrl != '' && message.linkUrl.startsWith('http')"
-                    v-on:click="removeIndex(index)" :href="message.linkUrl">
+                <a
+                    target="_blank"
+                    v-if="message.linkUrl && message.linkUrl != '' && message.linkUrl.startsWith('http')"
+                    v-on:click="removeIndex(index)"
+                    :href="message.linkUrl"
+                >
                     <div class="link">
                         <p>{{ message.linkTitle }}</p>
                         <IconOut />
                     </div>
                 </a>
 
-                <RouterLink v-else-if="message.linkUrl && message.linkUrl != ''" :to="message.linkUrl"
-                    v-on:click="removeIndex(index)">
+                <RouterLink
+                    v-else-if="message.linkUrl && message.linkUrl != ''"
+                    :to="message.linkUrl"
+                    v-on:click="removeIndex(index)"
+                >
                     <div class="link">
                         <p>{{ message.linkTitle }}</p>
                         <IconOut />
@@ -32,20 +39,20 @@
 </template>
 
 <script setup>
-import IconClose from './icons/IconClose.vue';
-import IconSuccess from './icons/IconSuccess.vue';
-import IconFailed from './icons/IconFailed.vue';
-import IconOut from './icons/IconOut.vue';
+import IconClose from "./icons/IconClose.vue"
+import IconSuccess from "./icons/IconSuccess.vue"
+import IconFailed from "./icons/IconFailed.vue"
+import IconOut from "./icons/IconOut.vue"
 </script>
 
 <script>
-import { messages } from '../reactives/messages';
+import { messages } from "../reactives/messages"
 export default {
     methods: {
         removeIndex: function (index) {
             messages.deleteMessage(index)
-        }
-    }
+        },
+    },
 }
 </script>
 
@@ -70,7 +77,7 @@ export default {
     align-items: center;
     gap: 20px;
     position: relative;
-    animation: slide_in_up .2s ease-in-out;
+    animation: slide_in_up 0.2s ease-in-out;
 }
 
 .indicator {
@@ -109,7 +116,7 @@ export default {
     width: 22px;
     height: 22px;
     border-radius: 4px;
-    background: #1A1B1D;
+    background: #1a1b1d;
     cursor: pointer;
 }
 

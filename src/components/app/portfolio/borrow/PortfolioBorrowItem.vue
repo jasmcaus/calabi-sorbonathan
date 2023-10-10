@@ -3,7 +3,7 @@
         <NoWallet />
     </p>
 
-    <div class="progress_box" v-if="(authenticating || fetching && userAddress != null)">
+    <div class="progress_box" v-if="authenticating || (fetching && userAddress != null)">
         <ProgressBox />
     </div>
 
@@ -42,17 +42,21 @@
         <div class="dashboard">
             <div class="first_row">
                 <div class="first_row_item">
-                    <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
-                    <p class="deep_text">{{ $toMoney($fromWei(offer.initialPrincipal)) }} <span>{{
-                        $findAsset(offer.principalToken).symbol }}</span></p>
+                    <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
+                    <p class="deep_text">
+                        {{ $toMoney($fromWei(offer.initialPrincipal)) }}
+                        <span>{{ $findAsset(offer.principalToken).symbol }}</span>
+                    </p>
                     <p class="light_text">Principal needed</p>
                 </div>
                 <div class="first_row_item">
                     <div class="images">
-                        <img :src="`/images/${$findAsset(offer.collateralToken).image}.png`" alt="">
+                        <img :src="`/images/${$findAsset(offer.collateralToken).image}.png`" alt="" />
                     </div>
-                    <p class="deep_text">{{ $nFormat($fromWei(offer.initialCollateral)) }} <span>{{
-                        $findAsset(offer.collateralToken).symbol }}</span></p>
+                    <p class="deep_text">
+                        {{ $nFormat($fromWei(offer.initialCollateral)) }}
+                        <span>{{ $findAsset(offer.collateralToken).symbol }}</span>
+                    </p>
                     <p class="light_text">My collateral</p>
                 </div>
                 <div class="first_row_item">
@@ -67,9 +71,13 @@
                 </div>
                 <div class="first_row_item">
                     <IconChart />
-                    <p class="deep_text">{{ $nFormat($fromWei(offer.currentCollateral)) }}<span>/{{
-                        $nFormat($fromWei(offer.initialCollateral)) }} {{ $findAsset(offer.collateralToken).symbol
-    }}</span></p>
+                    <p class="deep_text">
+                        {{ $nFormat($fromWei(offer.currentCollateral))
+                        }}<span
+                            >/{{ $nFormat($fromWei(offer.initialCollateral)) }}
+                            {{ $findAsset(offer.collateralToken).symbol }}</span
+                        >
+                    </p>
                     <p class="light_text">Remaining collateral</p>
                 </div>
             </div>
@@ -80,8 +88,12 @@
                         <div class="extra_user">0 <span>Lenders</span></div>
                     </div>
                     <div class="borrowers" v-else>
-                        <div class="img" v-for="(loan, index) in offer.loans" :key="loan.loanId"
-                            :id="`img_portfolio_borrow${index}`"></div>
+                        <div
+                            class="img"
+                            v-for="(loan, index) in offer.loans"
+                            :key="loan.loanId"
+                            :id="`img_portfolio_borrow${index}`"
+                        ></div>
                         <div class="extra_user">{{ offer.loans.length }} <span>Lenders</span></div>
                     </div>
                     <div class="expires_at" v-if="offer.loans.length == 0">
@@ -90,9 +102,9 @@
                     </div>
                     <div class="total_borrowed" v-else>
                         <div>
-                            <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="">
+                            <img :src="`/images/${$findAsset(offer.principalToken).image}.png`" alt="" />
                             <p>
-                                {{ $toMoney(($fromWei(offer.initialPrincipal) - $fromWei(offer.currentPrincipal))) }}
+                                {{ $toMoney($fromWei(offer.initialPrincipal) - $fromWei(offer.currentPrincipal)) }}
                                 {{ $findAsset(offer.principalToken).symbol }}
                             </p>
                         </div>
@@ -110,21 +122,21 @@
 </template>
 
 <script setup>
-import IconOut from '../../../icons/IconOut.vue';
-import IconChart from '../../../icons/IconChart.vue';
-import IconClock from '../../../icons/IconClock.vue';
-import IconInterest from '../../../icons/IconInterest.vue';
-import IconMenu from '../../../icons/IconMenu.vue';
-import PrimaryButton from '../../../PrimaryButton.vue';
-import RequestTable from './RequestTable.vue';
-import ProgressBox from '../../../ProgressBox.vue';
+import IconOut from "../../../icons/IconOut.vue"
+import IconChart from "../../../icons/IconChart.vue"
+import IconClock from "../../../icons/IconClock.vue"
+import IconInterest from "../../../icons/IconInterest.vue"
+import IconMenu from "../../../icons/IconMenu.vue"
+import PrimaryButton from "../../../PrimaryButton.vue"
+import RequestTable from "./RequestTable.vue"
+import ProgressBox from "../../../ProgressBox.vue"
 </script>
 
 <script>
-import Authentication from '../../../../scripts/Authentication';
-import Countdown from '../../../../utils/Countdown';
-import NoWallet from '../../../NoWallet.vue';
-import Profile from '../../../../scripts/Profile';
+import Authentication from "../../../../scripts/Authentication"
+import Countdown from "../../../../utils/Countdown"
+import NoWallet from "../../../NoWallet.vue"
+import Profile from "../../../../scripts/Profile"
 export default {
     data() {
         return {
@@ -133,64 +145,66 @@ export default {
             editOptions: false,
             authenticating: true,
             offer: null,
-            dueDate: ""
-        };
+            dueDate: "",
+        }
     },
     methods: {
         getInterest: function (rate, daysToMaturity) {
-            let result = rate * daysToMaturity * 24 * 60 * 60;
-            let interest = this.$fromWei(result.toString());
-            return this.$toMoney(interest);
+            let result = rate * daysToMaturity * 24 * 60 * 60
+            let interest = this.$fromWei(result.toString())
+            return this.$toMoney(interest)
         },
         getDueDate: function () {
-            let due = this.offer.expiresAt * 1000;
+            let due = this.offer.expiresAt * 1000
             Countdown.start(due, (text) => {
-                this.dueDate = text;
-            });
+                this.dueDate = text
+            })
         },
         fetchBorrowingOffer: async function (fetching) {
-            let id = this.$route.params.id;
-            this.fetching = fetching;
+            let id = this.$route.params.id
+            this.fetching = fetching
             if (this.userAddress == null) {
-                return;
+                return
             }
-            this.axios.get(`https://darshprotocol.onrender.com/offers/${id}?creator=${this.userAddress.toLowerCase()}`).then(response => {
-                this.offer = response.data;
-                this.fetching = false;
-                if (this.offer) {
-                    this.getDueDate();
-                }
-            }).catch(error => {
-                console.error(error);
-                // this.fetching = false;
-            });
+            this.axios
+                .get(`https://darshprotocol.onrender.com/offers/${id}?creator=${this.userAddress.toLowerCase()}`)
+                .then((response) => {
+                    this.offer = response.data
+                    this.fetching = false
+                    if (this.offer) {
+                        this.getDueDate()
+                    }
+                })
+                .catch((error) => {
+                    console.error(error)
+                    // this.fetching = false;
+                })
         },
         generateImages: function () {
             if (this.offer) {
                 for (let index = 0; index < this.offer.loans.length; index++) {
-                    const loan = this.offer.loans[index];
-                    let elx = Profile.generate(40, loan.lender);
-                    let domx = document.getElementById(`img_portfolio_borrow${index}`);
+                    const loan = this.offer.loans[index]
+                    let elx = Profile.generate(40, loan.lender)
+                    let domx = document.getElementById(`img_portfolio_borrow${index}`)
                     if (domx && domx.childNodes.length == 0) {
-                        domx.appendChild(elx);
+                        domx.appendChild(elx)
                     }
-
                 }
             }
-        }
+        },
     },
     async created() {
-        this.userAddress = await Authentication.userAddress();
+        this.userAddress = await Authentication.userAddress()
         this.authenticating = false
-        this.fetchBorrowingOffer(true);
+        this.fetchBorrowingOffer(true)
     },
     mounted() {
         this.generateImages()
     },
     updated() {
-        this.generateImages();
+        this.generateImages()
     },
-    components: { NoWallet }
+    components: { NoWallet },
 }
 </script>
 
@@ -201,7 +215,6 @@ export default {
     justify-content: center;
     margin-top: 200px;
 }
-
 
 .header {
     margin-top: 50px;
@@ -254,7 +267,7 @@ export default {
     justify-content: center;
     background: var(--bglighter);
     border-radius: 2px;
-    transition: .2s;
+    transition: 0.2s;
     cursor: pointer;
     position: relative;
 }
@@ -287,7 +300,6 @@ export default {
 .edit_icon svg {
     width: 18px;
 }
-
 
 .go_to_vault {
     display: flex;
@@ -419,14 +431,13 @@ export default {
     color: var(--textnormal);
 }
 
-
 .total_borrowed {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
 }
 
-.total_borrowed>div {
+.total_borrowed > div {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -442,7 +453,7 @@ export default {
     color: var(--textnormal);
 }
 
-.total_borrowed>p {
+.total_borrowed > p {
     font-size: 12px;
     margin-top: 8px;
     color: var(--textdimmed);
@@ -489,4 +500,5 @@ export default {
 .table {
     padding: 0 60px;
     margin-top: 60px;
-}</style>
+}
+</style>

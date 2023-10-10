@@ -7,7 +7,9 @@
                     <p>Ratings</p>
                     <div class="ratings_item">
                         <IconBadge />
-                        <p><span>{{ userLtv.score }}</span> of 100</p>
+                        <p>
+                            <span>{{ userLtv.score }}</span> of 100
+                        </p>
                     </div>
                 </div>
                 <div :class="`tag ${userLtv.tag}`">
@@ -23,7 +25,8 @@
                 </div>
                 <div class="profile_names">
                     <h3>{{ $shortName(userAddress, 6) }}</h3>
-                    <p class="address">{{ $shortAddress(userAddress, 8, '....') }}
+                    <p class="address">
+                        {{ $shortAddress(userAddress, 8, "....") }}
                         <IconCopy />
                     </p>
                     <div class="profile_stats">
@@ -37,23 +40,29 @@
                 <div class="stat">
                     <div class="stat_item">
                         <p>Active Loans</p>
-                        <p>{{ user ? user.activeLoans : '0' }}</p>
+                        <p>{{ user ? user.activeLoans : "0" }}</p>
                     </div>
                     <div class="stat_item">
                         <p>Total Loans Joined</p>
-                        <p>{{ user ? user.borrowedTimes + user.lentTimes : '0' }}</p>
+                        <p>{{ user ? user.borrowedTimes + user.lentTimes : "0" }}</p>
                     </div>
                 </div>
                 <div class="stat">
                     <div class="stat_item">
                         <p>Loans Defaulted</p>
-                        <p>{{ user ? user.defaultedTimes : '0' }}</p>
+                        <p>{{ user ? user.defaultedTimes : "0" }}</p>
                     </div>
                     <div class="stat_item">
                         <p>Total Loans Volume</p>
-                        <p>${{ user ? $nFormat(
-                            Number($fromWei(user.borrowedVolume)) + Number($fromWei(user.lentVolume))
-                        ) : '0' }}</p>
+                        <p>
+                            ${{
+                                user
+                                    ? $nFormat(
+                                          Number($fromWei(user.borrowedVolume)) + Number($fromWei(user.lentVolume))
+                                      )
+                                    : "0"
+                            }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -102,31 +111,31 @@
 </template>
 
 <script setup>
-import IconInfo from '../../icons/IconInfo.vue';
-import IconSort from '../../icons/IconSort.vue';
-import IconAdd from '../../icons/IconAdd.vue';
-import IconCopy from '../../icons/IconCopy.vue';
-import IconBadge from '../../icons/IconBadge.vue';
+import IconInfo from "../../icons/IconInfo.vue"
+import IconSort from "../../icons/IconSort.vue"
+import IconAdd from "../../icons/IconAdd.vue"
+import IconCopy from "../../icons/IconCopy.vue"
+import IconBadge from "../../icons/IconBadge.vue"
 </script>
 
 <script>
-import Authentication from '../../../scripts/Authentication'
-import Profile from '../../../scripts/Profile';
-import LtvAPI from '../../../scripts/DarshScore';
+import Authentication from "../../../scripts/Authentication"
+import Profile from "../../../scripts/Profile"
+import LtvAPI from "../../../scripts/DarshScore"
 export default {
     data() {
         return {
             userAddress: null,
             fetching: false,
             user: null,
-            userLtv: 0
+            userLtv: 0,
         }
     },
     methods: {
         generateImages: function () {
             if (this.userAddress) {
                 let el = Profile.generate(82, this.userAddress)
-                let dom = document.getElementById('img')
+                let dom = document.getElementById("img")
                 if (dom && dom.childNodes.length == 0) {
                     dom.appendChild(el)
                 }
@@ -138,17 +147,20 @@ export default {
             }
         },
         getProfile: async function () {
-            this.fetching = true;
+            this.fetching = true
             if (this.userAddress == null) {
-                return;
+                return
             }
-            this.axios.get(`https://darshprotocol.onrender.com/users/${this.userAddress}`).then(response => {
-                this.user = response.data;
-                this.fetching = false;
-            }).catch(error => {
-                console.error(error);
-                this.fetching = false;
-            });
+            this.axios
+                .get(`https://darshprotocol.onrender.com/users/${this.userAddress}`)
+                .then((response) => {
+                    this.user = response.data
+                    this.fetching = false
+                })
+                .catch((error) => {
+                    console.error(error)
+                    this.fetching = false
+                })
         },
     },
     async mounted() {
@@ -159,7 +171,7 @@ export default {
     },
     updated() {
         this.generateImages()
-    }
+    },
 }
 </script>
 
@@ -184,14 +196,13 @@ main {
     color: var(--textnormal);
 }
 
-
 .ratings {
     display: flex;
     align-items: center;
     gap: 40px;
 }
 
-.ratings .label>p {
+.ratings .label > p {
     font-size: 12px;
     color: var(--textdimmed);
 }
@@ -219,7 +230,6 @@ main {
     padding: 0 20px;
     border-radius: 2px;
 }
-
 
 .ratings .tag p {
     font-size: 16px;
@@ -346,7 +356,6 @@ main {
     border-right: 1px solid var(--bglighter);
 }
 
-
 .stat_item:last-child {
     padding: 0 20px;
     padding-top: 17px;
@@ -362,7 +371,6 @@ main {
     font-size: 14px;
     color: var(--textnormal);
 }
-
 
 .toolbar {
     width: 100%;
@@ -428,4 +436,5 @@ main {
     font-weight: 500;
     font-size: 14px;
     color: var(--textnormal);
-}</style>
+}
+</style>

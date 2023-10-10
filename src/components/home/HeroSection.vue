@@ -1,11 +1,11 @@
 <script setup>
-import IconArrowRight2 from '../icons/IconArrowRight2.vue';
+import IconArrowRight2 from "../icons/IconArrowRight2.vue"
 </script>
 
 <template>
     <main>
         <div class="home-width">
-            <img class="bgimg" src="/images/home-bg.png" alt="">
+            <img class="bgimg" src="/images/home-bg.png" alt="" />
             <div class="text">
                 <div class="container">
                     <div class="title">
@@ -83,7 +83,7 @@ import IconArrowRight2 from '../icons/IconArrowRight2.vue';
                         </div>
                     </div>
                 </div>
-                <p class="desc">Darsh offers a peer to peer way of lending and borrowing. </p>
+                <p class="desc">Darsh offers a peer to peer way of lending and borrowing.</p>
                 <div class="tabs">
                     <RouterLink to="/discover">
                         <div class="tab">
@@ -106,9 +106,7 @@ import IconArrowRight2 from '../icons/IconArrowRight2.vue';
                 </div>
                 <div class="cta">
                     <RouterLink to="/discover">
-                        <div class="button">
-                            Launch App
-                        </div>
+                        <div class="button">Launch App</div>
                     </RouterLink>
                 </div>
             </div>
@@ -142,7 +140,7 @@ main {
 
 .desc {
     font-size: 22px;
-    color: #9284BC;
+    color: #9284bc;
     margin-top: 30px;
 }
 
@@ -151,7 +149,6 @@ main {
     height: 960px;
     object-fit: cover;
 }
-
 
 .tabs {
     display: grid;
@@ -200,24 +197,6 @@ main {
     font-size: 16px;
     color: var(--textnormal);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @keyframes can {
     0% {
@@ -339,7 +318,6 @@ main {
     grid-row: auto;
 }
 
-
 .word span {
     display: inline-block;
 }
@@ -439,7 +417,7 @@ main {
 }
 
 .title h3 {
-    font-family: 'Axiforma Bold';
+    font-family: "Axiforma Bold";
     font-weight: 700;
     font-size: 68px;
 }

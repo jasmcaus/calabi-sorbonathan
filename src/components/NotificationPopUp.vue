@@ -9,19 +9,25 @@
             </div>
             <div class="tabs">
                 <div class="tab active">
-                    <p>All</p> <span>{{ notifications.length }}</span>
+                    <p>All</p>
+                    <span>{{ notifications.length }}</span>
                 </div>
                 <div class="tab">
-                    <p>Actions</p> <span>0</span>
+                    <p>Actions</p>
+                    <span>0</span>
                 </div>
                 <div class="tab">
-                    <p>Requests</p> <span>{{ notifications.length }}</span>
+                    <p>Requests</p>
+                    <span>{{ notifications.length }}</span>
                 </div>
             </div>
             <div class="scroll">
                 <div class="notifications">
-                    <div v-for="(notification, index) in notifications" :key="index"
-                        :class="notification.readAt == 0 ? 'notification active' : 'notification'">
+                    <div
+                        v-for="(notification, index) in notifications"
+                        :key="index"
+                        :class="notification.readAt == 0 ? 'notification active' : 'notification'"
+                    >
                         <div class="image">
                             <div class="img" :id="`img_notification${index}`"></div>
                         </div>
@@ -37,8 +43,12 @@
                                 <div class="mark_as_read" v-on:click="markAsRead(notification._id)">
                                     <p>Mark as read</p>
                                 </div>
-                                <RouterLink v-on:click="$emit('close')"
-                                    :to="`/discover/${notification.offerType == 0 ? 'lenders' : 'borrowers'}/${notification.offerId}`">
+                                <RouterLink
+                                    v-on:click="$emit('close')"
+                                    :to="`/discover/${notification.offerType == 0 ? 'lenders' : 'borrowers'}/${
+                                        notification.offerId
+                                    }`"
+                                >
                                     <div class="view">
                                         <p>View</p>
                                         <IconOut />
@@ -57,9 +67,9 @@
 </template>
 
 <script setup>
-import Profile from '../scripts/Profile';
-import IconClose from './icons/IconClose.vue';
-import IconOut from './icons/IconOut.vue';
+import Profile from "../scripts/Profile"
+import IconClose from "./icons/IconClose.vue"
+import IconOut from "./icons/IconOut.vue"
 </script>
 
 <script>
@@ -68,7 +78,7 @@ export default {
     data() {
         return {
             notifications: [],
-            fetching: false
+            fetching: false,
         }
     },
     methods: {
@@ -82,52 +92,67 @@ export default {
             }
         },
         markAsRead: async function (id) {
-            this.axios.post(`https://darshprotocol.onrender.com/notifications/mark/${id}`).then(() => {
-                this.getNotifications()
-            }).catch(error => {
-                console.error(error);
-            })
+            this.axios
+                .post(`https://darshprotocol.onrender.com/notifications/mark/${id}`)
+                .then(() => {
+                    this.getNotifications()
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
         },
         markAllAsRead: async function () {
-            this.axios.post(`https://darshprotocol.onrender.com/notifications/markall?to=${this.userAddress.toLowerCase()}`).then(() => {
-                this.getNotifications()
-            }).catch(error => {
-                console.error(error);
-            })
+            this.axios
+                .post(`https://darshprotocol.onrender.com/notifications/markall?to=${this.userAddress.toLowerCase()}`)
+                .then(() => {
+                    this.getNotifications()
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
         },
         getActionText: function (code) {
             switch (code) {
-                case 100: return 'accepts your request.'
-                case 101: return 'rejects your request.'
-                case 102: return 'Your request expires.'
-                case 103: return 'repaid their loan.'
-                case 104: return 'liquidates their loan.'
-                default: return '';
+                case 100:
+                    return "accepts your request."
+                case 101:
+                    return "rejects your request."
+                case 102:
+                    return "Your request expires."
+                case 103:
+                    return "repaid their loan."
+                case 104:
+                    return "liquidates their loan."
+                default:
+                    return ""
             }
         },
         getNotifications: function () {
             if (!this.userAddress) return
             this.fetching = true
-            this.axios.get(`https://darshprotocol.onrender.com/notifications?to=${this.userAddress.toLowerCase()}`).then(response => {
-                this.notifications = response.data
-                this.fetching = false
-            }).catch(error => {
-                console.error(error);
-                this.fetching = false
-            })
-        }
+            this.axios
+                .get(`https://darshprotocol.onrender.com/notifications?to=${this.userAddress.toLowerCase()}`)
+                .then((response) => {
+                    this.notifications = response.data
+                    this.fetching = false
+                })
+                .catch((error) => {
+                    console.error(error)
+                    this.fetching = false
+                })
+        },
     },
     mounted() {
         this.generateImages()
         this.getNotifications()
-        document.body.classList.add('modal')
+        document.body.classList.add("modal")
     },
     updated() {
         this.generateImages()
     },
     unmounted() {
-        document.body.classList.remove('modal')
-    }
+        document.body.classList.remove("modal")
+    },
 }
 </script>
 
@@ -145,7 +170,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    animation: fade_in .2s ease-in-out;
+    animation: fade_in 0.2s ease-in-out;
 }
 
 .box {
@@ -156,9 +181,8 @@ main {
     background-color: var(--bglight);
     border-radius: 6px;
     overflow: hidden;
-    animation: slide_in_left .2s ease-in-out;
+    animation: slide_in_left 0.2s ease-in-out;
 }
-
 
 .title {
     height: 90px;

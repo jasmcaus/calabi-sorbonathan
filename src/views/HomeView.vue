@@ -1,10 +1,10 @@
 <script setup>
-import HomeHeader from '../components/home/HomeHeader.vue';
-import HeroSection from '../components/home/HeroSection.vue';
-import HomeDisplay from '../components/home/HomeDisplay.vue';
-import FeaturesSection from '../components/home/FeaturesSection.vue';
-import HomeFooter from '../components/home/HomeFooter.vue';
-import HomeShowcase from '../components/home/HomeShowcase.vue';
+import HomeHeader from "../components/home/HomeHeader.vue"
+import HeroSection from "../components/home/HeroSection.vue"
+import HomeDisplay from "../components/home/HomeDisplay.vue"
+import FeaturesSection from "../components/home/FeaturesSection.vue"
+import HomeFooter from "../components/home/HomeFooter.vue"
+import HomeShowcase from "../components/home/HomeShowcase.vue"
 </script>
 
 <template>
@@ -21,18 +21,17 @@ import HomeShowcase from '../components/home/HomeShowcase.vue';
     </main>
 </template>
 
-
 <style scoped>
 .linesbg {
-    background-image: url('/images/white-lines.png');
+    background-image: url("/images/white-lines.png");
     background-size: 900px 100%;
     background-position: center center;
     background-repeat: no-repeat;
-    background-color: #F5F7F9;
+    background-color: #f5f7f9;
 }
 
 .ma {
-    background: #F5F7F9;
+    background: #f5f7f9;
     height: 80px;
 }
 </style>

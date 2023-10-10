@@ -2,7 +2,7 @@
     <main>
         <div class="logo">
             <RouterLink to="/discover">
-                <img src="../../assets/images/logo.png" alt="">
+                <img src="../../assets/images/logo.png" alt="" />
             </RouterLink>
         </div>
         <div class="overflow">
@@ -12,16 +12,20 @@
                         <div class="title">
                             <IconDiscover :active="$route.name.startsWith('discover')" />
                             <h3>Discover</h3>
-                            <div :class="$route.name.startsWith('discover') ? 'indicator indicator_active' : 'indicator'">
-                            </div>
+                            <div
+                                :class="$route.name.startsWith('discover') ? 'indicator indicator_active' : 'indicator'"
+                            ></div>
                         </div>
                     </RouterLink>
                     <div class="tabs">
                         <RouterLink to="/discover">
-                            <div :class="$route.name.startsWith('discover-lend') ? 'tab tab_active' : 'tab'">Lenders</div>
+                            <div :class="$route.name.startsWith('discover-lend') ? 'tab tab_active' : 'tab'">
+                                Lenders
+                            </div>
                         </RouterLink>
                         <RouterLink to="/discover/borrowers">
-                            <div :class="$route.name.startsWith('discover-borrow') ? 'tab tab_active' : 'tab'">Borrowers
+                            <div :class="$route.name.startsWith('discover-borrow') ? 'tab tab_active' : 'tab'">
+                                Borrowers
                             </div>
                         </RouterLink>
                     </div>
@@ -31,8 +35,9 @@
                         <div class="title">
                             <IconStake :active="$route.name.startsWith('stake')" />
                             <h3>Stake <span>Coming</span></h3>
-                            <div :class="$route.name.startsWith('stake') ? 'indicator indicator_active' : 'indicator'">
-                            </div>
+                            <div
+                                :class="$route.name.startsWith('stake') ? 'indicator indicator_active' : 'indicator'"
+                            ></div>
                         </div>
                     </RouterLink>
                 </div>
@@ -41,20 +46,28 @@
                         <div class="title">
                             <IconBriefcase :active="$route.name.startsWith('portfolio')" />
                             <h3>Portfolio</h3>
-                            <div :class="$route.name.startsWith('portfolio') ? 'indicator indicator_active' : 'indicator'">
-                            </div>
+                            <div
+                                :class="
+                                    $route.name.startsWith('portfolio') ? 'indicator indicator_active' : 'indicator'
+                                "
+                            ></div>
                         </div>
                     </RouterLink>
                     <div class="tabs">
                         <RouterLink to="/portfolio">
-                            <div :class="$route.name.startsWith('portfolio-lend') ? 'tab tab_active' : 'tab'">My Lends</div>
+                            <div :class="$route.name.startsWith('portfolio-lend') ? 'tab tab_active' : 'tab'">
+                                My Lends
+                            </div>
                         </RouterLink>
                         <RouterLink to="/portfolio/borrows">
-                            <div :class="$route.name.startsWith('portfolio-borrow') ? 'tab tab_active' : 'tab'">My Borrows
+                            <div :class="$route.name.startsWith('portfolio-borrow') ? 'tab tab_active' : 'tab'">
+                                My Borrows
                             </div>
                         </RouterLink>
                         <RouterLink to="/portfolio/vaults">
-                            <div :class="$route.name.startsWith('portfolio-vault') ? 'tab tab_active' : 'tab'">Vaults</div>
+                            <div :class="$route.name.startsWith('portfolio-vault') ? 'tab tab_active' : 'tab'">
+                                Vaults
+                            </div>
                         </RouterLink>
                     </div>
                 </div>
@@ -63,8 +76,11 @@
                         <div class="title">
                             <IconCategory :active="$route.name.startsWith('darshboard')" />
                             <h3>Darshboard</h3>
-                            <div :class="$route.name.startsWith('darshboard') ? 'indicator indicator_active' : 'indicator'">
-                            </div>
+                            <div
+                                :class="
+                                    $route.name.startsWith('darshboard') ? 'indicator indicator_active' : 'indicator'
+                                "
+                            ></div>
                         </div>
                     </RouterLink>
                 </div>
@@ -96,17 +112,15 @@
 </template>
 
 <script setup>
-
-import IconDiscover from '../icons/IconDiscover.vue';
-import IconBriefcase from '../icons/IconBriefcase.vue';
-import IconCategory from '../icons/IconCategory.vue';
-import IconDiscord from '../icons/IconDiscord.vue';
-import IconMedium from '../icons/IconMedium.vue';
-import IconTelegram from '../icons/IconTelegram.vue';
-import IconTwitter from '../icons/IconTwitter.vue';
-import IconSupport from '../icons/IconSupport.vue';
-import IconStake from '../icons/IconStake.vue';
-
+import IconDiscover from "../icons/IconDiscover.vue"
+import IconBriefcase from "../icons/IconBriefcase.vue"
+import IconCategory from "../icons/IconCategory.vue"
+import IconDiscord from "../icons/IconDiscord.vue"
+import IconMedium from "../icons/IconMedium.vue"
+import IconTelegram from "../icons/IconTelegram.vue"
+import IconTwitter from "../icons/IconTwitter.vue"
+import IconSupport from "../icons/IconSupport.vue"
+import IconStake from "../icons/IconStake.vue"
 </script>
 
 <style scoped>
@@ -176,7 +190,7 @@ main {
     font-weight: 500;
     font-size: 16px;
     line-height: 120%;
-    color: #EEF1F8;
+    color: #eef1f8;
 }
 
 .title span {
