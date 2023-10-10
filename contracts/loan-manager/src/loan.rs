@@ -4,6 +4,8 @@ use soroban_sdk::{Address, Env, contracttype, contract, contractimpl};
 use crate::storage::*;
 use crate::assertions::*;
 
+const DUST_AMOUNT: u128 = 100;
+
 #[contract]
 pub struct LoanManager;
 
@@ -14,13 +16,13 @@ impl LoanManager {
         is_lending_offer: bool, // if false, it's borrowing offer
         borrower: Address,
         lender: Address,
-        principal_asset: Address,
+        principle_asset: Address,
         collateral_asset: Address,
         collateral_amount: u128,
-        principal_amount: u128,
+        principle_amount: u128,
         collateral_price: u128,
         interest_rate: u32,
-        unclaimed_borrowed_principal: u128,
+        unclaimed_borrowed_principle: u128,
     ) -> u32 {
         __increment_loan_id(&env);
         let loan_id = __get_loan_id(&env);
@@ -43,10 +45,10 @@ impl LoanManager {
             state: LoanState::ACTIVE,
             borrower,
             lender,
-            principal_asset,
+            principle_asset,
             collateral_asset,
-            initial_principal: principal_amount,
-            current_principal: principal_amount,
+            initial_principle: principle_amount,
+            current_principle: principle_amount,
             initial_collateral: collateral_amount,
             current_collateral: collateral_amount,
             collateral_price,
@@ -56,15 +58,15 @@ impl LoanManager {
             
             num_installments_paid: 0,
 
-            unclaimed_principal: 0,
+            unclaimed_principle: 0,
             unclaimed_collateral: 0,
             unclaimed_default_collateral: 0,
-            unclaimed_borrowed_principal: 0,
+            unclaimed_borrowed_principle: 0,
             total_interest_paid: 0,
             repaid_on: 0,
         };
 
-        __set_loan(&env, loan_id, loan);
+        __set_loan(&env, loan_id, &loan);
 
         loan_id
     }
@@ -73,8 +75,24 @@ impl LoanManager {
         env: Env,
         loan_id: u32,
         interest_paid: u128, 
+        principle_paid: u128, 
+        collateral_received: u128
     ) {
+        let mut loan = __get_loan(&env, loan_id);
+        require(loan.exists, "Loan doesn't exist lol");
 
+        loan.num_installments_paid += 1;
+        loan.total_interest_paid += interest_paid;
+        loan.unclaimed_principle += principle_paid + interest_paid;
+        loan.unclaimed_collateral += collateral_received;
+        loan.current_principle -= principle_paid;
+        loan.current_collateral -= collateral_received;
+
+        if loan.current_principle <= DUST_AMOUNT {
+            loan.state = LoanState::REPAID;
+        }
+
+        __set_loan(&env, loan_id, &loan);
     }
 
 
