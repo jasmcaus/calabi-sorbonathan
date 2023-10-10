@@ -15,8 +15,6 @@ echo "source <(soroban completion --shell bash)" >> ~/.bashrc
 
 cargo new --lib contracts
 
-soroban contract invoke --wasm target/wasm32-unknown-unknown/release/contracts.wasm --id 1 -- hello --to friend
-
 soroban config network add testnet --rpc-url https://soroban-testnet.stellar.org:443 --network-passphrase "Test SDF Network ; September 2015"
 soroban config identity generate alice
 
@@ -25,6 +23,14 @@ soroban contract build && soroban contract optimize --wasm target/wasm32-unknown
 
 # Deploy
 soroban contract deploy --wasm target/wasm32-unknown-unknown/release/contracts.optimized.wasm --source alice --network testnet > ../contractId
+
+# Invoke on Local testnet
+soroban contract invoke --wasm target/wasm32-unknown-unknown/release/contracts.wasm --id 1 -- hello --to friend
+
+# Invoke on Futurenet
+soroban contract invoke --id $(cat ../.contractId) --source alice --network testnet -- hello --to RPC
+
+---
 
 # Frontend
 cargo install_soroban

@@ -14,4 +14,4 @@ build:
 	soroban contract build && soroban contract optimize --wasm target/wasm32-unknown-unknown/release/contracts.wasm
 
 deploy:
-	soroban contract deploy --wasm target/wasm32-unknown-unknown/release/contracts.optimized.wasm --source alice --network testnet > ../contractId
+	soroban contract deploy --wasm target/wasm32-unknown-unknown/release/hello_contracts.optimized.wasm --source alice --network testnet > ../.contractId
