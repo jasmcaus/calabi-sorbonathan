@@ -1,25 +1,45 @@
 {
-    "name": "soroban-tutorial",
-    "type": "module",
-    "version": "0.0.1",
-    "scripts": {
-        "d": "yarn dev",
-        "dev": "TSC_COMPILE_ON_ERROR=true astro dev",
-        "start": "astro dev",
-        "build": "astro build",
-        "preview": "astro preview",
-        "astro": "astro",
-        "sorobanCopy": "rm -rf .soroban && cp -r contracts/.soroban .",
-        "generate": "soroban contract bindings typescript --network testnet --contract-id $(cat .contractId) --output-dir @amorphous-soroban-client --overwrite && python postGenerate.py",
-        "postinstall": "yarn generate",
-        "p": "yarn prettier --write .",
-        "[": "yarn prettier --write ."
-    },
-    "dependencies": {
-        "@stellar/freighter-api": "1.7.0",
-        "astro": "^3.2.3"
-    },
-    "devDependencies": {
-        "prettier": "^2.8.4"
-    }
+  "name": "darsh-web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:unit": "vitest --environment jsdom --root src/",
+    "test:e2e": "playwright test",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "@floating-ui/vue": "^0.2.1",
+    "@vueform/slider": "^2.1.7",
+    "apexcharts": "^3.37.1",
+    "arc-progress": "^1.0.0",
+    "axios": "^1.3.2",
+    "bignumber.js": "^4.0.2",
+    "ethereumjs-units": "^0.2.0",
+    "gsap": "^3.11.4",
+    "jazzicon": "^1.5.0",
+    "swiper": "^8.4.6",
+    "truffle-contract": "^4.0.31",
+    "vue": "^3.2.45",
+    "vue-axios": "^3.5.2",
+    "vue-router": "^4.1.6",
+    "vue-timeago3": "^2.3.0",
+    "vue3-observe-visibility": "^0.1.2",
+    "web3": "^1.8.1",
+    "web3-providers-http": "^1.8.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.28.1",
+    "@rushstack/eslint-patch": "^1.1.4",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "@vue/test-utils": "^2.2.6",
+    "eslint": "^8.22.0",
+    "eslint-plugin-vue": "^9.3.0",
+    "jsdom": "^20.0.3",
+    "vite": "^4.0.0",
+    "vitest": "^0.25.6"
+  }
 }

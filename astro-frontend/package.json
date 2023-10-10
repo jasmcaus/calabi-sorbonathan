@@ -1,0 +1,25 @@
+{
+    "name": "soroban-tutorial",
+    "type": "module",
+    "version": "0.0.1",
+    "scripts": {
+        "d": "yarn dev",
+        "dev": "TSC_COMPILE_ON_ERROR=true astro dev",
+        "start": "astro dev",
+        "build": "astro build",
+        "preview": "astro preview",
+        "astro": "astro",
+        "sorobanCopy": "rm -rf .soroban && cp -r contracts/.soroban .",
+        "generate": "soroban contract bindings typescript --network testnet --contract-id $(cat .contractId) --output-dir @amorphous-soroban-client --overwrite && python postGenerate.py",
+        "postinstall": "yarn generate",
+        "p": "yarn prettier --write .",
+        "[": "yarn prettier --write ."
+    },
+    "dependencies": {
+        "@stellar/freighter-api": "1.7.0",
+        "astro": "^3.2.3"
+    },
+    "devDependencies": {
+        "prettier": "^2.8.4"
+    }
+}
