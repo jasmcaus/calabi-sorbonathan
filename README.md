@@ -30,7 +30,6 @@ soroban contract deploy --wasm target/wasm32-unknown-unknown/release/contracts.o
 cargo install_soroban
 chmod +x soroban
 
-
 soroban contract bindings typescript --network testnet --contract-id $(cat contracts/.soroban/hello-id) --output-dir amorphous-soroban-client
 ```
 
