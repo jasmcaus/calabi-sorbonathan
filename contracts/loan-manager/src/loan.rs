@@ -30,9 +30,11 @@ impl LoanManager {
         require(lender != borrower, "Invalid lender/borrower");
 
         if is_lending_offer {
-
+            require(!__has_borrowed(&env, loan_id, borrower.clone()), "Err: already borrowed");
+            __set_has_borrowed(&env, loan_id, borrower.clone(), true)
         } else {
-
+            require(!__has_borrowed(&env, loan_id, lender.clone()), "Err: already borrowed");
+            __set_has_borrowed(&env, loan_id, lender.clone(), true)
         }
 
         let now = env.ledger().timestamp();
@@ -66,7 +68,7 @@ impl LoanManager {
             repaid_on: 0,
         };
 
-        __set_loan(&env, loan_id, &loan);
+        __set_loan(&env, loan_id, loan);
 
         loan_id
     }
@@ -92,7 +94,98 @@ impl LoanManager {
             loan.state = LoanState::REPAID;
         }
 
-        __set_loan(&env, loan_id, &loan);
+        __set_loan(&env, loan_id, loan);
+    }
+
+    pub fn claim_principle(
+        env: Env,
+        loan_id: u32,
+        user: Address
+    ) -> (u128, u32) {
+        let mut loan = __get_loan(&env, loan_id);
+        require(loan.exists, "Loan doesn't exist lol");
+
+        require(loan.lender == user, "Err: not lender");
+        require(loan.unclaimed_principle > 0, "Err: zero balance");
+
+        let amount = loan.unclaimed_principle;
+        let offer_id = loan.offer_id;
+        loan.unclaimed_principle = 0;
+
+        __set_loan(&env, loan_id, loan.clone());
+
+        (amount, offer_id)
+    }
+
+    pub fn claim_collateral(
+        env: Env,
+        loan_id: u32,
+        user: Address
+    ) -> (u128, u32) {
+        let mut loan = __get_loan(&env, loan_id);
+        require(loan.exists, "Loan doesn't exist lol");
+
+        require(loan.borrower == user, "Err: not borrower");
+        require(loan.unclaimed_collateral > 0, "Err: zero balance");
+
+        let amount = loan.unclaimed_collateral;
+        let offer_id = loan.offer_id;
+        loan.unclaimed_collateral = 0;
+
+        __set_loan(&env, loan_id, loan.clone());
+
+        (amount, offer_id)
+    }
+
+    pub fn claim_borrowed_principle(
+        env: Env,
+        loan_id: u32,
+        user: Address
+    ) -> (u128, u32) {
+        let mut loan = __get_loan(&env, loan_id);
+        require(loan.exists, "Loan doesn't exist lol");
+
+        require(loan.borrower == user, "Err: not borrower");
+        require(loan.unclaimed_borrowed_principle > 0, "Err: zero balance");
+
+        let amount = loan.unclaimed_borrowed_principle;
+        let offer_id = loan.offer_id;
+        loan.unclaimed_borrowed_principle = 0;
+
+        __set_loan(&env, loan_id, loan.clone());
+
+        (amount, offer_id)
+    }
+
+    pub fn liquidate_loan(
+        env: Env,
+        loan_id: u32,
+        principle_paid: u128, 
+        collateral_received: u128,
+        collateral_paid: u128,
+    ) {
+        let mut loan = __get_loan(&env, loan_id);
+        require(loan.state == LoanState::ACTIVE, "Loan not active");
+
+        let now = env.ledger().timestamp() as u128;
+        let default_date = loan.maturity_date * 1;
+
+        require(default_date >= now, "Err: loan not matured");
+
+        loan.current_principle -= principle_paid;
+        loan.current_collateral -= collateral_received;
+        loan.unclaimed_default_collateral -= collateral_paid;
+
+        if loan.current_collateral > 0 {
+            loan.unclaimed_collateral = loan.current_collateral;
+            loan.current_collateral = 0;
+        }
+
+        if loan.current_principle <= 10 {
+            loan.state = LoanState::REPAIDDEFAULTED;
+        } else {
+            loan.state = LoanState::ACTIVEDEFAULTED;
+        }
     }
 
 

@@ -10,7 +10,7 @@ pub enum LoanState {
     REPAIDDEFAULTED
 }
 
-
+#[derive(Clone)]
 #[contracttype]
 pub struct Loan {
     pub exists: bool,
@@ -54,11 +54,19 @@ pub struct Loan {
 }
 
 #[derive(Clone)]
+#[contracttype]
+pub struct HasBorrowedStorageKey {
+    offer_id: u32,
+    user: Address
+}
+
+#[derive(Clone)]
 #[repr(u32)]
 #[contracttype]
 enum StorageKey {
     LoanId,
     Loans(u32),
+    HasBorrowed(HasBorrowedStorageKey)
 }
 
 
@@ -91,8 +99,24 @@ pub fn __get_loan(env: &Env, loan_id: u32) -> Loan {
     }
 }
 
-pub fn __set_loan(env: &Env, loan_id: u32, loan: &Loan) {
+pub fn __set_loan(env: &Env, loan_id: u32, loan: Loan) {
     let key = StorageKey::Loans(loan_id);
 
-    env.storage().persistent().set(&key, loan);
+    env.storage().persistent().set(&key, &loan);
+}
+
+pub fn __has_borrowed(env: &Env, offer_id: u32, user: Address) -> bool {
+    let key = StorageKey::HasBorrowed(HasBorrowedStorageKey { offer_id, user });
+
+    if let Some(has_borrowed) = env.storage().persistent().get(&key) {
+        has_borrowed
+    } else {
+        false 
+    }
+}
+
+pub fn __set_has_borrowed(env: &Env, offer_id: u32, user: Address, has_borrowed: bool) {
+    let key = StorageKey::HasBorrowed(HasBorrowedStorageKey { offer_id, user });
+
+    env.storage().persistent().set(&key, &has_borrowed);
 }

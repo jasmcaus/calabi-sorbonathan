@@ -15,7 +15,7 @@ clean:
 	cd contracts; cargo clean; cd ..
 
 build:
-	cd contracts; soroban contract build && soroban contract optimize --wasm target/wasm32-unknown-unknown/release/contracts.wasm; cd .. 
+	cd contracts; soroban contract build && soroban contract optimize --wasm target/wasm32-unknown-unknown/release/loan_manager.wasm; cd .. 
 
 deploy:
 	cd contracts; soroban contract deploy --wasm target/wasm32-unknown-unknown/release/hello_contracts.optimized.wasm --source alice --network testnet > ../.contractId; cd ..
