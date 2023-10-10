@@ -11,7 +11,8 @@ sorobanInit:
 	# soroban config identity generate alice
 
 build:
-	soroban contract build && soroban contract optimize --wasm target/wasm32-unknown-unknown/release/contracts.wasm
+	cd contracts; soroban contract build && soroban contract optimize --wasm target/wasm32-unknown-unknown/release/contracts.wasm; cd .. 
 
 deploy:
-	soroban contract deploy --wasm target/wasm32-unknown-unknown/release/hello_contracts.optimized.wasm --source alice --network testnet > ../.contractId
+	
+	cd contracts; soroban contract deploy --wasm target/wasm32-unknown-unknown/release/hello_contracts.optimized.wasm --source alice --network testnet > ../.contractId; cd ..

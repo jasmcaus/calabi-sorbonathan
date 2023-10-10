@@ -154,6 +154,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "28c122c3980598d243d63d9a704629a2d748d101f278052ff068be5a4423ab6f"
 
 [[package]]
+name = "contract-a"
+version = "0.0.0"
+dependencies = [
+ "interface",
+ "soroban-sdk",
+ "token",
+]
+
+[[package]]
+name = "contract-b"
+version = "0.0.0"
+dependencies = [
+ "contract-a",
+ "interface",
+ "soroban-sdk",
+]
+
+[[package]]
 name = "core-foundation-sys"
 version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -546,6 +564,13 @@ name = "indexmap-nostd"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8e04e2fd2b8188ea827b32ef11de88377086d690286ab35747ef7f9bf3ccb590"
+
+[[package]]
+name = "interface"
+version = "0.0.0"
+dependencies = [
+ "soroban-sdk",
+]
 
 [[package]]
 name = "itertools"
@@ -1076,14 +1101,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "soroban-token-contract"
-version = "0.0.0"
-dependencies = [
- "soroban-sdk",
- "soroban-token-sdk",
-]
-
-[[package]]
 name = "soroban-token-sdk"
 version = "20.0.0-rc2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1103,30 +1120,6 @@ dependencies = [
  "wasmi_arena",
  "wasmi_core",
  "wasmparser-nostd",
-]
-
-[[package]]
-name = "soroban-workspace-contract-a"
-version = "0.0.0"
-dependencies = [
- "soroban-sdk",
- "soroban-workspace-contract-a-interface",
-]
-
-[[package]]
-name = "soroban-workspace-contract-a-interface"
-version = "0.0.0"
-dependencies = [
- "soroban-sdk",
-]
-
-[[package]]
-name = "soroban-workspace-contract-b"
-version = "0.0.0"
-dependencies = [
- "soroban-sdk",
- "soroban-workspace-contract-a",
- "soroban-workspace-contract-a-interface",
 ]
 
 [[package]]
@@ -1244,6 +1237,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1a942f44339478ef67935ab2bbaec2fb0322496cf3cbe84b261e06ac3814c572"
 dependencies = [
  "time-core",
+]
+
+[[package]]
+name = "token"
+version = "0.0.0"
+dependencies = [
+ "soroban-sdk",
+ "soroban-token-sdk",
 ]
 
 [[package]]

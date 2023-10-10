@@ -1,5 +1,5 @@
 [package]
-name = "soroban-workspace-contract-b"
+name = "contract-b"
 version.workspace = true
 authors = ["Stellar Development Foundation <info@stellar.org>"]
 license = "Apache-2.0"
@@ -12,9 +12,9 @@ doctest = false
 
 [dependencies]
 soroban-sdk = { workspace = true }
-soroban-workspace-contract-a-interface = { workspace = true }
+interface = { workspace = true }
 
 [dev_dependencies]
 soroban-sdk = { workspace = true, features = ["testutils"] }
-soroban-workspace-contract-a-interface = { workspace = true, features = ["testutils"] }
-soroban-workspace-contract-a = { workspace = true, features = ["testutils"] }
+interface = { workspace = true, features = ["testutils"] }
+contract-a = { workspace = true, features = ["testutils"] }

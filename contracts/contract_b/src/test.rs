@@ -4,7 +4,7 @@ use soroban_sdk::Env;
 
 use crate::{ContractB, ContractBClient};
 
-use soroban_workspace_contract_a::ContractA;
+use contract_a::ContractA;
 
 #[test]
 fn test() {

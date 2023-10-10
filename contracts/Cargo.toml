@@ -2,7 +2,7 @@
 resolver = "2"
 
 members = [
-    "contract_a_interface",
+    "interface",
     "contract_a",
     "contract_b",
     "token"
@@ -15,9 +15,9 @@ version = "0.0.0"
 soroban-sdk = { version = "20.0.0-rc2" }
 soroban-token-sdk = { version = "20.0.0-rc2" }
 
-soroban-workspace-contract-a-interface = { path = "contract_a_interface" }
-soroban-workspace-contract-a = { path = "contract_a" }
-soroban-workspace-token = { path = "token" }
+interface = { path = "interface" }
+contract-a = { path = "contract_a" }
+token = { path = "token" }
 
 [workspace.dev_dependencies]
 soroban-sdk = { version = "20.0.0-rc2", features = ["testutils"] }

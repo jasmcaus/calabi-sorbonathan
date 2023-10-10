@@ -1,7 +1,7 @@
 #![no_std]
 
 use soroban_sdk::{contract, contractimpl};
-use soroban_workspace_contract_a_interface::ContractAInterface;
+use interface::ContractAInterface;
 
 #[contract]
 pub struct ContractA;

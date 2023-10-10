@@ -1,5 +1,5 @@
 [package]
-name = "soroban-workspace-contract-a-interface"
+name = "interface"
 version.workspace = true
 authors = ["Stellar Development Foundation <info@stellar.org>"]
 license = "Apache-2.0"
