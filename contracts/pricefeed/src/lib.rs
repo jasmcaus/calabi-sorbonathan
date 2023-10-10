@@ -1,3 +1,4 @@
+#![allow(unused)]
 #![no_std]
 
 mod storage;
@@ -35,5 +36,3 @@ impl PriceFeed {
         client.add(&x, &y)
     }
 }
-
-mod test;

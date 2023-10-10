@@ -1,4 +1,5 @@
 #![no_std]
+#![allow(unused)]
 
 mod storage;
 
@@ -7,10 +8,10 @@ use interface::ContractAInterface;
 use crate::storage::*;
 
 #[contract]
-pub struct ContractA;
+pub struct LendingPool;
 
 #[contractimpl]
-impl ContractAInterface for ContractA {
+impl LendingPool {
     fn add(x: u32, y: u32) -> u32 {
         x.checked_add(y).expect("no overflow")
     }

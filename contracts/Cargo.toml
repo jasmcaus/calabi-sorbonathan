@@ -5,7 +5,9 @@ members = [
     "interface",
     "core",
     "pricefeed",
-    "token"
+    "token",
+    "fee-manager",
+    "loan-manager",
 ]
 
 [workspace.package]

@@ -11,6 +11,9 @@ sorobanInit:
 	soroban config network add testnet --rpc-url https://soroban-testnet.stellar.org:443 --network-passphrase "Test SDF Network ; September 2015"
 	# soroban config identity generate alice
 
+clean:
+	cd contracts; cargo clean; cd ..
+
 build:
 	cd contracts; soroban contract build && soroban contract optimize --wasm target/wasm32-unknown-unknown/release/contracts.wasm; cd .. 
 
