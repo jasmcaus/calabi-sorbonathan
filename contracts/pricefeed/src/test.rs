@@ -2,7 +2,7 @@
 
 use soroban_sdk::Env;
 
-use crate::{ContractB, ContractBClient};
+use crate::{PriceFeed, PriceFeedClient};
 
 use contract_a::ContractA;
 
@@ -14,10 +14,10 @@ fn test() {
     let contract_a_id = env.register_contract(None, ContractA);
 
     // Register contract B defined in this crate.
-    let contract_b_id = env.register_contract(None, ContractB);
+    let contract_b_id = env.register_contract(None, PriceFeed);
 
     // Create a client for calling contract B.
-    let client = ContractBClient::new(&env, &contract_b_id);
+    let client = PriceFeedClient::new(&env, &contract_b_id);
 
     // Invoke contract B via its client. Contract B will invoke contract A.
     let sum = client.add_with(&contract_a_id, &5, &7);

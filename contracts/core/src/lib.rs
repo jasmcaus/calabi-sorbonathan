@@ -1,7 +1,10 @@
 #![no_std]
 
+mod storage;
+
 use soroban_sdk::{contract, contractimpl};
 use interface::ContractAInterface;
+use crate::storage::*;
 
 #[contract]
 pub struct ContractA;
