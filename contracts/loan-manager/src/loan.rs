@@ -192,5 +192,4 @@ impl LoanManager {
     pub fn get_loan(env: Env, loan_id: u32) -> Loan {
         __get_loan(&env, loan_id)
     }
-
 }

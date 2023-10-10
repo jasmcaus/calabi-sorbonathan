@@ -12,6 +12,22 @@ pub enum LoanState {
 
 #[derive(Clone)]
 #[contracttype]
+pub struct HasBorrowedStorageKey {
+    offer_id: u32,
+    user: Address
+}
+
+#[derive(Clone)]
+#[repr(u32)]
+#[contracttype]
+enum StorageKey {
+    LoanId,
+    Loans(u32),
+    HasBorrowed(HasBorrowedStorageKey)
+}
+
+#[derive(Clone)]
+#[contracttype]
 pub struct Loan {
     pub exists: bool,
 
@@ -51,22 +67,6 @@ pub struct Loan {
     pub total_interest_paid: u128,
     // seconds of full/installment repaid loan
     pub repaid_on: u128,
-}
-
-#[derive(Clone)]
-#[contracttype]
-pub struct HasBorrowedStorageKey {
-    offer_id: u32,
-    user: Address
-}
-
-#[derive(Clone)]
-#[repr(u32)]
-#[contracttype]
-enum StorageKey {
-    LoanId,
-    Loans(u32),
-    HasBorrowed(HasBorrowedStorageKey)
 }
 
 
