@@ -1,4 +1,5 @@
 pythonSetup:
+	pip install caer
 	sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6  -y
 
 setup:
@@ -14,5 +15,7 @@ build:
 	cd contracts; soroban contract build && soroban contract optimize --wasm target/wasm32-unknown-unknown/release/contracts.wasm; cd .. 
 
 deploy:
-	
 	cd contracts; soroban contract deploy --wasm target/wasm32-unknown-unknown/release/hello_contracts.optimized.wasm --source alice --network testnet > ../.contractId; cd ..
+
+generate:
+	soroban contract bindings typescript --network testnet --contract-id $(shell cat ./.contractId) --output-dir @amorphous-soroban-client --overwrite; python postGenerate.py

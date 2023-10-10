@@ -21,3 +21,5 @@ if os.path.isdir(destNodeModules):  sh.rmtree(destNodeModules)
 
 os.system(f"cp -r ./{FOLDER} {destNodeModules}")
 sh.rmtree(DEST_FOLDER)
+
+print("Done!")

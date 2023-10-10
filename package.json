@@ -10,7 +10,7 @@
         "preview": "astro preview",
         "astro": "astro",
         "sorobanCopy": "rm -rf .soroban && cp -r contracts/.soroban .",
-        "generate": "yarn sorobanCopy && soroban contract bindings typescript --network testnet --contract-id $(cat .contractId) --output-dir @amorphous-soroban-client --overwrite && python postGenerate.py",
+        "generate": "soroban contract bindings typescript --network testnet --contract-id $(cat .contractId) --output-dir @amorphous-soroban-client --overwrite && python postGenerate.py",
         "postinstall": "yarn generate",
         "p": "yarn prettier --write .",
         "[": "yarn prettier --write ."
