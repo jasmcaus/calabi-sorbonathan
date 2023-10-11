@@ -1,8 +1,8 @@
 #![allow(unused)]
-use soroban_sdk::{Address, Env, contracttype, contract, contractimpl};
+use soroban_sdk::{contract, contractimpl, contracttype, Address, Env};
 
-use crate::storage::*;
 use crate::assertions::*;
+use crate::storage::*;
 
 const DUST_AMOUNT: u128 = 100;
 
@@ -30,10 +30,16 @@ impl LoanManager {
         require(lender != borrower, "Invalid lender/borrower");
 
         if is_lending_offer {
-            require(!__has_borrowed(&env, loan_id, borrower.clone()), "Err: already borrowed");
+            require(
+                !__has_borrowed(&env, loan_id, borrower.clone()),
+                "Err: already borrowed",
+            );
             __set_has_borrowed(&env, loan_id, borrower.clone(), true)
         } else {
-            require(!__has_borrowed(&env, loan_id, lender.clone()), "Err: already borrowed");
+            require(
+                !__has_borrowed(&env, loan_id, lender.clone()),
+                "Err: already borrowed",
+            );
             __set_has_borrowed(&env, loan_id, lender.clone(), true)
         }
 
@@ -57,7 +63,7 @@ impl LoanManager {
             interest_rate,
             start_date: now as u128,
             maturity_date: maturity_date as u128,
-            
+
             num_installments_paid: 0,
 
             unclaimed_principle: 0,
@@ -76,9 +82,9 @@ impl LoanManager {
     pub fn repay_loan(
         env: Env,
         loan_id: u32,
-        interest_paid: u128, 
-        principle_paid: u128, 
-        collateral_received: u128
+        interest_paid: u128,
+        principle_paid: u128,
+        collateral_received: u128,
     ) {
         let mut loan = __get_loan(&env, loan_id);
         require(loan.exists, "Loan doesn't exist lol");
@@ -97,11 +103,7 @@ impl LoanManager {
         __set_loan(&env, loan_id, loan);
     }
 
-    pub fn claim_principle(
-        env: Env,
-        loan_id: u32,
-        user: Address
-    ) -> (u128, u32) {
+    pub fn claim_principle(env: Env, loan_id: u32, user: Address) -> (u128, u32) {
         let mut loan = __get_loan(&env, loan_id);
         require(loan.exists, "Loan doesn't exist lol");
 
@@ -117,11 +119,7 @@ impl LoanManager {
         (amount, offer_id)
     }
 
-    pub fn claim_collateral(
-        env: Env,
-        loan_id: u32,
-        user: Address
-    ) -> (u128, u32) {
+    pub fn claim_collateral(env: Env, loan_id: u32, user: Address) -> (u128, u32) {
         let mut loan = __get_loan(&env, loan_id);
         require(loan.exists, "Loan doesn't exist lol");
 
@@ -137,11 +135,7 @@ impl LoanManager {
         (amount, offer_id)
     }
 
-    pub fn claim_borrowed_principle(
-        env: Env,
-        loan_id: u32,
-        user: Address
-    ) -> (u128, u32) {
+    pub fn claim_borrowed_principle(env: Env, loan_id: u32, user: Address) -> (u128, u32) {
         let mut loan = __get_loan(&env, loan_id);
         require(loan.exists, "Loan doesn't exist lol");
 
@@ -160,7 +154,7 @@ impl LoanManager {
     pub fn liquidate_loan(
         env: Env,
         loan_id: u32,
-        principle_paid: u128, 
+        principle_paid: u128,
         collateral_received: u128,
         collateral_paid: u128,
     ) {
@@ -187,7 +181,6 @@ impl LoanManager {
             loan.state = LoanState::ACTIVEDEFAULTED;
         }
     }
-
 
     pub fn get_loan(env: Env, loan_id: u32) -> Loan {
         __get_loan(&env, loan_id)

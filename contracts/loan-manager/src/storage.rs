@@ -1,5 +1,5 @@
 #![allow(unused)]
-use soroban_sdk::{Address, Env, contracttype, contract, contractimpl};
+use soroban_sdk::{contract, contractimpl, contracttype, Address, Env};
 
 #[derive(Clone, Eq, PartialEq)]
 #[contracttype]
@@ -7,14 +7,14 @@ pub enum LoanState {
     ACTIVE,
     REPAID,
     ACTIVEDEFAULTED,
-    REPAIDDEFAULTED
+    REPAIDDEFAULTED,
 }
 
 #[derive(Clone)]
 #[contracttype]
 pub struct HasBorrowedStorageKey {
     offer_id: u32,
-    user: Address
+    user: Address,
 }
 
 #[derive(Clone)]
@@ -23,7 +23,7 @@ pub struct HasBorrowedStorageKey {
 enum StorageKey {
     LoanId,
     Loans(u32),
-    HasBorrowed(HasBorrowedStorageKey)
+    HasBorrowed(HasBorrowedStorageKey),
 }
 
 #[derive(Clone)]
@@ -46,7 +46,7 @@ pub struct Loan {
     pub current_collateral: u128,
 
     // worth of collateral in USD
-    pub collateral_price: u128, 
+    pub collateral_price: u128,
 
     // loan interest_rate rate per seconds
     pub interest_rate: u32,
@@ -69,12 +69,11 @@ pub struct Loan {
     pub repaid_on: u128,
 }
 
-
 pub fn __get_loan_id(env: &Env) -> u32 {
     let key = StorageKey::LoanId;
 
     if let Some(id) = env.storage().persistent().get(&key) {
-        id 
+        id
     } else {
         0
     }
@@ -87,7 +86,6 @@ pub fn __increment_loan_id(env: &Env) {
 
     env.storage().persistent().set(&key, &(loan_id + 1));
 }
-
 
 pub fn __get_loan(env: &Env, loan_id: u32) -> Loan {
     let key = StorageKey::Loans(loan_id);
@@ -111,7 +109,7 @@ pub fn __has_borrowed(env: &Env, offer_id: u32, user: Address) -> bool {
     if let Some(has_borrowed) = env.storage().persistent().get(&key) {
         has_borrowed
     } else {
-        false 
+        false
     }
 }
 

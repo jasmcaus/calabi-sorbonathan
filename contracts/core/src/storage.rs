@@ -1,4 +1,4 @@
-use soroban_sdk::{contracttype};
+use soroban_sdk::contracttype;
 
 #[derive(Clone, Copy)]
 #[repr(u32)]

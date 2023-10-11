@@ -3,9 +3,9 @@
 
 mod storage;
 
-use soroban_sdk::{contract, contractimpl};
-use interface::ContractAInterface;
 use crate::storage::*;
+use interface::ContractAInterface;
+use soroban_sdk::{contract, contractimpl};
 
 #[contract]
 pub struct LendingPool;

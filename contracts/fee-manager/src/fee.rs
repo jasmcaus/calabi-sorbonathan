@@ -1,11 +1,11 @@
 #![allow(unused)]
-use soroban_sdk::{Address, Env, contracttype, contract, contractimpl};
+use soroban_sdk::{contract, contractimpl, contracttype, Address, Env};
 
 #[derive(Clone)]
 #[repr(u32)]
 #[contracttype]
 enum StorageKey {
-    Balance(Address)
+    Balance(Address),
 }
 
 #[contract]
@@ -34,7 +34,7 @@ impl FeeManager {
     pub fn debit(env: Env, asset: Address, amount: i128) {
         let existing_balance = Self::get_balance(&env, asset.clone());
 
-        if existing_balance < amount  {
+        if existing_balance < amount {
             panic!("Insufficient Collateral");
         }
 

@@ -3,8 +3,8 @@
 
 mod storage;
 
-use soroban_sdk::{contract, contractimpl, Address, Env};
 use interface::ContractAClient;
+use soroban_sdk::{contract, contractimpl, Address, Env};
 
 use crate::storage::*;
 
@@ -22,7 +22,7 @@ impl PriceFeed {
     pub fn get_pricefeed(env: Env, asset: Address) -> Address {
         let key = StorageKey::FeedAddresses(asset);
 
-        env.storage().persistent().get(&key).unwrap() 
+        env.storage().persistent().get(&key).unwrap()
     }
 
     pub fn get_latest_price(env: Env, asset: Address) -> (u64, u32) {
