@@ -1,6 +1,7 @@
 #![allow(unused)]
 use soroban_sdk::{contract, contractimpl, contracttype, Address, Env};
 
+use interface::loan_manager::*;
 use crate::assertions::*;
 use crate::storage::*;
 
@@ -10,8 +11,8 @@ const DUST_AMOUNT: u128 = 100;
 pub struct LoanManager;
 
 #[contractimpl]
-impl LoanManager {
-    pub fn create_loan(
+impl ILoanManager for LoanManager {
+    fn create_loan(
         env: Env,
         is_lending_offer: bool, // if false, it's borrowing offer
         borrower: Address,
@@ -79,7 +80,7 @@ impl LoanManager {
         loan_id
     }
 
-    pub fn repay_loan(
+    fn repay_loan(
         env: Env,
         loan_id: u32,
         interest_paid: u128,
@@ -103,7 +104,7 @@ impl LoanManager {
         __set_loan(&env, loan_id, loan);
     }
 
-    pub fn claim_principle(env: Env, loan_id: u32, user: Address) -> (u128, u32) {
+    fn claim_principle(env: Env, loan_id: u32, user: Address) -> (u128, u32) {
         let mut loan = __get_loan(&env, loan_id);
         require(loan.exists, "Loan doesn't exist lol");
 
@@ -119,7 +120,7 @@ impl LoanManager {
         (amount, offer_id)
     }
 
-    pub fn claim_collateral(env: Env, loan_id: u32, user: Address) -> (u128, u32) {
+    fn claim_collateral(env: Env, loan_id: u32, user: Address) -> (u128, u32) {
         let mut loan = __get_loan(&env, loan_id);
         require(loan.exists, "Loan doesn't exist lol");
 
@@ -135,7 +136,7 @@ impl LoanManager {
         (amount, offer_id)
     }
 
-    pub fn claim_borrowed_principle(env: Env, loan_id: u32, user: Address) -> (u128, u32) {
+    fn claim_borrowed_principle(env: Env, loan_id: u32, user: Address) -> (u128, u32) {
         let mut loan = __get_loan(&env, loan_id);
         require(loan.exists, "Loan doesn't exist lol");
 
@@ -151,7 +152,7 @@ impl LoanManager {
         (amount, offer_id)
     }
 
-    pub fn liquidate_loan(
+    fn liquidate_loan(
         env: Env,
         loan_id: u32,
         principle_paid: u128,
@@ -182,7 +183,7 @@ impl LoanManager {
         }
     }
 
-    pub fn get_loan(env: Env, loan_id: u32) -> Loan {
+    fn get_loan(env: Env, loan_id: u32) -> Loan {
         __get_loan(&env, loan_id)
     }
 }

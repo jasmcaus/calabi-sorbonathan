@@ -3,7 +3,6 @@
 
 mod storage;
 
-use interface::ContractAClient;
 use soroban_sdk::{contract, contractimpl, Address, Env};
 
 use crate::storage::*;
@@ -31,8 +30,8 @@ impl PriceFeed {
         (1_000_000, 6)
     }
 
-    pub fn add_with(env: Env, contract: Address, x: u32, y: u32) -> u32 {
-        let client = ContractAClient::new(&env, &contract);
-        client.add(&x, &y)
-    }
+    // pub fn add_with(env: Env, contract: Address, x: u32, y: u32) -> u32 {
+    //     let client = ContractAClient::new(&env, &contract);
+    //     client.add(&x, &y)
+    // }
 }
