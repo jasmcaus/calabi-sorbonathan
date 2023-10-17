@@ -11,7 +11,7 @@ setup:
 
 sorobanInit:
 	soroban config network add testnet --rpc-url https://soroban-testnet.stellar.org:443 --network-passphrase "Test SDF Network ; September 2015"
-	# soroban config identity generate alice
+	soroban config identity generate alice
 
 clean:
 	cd contracts; cargo clean; cd ..
@@ -20,7 +20,10 @@ build:
 	cd contracts; soroban contract build && soroban contract optimize --wasm target/wasm32-unknown-unknown/release/loan_manager.wasm; cd .. 
 
 deploy:
-	cd contracts; soroban contract deploy --wasm target/wasm32-unknown-unknown/release/hello_contracts.optimized.wasm --source alice --network testnet > ../.contractId; cd ..
+	soroban contract deploy --wasm contracts/target/wasm32-unknown-unknown/release/token.optimized.wasm --source alice --network testnet
+
+optimize:
+	cd contracts; soroban contract optimize --wasm target/wasm32-unknown-unknown/release/token.wasm; cd .. 
 
 generate:
 	soroban contract bindings typescript --network testnet --contract-id $(shell cat ./.contractId) --output-dir @amorphous-soroban-client --overwrite; python postGenerate.py

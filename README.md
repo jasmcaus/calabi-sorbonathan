@@ -39,6 +39,15 @@ chmod +x soroban
 soroban contract bindings typescript --network testnet --contract-id $(cat contracts/.soroban/hello-id) --output-dir amorphous-soroban-client
 ```
 
+
+```
+Deployments:
+- Token: CCA4MRQO4N6RYK7IJIOMYLREA3AJNXTRJTVT2ETML2MGDGTU3322OROK
+
+```
+
+
+
 # Astro Starter Kit: Basics
 
 ```sh
