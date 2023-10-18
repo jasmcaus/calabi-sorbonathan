@@ -18,7 +18,7 @@ enum StorageKey {
     HasBorrowed(HasBorrowedStorageKey),
 }
 
-
+ 
 pub fn __get_loan_id(env: &Env) -> u32 {
     let key = StorageKey::LoanId;
 

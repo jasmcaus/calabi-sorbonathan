@@ -17,4 +17,4 @@ interface = { workspace = true }
 [dev_dependencies]
 soroban-sdk = { workspace = true, features = ["testutils"] }
 interface = { workspace = true, features = ["testutils"] }
-contract-a = { workspace = true, features = ["testutils"] }
+core= { workspace = true, features = ["testutils"] }

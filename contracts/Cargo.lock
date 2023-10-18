@@ -154,7 +154,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "28c122c3980598d243d63d9a704629a2d748d101f278052ff068be5a4423ab6f"
 
 [[package]]
-name = "contract-a"
+name = "core"
 version = "0.0.0"
 dependencies = [
  "interface",
@@ -409,7 +409,7 @@ checksum = "6c8ff382b2fa527fb7fb06eeebfc5bbb3f17e3cc6b9d70b006c41daa8824adac"
 name = "fee-manager"
 version = "0.0.0"
 dependencies = [
- "contract-a",
+ "core",
  "interface",
  "soroban-sdk",
 ]
@@ -634,7 +634,7 @@ checksum = "4ec2a862134d2a7d32d7983ddcdd1c4923530833c9f2ea1a44fc5fa473989058"
 name = "loan-manager"
 version = "0.0.0"
 dependencies = [
- "contract-a",
+ "core",
  "interface",
  "soroban-sdk",
 ]
@@ -714,7 +714,7 @@ dependencies = [
 name = "offer-manager"
 version = "0.0.0"
 dependencies = [
- "contract-a",
+ "core",
  "interface",
  "soroban-sdk",
 ]
@@ -767,7 +767,7 @@ dependencies = [
 name = "pricefeed"
 version = "0.0.0"
 dependencies = [
- "contract-a",
+ "core",
  "interface",
  "soroban-sdk",
 ]
