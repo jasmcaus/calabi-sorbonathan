@@ -1,6 +1,6 @@
 #![allow(unused)]
-use soroban_sdk::{contract, contractimpl, contracttype, Address, Env};
 use interface::loan_manager::{Loan, LoanState};
+use soroban_sdk::{contract, contractimpl, contracttype, Address, Env};
 
 #[derive(Clone)]
 #[contracttype]
@@ -18,7 +18,6 @@ enum StorageKey {
     HasBorrowed(HasBorrowedStorageKey),
 }
 
- 
 pub fn __get_loan_id(env: &Env) -> u32 {
     let key = StorageKey::LoanId;
 

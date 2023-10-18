@@ -1,11 +1,7 @@
-use soroban_sdk::{contractclient, Env, Address};
+use soroban_sdk::{contractclient, Address, Env};
 
 #[contractclient(name = "LendingPool")]
 pub trait ILendingPool {
-    fn supply(
-        env: Env,
-        asset: Address,
-        amount: u128,
-        from: Address,
-    );
+    fn supply(env: Env, asset: Address, amount: u128, from: Address);
+    fn borrow(env: Env, asset: Address, amount: u128, from: Address);
 }

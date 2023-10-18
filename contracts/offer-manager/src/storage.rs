@@ -1,6 +1,6 @@
 #![allow(unused)]
-use soroban_sdk::{contract, contractimpl, contracttype, Address, Env};
 use interface::offer_manager::{Offer, OfferState, OfferType};
+use soroban_sdk::{contract, contractimpl, contracttype, Address, Env};
 
 #[derive(Clone)]
 #[repr(u32)]
@@ -9,7 +9,6 @@ enum StorageKey {
     OfferId,
     Offers(u32),
 }
-
 
 pub fn __get_offer_id(env: &Env) -> u32 {
     let key = StorageKey::OfferId;

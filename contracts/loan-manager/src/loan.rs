@@ -1,9 +1,9 @@
 #![allow(unused)]
 use soroban_sdk::{contract, contractimpl, contracttype, Address, Env};
 
-use interface::loan_manager::*;
 use crate::assertions::*;
 use crate::storage::*;
+use interface::loan_manager::*;
 
 const DUST_AMOUNT: u128 = 100;
 

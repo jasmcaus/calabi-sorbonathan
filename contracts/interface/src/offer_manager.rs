@@ -1,6 +1,5 @@
 #![allow(unused)]
-use soroban_sdk::{contract, contractimpl, contracttype, contractclient, Address, Env};
-
+use soroban_sdk::{contract, contractclient, contractimpl, contracttype, Address, Env};
 
 #[derive(Clone, Eq, PartialEq)]
 #[contracttype]
@@ -15,7 +14,6 @@ pub enum OfferState {
     DEFAULT,
     CANCELLED,
 }
-
 
 #[derive(Clone)]
 #[contracttype]
@@ -43,7 +41,6 @@ pub struct Offer {
 
     pub creator: Address,
 }
-
 
 #[contractclient(name = "OfferManager")]
 pub trait IOfferManager {

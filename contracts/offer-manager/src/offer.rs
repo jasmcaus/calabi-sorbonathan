@@ -1,9 +1,9 @@
 #![allow(unused)]
 use soroban_sdk::{contract, contractimpl, contracttype, Address, Env};
 
-use interface::offer_manager::*;
 use crate::assertions::*;
 use crate::storage::*;
+use interface::offer_manager::*;
 
 const DUST_AMOUNT: u128 = 100;
 
@@ -45,15 +45,11 @@ impl IOfferManager for OfferManager {
             interest_rate,
             days_to_maturity,
             expiration_date: expires_at,
-            creator: lender
+            creator: lender,
         };
 
         return offer_id;
-
-
     }
-
-
 
     //     require(lender != borrower, "Invalid lender/borrower");
 

@@ -1,6 +1,5 @@
 #![allow(unused)]
-use soroban_sdk::{contract, contractimpl, contracttype, contractclient, Address, Env};
-
+use soroban_sdk::{contract, contractclient, contractimpl, contracttype, Address, Env};
 
 #[derive(Clone, Eq, PartialEq)]
 #[contracttype]
@@ -10,7 +9,6 @@ pub enum LoanState {
     ACTIVEDEFAULTED,
     REPAIDDEFAULTED,
 }
-
 
 #[derive(Clone)]
 #[contracttype]
@@ -54,7 +52,6 @@ pub struct Loan {
     // seconds of full/installment repaid loan
     pub repaid_on: u128,
 }
-
 
 #[contractclient(name = "LoanManager")]
 pub trait ILoanManager {

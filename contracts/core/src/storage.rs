@@ -27,7 +27,7 @@ pub struct InterestRateParams {
 #[contracttype]
 pub struct Vault {
     pub amount: u128,
-    pub shares: u128
+    pub shares: u128,
 }
 
 #[derive(Clone, Copy)]
@@ -35,14 +35,21 @@ pub struct Vault {
 pub struct AssetVault {
     pub total_asset: Vault,
     pub total_borrow: Vault,
-    pub interest_rate_info: InterestRateInfo
+    pub interest_rate_info: InterestRateInfo,
 }
 
 #[derive(Clone)]
 #[contracttype]
 pub struct CollateralSharesKey {
     user: Address,
-    asset: Address
+    asset: Address,
+}
+
+#[derive(Clone)]
+#[contracttype]
+pub struct BorrowSharesKey {
+    user: Address,
+    asset: Address,
 }
 
 #[derive(Clone)]
@@ -52,17 +59,19 @@ pub enum StorageKey {
     TokenA,
     Vaults(Address),
     CollateralShares(CollateralSharesKey),
-    BorrowShares(Address),
+    BorrowShares(BorrowSharesKey),
 }
-
 
 pub fn __get_vault(env: &Env, asset: &Address) -> AssetVault {
     let key = StorageKey::Vaults(asset.clone());
 
     if let Some(vault) = env.storage().persistent().get(&key) {
-        vault 
+        vault
     } else {
-        let v = Vault { amount: 0, shares: 0 };
+        let v = Vault {
+            amount: 0,
+            shares: 0,
+        };
         let i = InterestRateInfo {
             last_block: 0,
             fee_to_protocol_rate: 0,
@@ -73,7 +82,11 @@ pub fn __get_vault(env: &Env, asset: &Address) -> AssetVault {
             slope_1: 0,
             slope_2: 0,
         };
-        AssetVault { total_asset: v, total_borrow: v, interest_rate_info: i }
+        AssetVault {
+            total_asset: v,
+            total_borrow: v,
+            interest_rate_info: i,
+        }
     }
 }
 
@@ -83,19 +96,46 @@ pub fn __set_vault(env: &Env, asset: &Address, asset_vault: &AssetVault) {
     env.storage().persistent().set(&key, asset_vault);
 }
 
-
 pub fn __get_collateral_shares(env: &Env, user: &Address, asset: &Address) -> u128 {
-    let key = StorageKey::CollateralShares(CollateralSharesKey { user: user.clone(), asset: asset.clone() });
+    let key = StorageKey::CollateralShares(CollateralSharesKey {
+        user: user.clone(),
+        asset: asset.clone(),
+    });
 
     if let Some(shares) = env.storage().persistent().get(&key) {
-        shares 
+        shares
     } else {
         0
     }
 }
 
 pub fn __set_collateral_shares(env: &Env, user: &Address, asset: &Address, new_shares: u128) {
-    let key = StorageKey::CollateralShares(CollateralSharesKey { user: user.clone(), asset: asset.clone() });
+    let key = StorageKey::CollateralShares(CollateralSharesKey {
+        user: user.clone(),
+        asset: asset.clone(),
+    });
+
+    env.storage().persistent().set(&key, &new_shares);
+}
+
+pub fn __get_borrow_shares(env: &Env, user: &Address, asset: &Address) -> u128 {
+    let key = StorageKey::BorrowShares(BorrowSharesKey {
+        user: user.clone(),
+        asset: asset.clone(),
+    });
+
+    if let Some(shares) = env.storage().persistent().get(&key) {
+        shares
+    } else {
+        0
+    }
+}
+
+pub fn __set_borrow_shares(env: &Env, user: &Address, asset: &Address, new_shares: u128) {
+    let key = StorageKey::BorrowShares(BorrowSharesKey {
+        user: user.clone(),
+        asset: asset.clone(),
+    });
 
     env.storage().persistent().set(&key, &new_shares);
 }
