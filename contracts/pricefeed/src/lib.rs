@@ -3,6 +3,7 @@
 
 mod storage;
 
+use interface::pricefeed::IPriceFeed;
 use soroban_sdk::{contract, contractimpl, Address, Env};
 
 use crate::storage::*;
@@ -11,20 +12,20 @@ use crate::storage::*;
 pub struct PriceFeed;
 
 #[contractimpl]
-impl PriceFeed {
-    pub fn add_pricefeed(env: Env, asset: Address, feed: Address) {
+impl IPriceFeed for PriceFeed {
+    fn add_pricefeed(env: Env, asset: Address, feed: Address) {
         let key = StorageKey::FeedAddresses(asset);
 
         env.storage().persistent().set(&key, &feed);
     }
 
-    pub fn get_pricefeed(env: Env, asset: Address) -> Address {
+    fn get_pricefeed(env: Env, asset: Address) -> Address {
         let key = StorageKey::FeedAddresses(asset);
 
         env.storage().persistent().get(&key).unwrap()
     }
 
-    pub fn get_latest_price(env: Env, asset: Address) -> (u64, u32) {
+    fn get_latest_price(env: Env, asset: Address) -> (u128, u32) {
         let feed = Self::get_pricefeed(env, asset);
 
         (1_000_000, 6)
