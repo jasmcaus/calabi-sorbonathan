@@ -4,4 +4,5 @@ use soroban_sdk::{contractclient, Address, Env};
 pub trait ILendingPool {
     fn supply(env: Env, asset: Address, amount: u128, from: Address);
     fn borrow(env: Env, asset: Address, amount: u128, from: Address);
+    fn repay(env: Env, asset: Address, amount: u128, from: Address);
 }

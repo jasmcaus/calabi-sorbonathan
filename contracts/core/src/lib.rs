@@ -33,6 +33,7 @@ impl ILendingPool for LendingPool {
 
         asset_vault.total_asset.shares += shares;
         asset_vault.total_asset.amount += amount;
+        __set_vault(&env, &asset, &asset_vault);
 
         let mut new_shares = __get_collateral_shares(&env, &from, &asset);
         new_shares += shares;
@@ -56,6 +57,7 @@ impl ILendingPool for LendingPool {
 
         asset_vault.total_borrow.shares += shares;
         asset_vault.total_borrow.amount += amount;
+        __set_vault(&env, &asset, &asset_vault);
 
         let mut new_shares = __get_borrow_shares(&env, &from, &asset);
         new_shares += shares;
@@ -64,6 +66,35 @@ impl ILendingPool for LendingPool {
         // if __health_factor(&from) <=  MIN_HEALTH_FACTOR {
         //     panic!("Borrow not allowed (health factor too low)");
         // }
+    }
+
+    fn repay(env: Env, asset: Address, mut amount: u128, from: Address) {
+        from.require_auth();
+        __accrue_interest(&env, &asset);
+
+        let mut asset_vault = __get_vault(&env, &asset);
+
+        let user_borrow_share = __get_borrow_shares(&env, &from, &asset);
+        let mut shares = __to_shares(asset_vault.total_borrow, amount, false);
+
+        if shares > user_borrow_share {
+            shares = user_borrow_share;
+            amount = __to_amount(asset_vault.total_borrow, shares, false);
+        }
+
+        // Extract tokens
+        token::Client::new(&env, &asset).transfer(
+            &env.current_contract_address(),
+            &from,
+            &(amount as i128),
+        );
+
+        asset_vault.total_borrow.shares -= shares;
+        asset_vault.total_borrow.amount -= amount;
+        __set_vault(&env, &asset, &asset_vault);
+
+        let mut new_shares = user_borrow_share - shares;
+        __set_borrow_shares(&env, &from, &asset, new_shares)
     }
 }
 
