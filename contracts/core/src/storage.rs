@@ -61,6 +61,7 @@ pub enum StorageKey {
     CollateralShares(CollateralSharesKey),
     BorrowShares(BorrowSharesKey),
     Pricefeeds(Address),
+    SupportedAsset(Address),
 }
 
 pub fn __get_vault(env: &Env, asset: &Address) -> AssetVault {
@@ -95,6 +96,22 @@ pub fn __set_vault(env: &Env, asset: &Address, asset_vault: &AssetVault) {
     let key = StorageKey::Vaults(asset.clone());
 
     env.storage().persistent().set(&key, asset_vault);
+}
+
+pub fn __get_asset_supported(env: &Env, asset: &Address) -> bool {
+    let key = StorageKey::SupportedAsset(asset.clone());
+
+    if let Some(_val) = env.storage().persistent().get(&key) {
+        _val
+    } else {
+        false
+    }
+}
+
+pub fn __set_asset_supported(env: &Env, asset: &Address, is_supported: bool) {
+    let key = StorageKey::SupportedAsset(asset.clone());
+
+    env.storage().persistent().set(&key, &is_supported);
 }
 
 pub fn __get_pricefeed(env: &Env, asset: &Address) -> Address {

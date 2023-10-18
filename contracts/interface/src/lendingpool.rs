@@ -9,8 +9,8 @@ pub trait ILendingPool {
     fn liquidate(
         env: Env,
         account: Address,
-        collateral: Address,
-        borrow_token: Address,
+        collateral_asset: Address,
+        borrow_asset: Address,
         amount_to_liquidate: u128,
         from: Address,
     );

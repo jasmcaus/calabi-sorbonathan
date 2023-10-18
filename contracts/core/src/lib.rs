@@ -1,11 +1,13 @@
 #![no_std]
 #![allow(unused)]
 
+mod assertions;
 mod constants;
 mod storage;
 
 use core::panic;
 
+use crate::assertions::*;
 use crate::constants::*;
 use crate::storage::*;
 use interface::lendingpool::ILendingPool;
@@ -23,6 +25,8 @@ impl ILendingPool for LendingPool {
 
     fn supply(env: Env, asset: Address, amount: u128, from: Address) {
         from.require_auth();
+        require(__get_asset_supported(&env, &asset), "Asset not supported");
+
         __accrue_interest(&env, &asset);
 
         // Extract tokens
@@ -47,6 +51,8 @@ impl ILendingPool for LendingPool {
 
     fn borrow(env: Env, asset: Address, amount: u128, from: Address) {
         from.require_auth();
+        require(__get_asset_supported(&env, &asset), "Asset not supported");
+
         __accrue_interest(&env, &asset);
 
         // Extract tokens
@@ -75,6 +81,8 @@ impl ILendingPool for LendingPool {
 
     fn repay(env: Env, asset: Address, mut amount: u128, from: Address) {
         from.require_auth();
+        require(__get_asset_supported(&env, &asset), "Asset not supported");
+
         __accrue_interest(&env, &asset);
 
         let mut asset_vault = __get_vault(&env, &asset);
@@ -105,8 +113,8 @@ impl ILendingPool for LendingPool {
     fn liquidate(
         env: Env,
         account: Address,
-        collateral: Address,
-        borrow_token: Address,
+        collateral_asset: Address,
+        borrow_asset: Address,
         mut amount_to_liquidate: u128,
         from: Address,
     ) {
@@ -116,14 +124,14 @@ impl ILendingPool for LendingPool {
         //     panic!("Borrow is solvant");
         // }
 
-        let collateral_shares = __get_collateral_shares(&env, &account, &collateral);
-        let borrow_shares = __get_borrow_shares(&env, &account, &borrow_token);
+        let collateral_shares = __get_collateral_shares(&env, &account, &collateral_asset);
+        let borrow_shares = __get_borrow_shares(&env, &account, &borrow_asset);
 
         if collateral_shares == 0 || borrow_shares == 0 {
             panic!("Invalid liquidation");
         }
 
-        let mut borrow_vault = __get_vault(&env, &borrow_token);
+        let mut borrow_vault = __get_vault(&env, &borrow_asset);
         let total_borrow_amount = __to_amount(borrow_vault.total_borrow, borrow_shares, false);
         let max_borrow_amount_to_liquidate =
             (total_borrow_amount * LIQUIDATION_CLOSE_FACTOR) / PRECISION;
@@ -133,7 +141,7 @@ impl ILendingPool for LendingPool {
             amount_to_liquidate
         };
 
-        let mut collateral_vault = __get_vault(&env, &collateral);
+        let mut collateral_vault = __get_vault(&env, &collateral_asset);
 
         let mut collateral_amount_to_liquidate = 0 as u128;
         let mut liquidation_reward = 0;
@@ -142,18 +150,18 @@ impl ILendingPool for LendingPool {
             let user_total_collateral_amount =
                 __to_amount(collateral_vault.total_asset, collateral_shares, false);
 
-            let collateral_price = __get_asset_price(&env, &collateral);
-            let borrow_token_price = __get_asset_price(&env, &borrow_token);
+            let collateral_price = __get_asset_price(&env, &collateral_asset);
+            let borrow_asset_price = __get_asset_price(&env, &borrow_asset);
 
             collateral_amount_to_liquidate =
-                (amount_to_liquidate * borrow_token_price) / collateral_price;
+                (amount_to_liquidate * borrow_asset_price) / collateral_price;
             let max_liquidation_reward =
                 (collateral_amount_to_liquidate * LIQUIDATION_REWARD) / PRECISION;
 
             if collateral_amount_to_liquidate > user_total_collateral_amount {
                 collateral_amount_to_liquidate = user_total_collateral_amount;
                 amount_to_liquidate =
-                    (user_total_collateral_amount * collateral_price) / borrow_token_price;
+                    (user_total_collateral_amount * collateral_price) / borrow_asset_price;
             } else {
                 let collateral_balance_after =
                     user_total_collateral_amount - collateral_amount_to_liquidate;
@@ -185,34 +193,34 @@ impl ILendingPool for LendingPool {
             __set_borrow_shares(
                 &env,
                 &account,
-                &borrow_token,
+                &borrow_asset,
                 (borrow_shares - repaid_borrow_shares),
             );
             __set_collateral_shares(
                 &env,
                 &account,
-                &collateral,
+                &collateral_asset,
                 (collateral_shares - liquidated_collateral_shares),
             );
         }
 
         // Repay borrowed amount
-        token::Client::new(&env, &borrow_token).transfer(
+        token::Client::new(&env, &borrow_asset).transfer(
             &from,
             &env.current_contract_address(),
             &(amount_to_liquidate as i128),
         );
 
         // Repay collateral and liquidation reward to liquidator
-        token::Client::new(&env, &collateral).transfer(
+        token::Client::new(&env, &collateral_asset).transfer(
             &env.current_contract_address(),
             &from,
             &((collateral_amount_to_liquidate + liquidation_reward) as i128),
         );
 
         // Save vaults
-        __set_vault(&env, &collateral, &collateral_vault);
-        __set_vault(&env, &borrow_token, &borrow_vault);
+        __set_vault(&env, &collateral_asset, &collateral_vault);
+        __set_vault(&env, &borrow_asset, &borrow_vault);
     }
 }
 
