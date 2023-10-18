@@ -9,6 +9,7 @@ use core::panic;
 use crate::constants::*;
 use crate::storage::*;
 use interface::lendingpool::ILendingPool;
+use interface::pricefeed::PriceFeed;
 use soroban_sdk::{contract, contractimpl, token, Address, Env};
 
 #[contract]
@@ -95,6 +96,119 @@ impl ILendingPool for LendingPool {
 
         let mut new_shares = user_borrow_share - shares;
         __set_borrow_shares(&env, &from, &asset, new_shares)
+    }
+
+    fn liquidate(
+        env: Env,
+        account: Address,
+        collateral: Address,
+        borrow_token: Address,
+        mut amount_to_liquidate: u128,
+        from: Address,
+    ) {
+        from.require_auth();
+
+        // if __health_factor(&from) >=  MIN_HEALTH_FACTOR {
+        //     panic!("Borrow is solvant");
+        // }
+
+        let collateral_shares = __get_collateral_shares(&env, &account, &collateral);
+        let borrow_shares = __get_borrow_shares(&env, &account, &borrow_token);
+
+        if collateral_shares == 0 || borrow_shares == 0 {
+            panic!("Invalid liquidation");
+        }
+
+        let mut borrow_vault = __get_vault(&env, &borrow_token);
+        let total_borrow_amount = __to_amount(borrow_vault.total_borrow, borrow_shares, false);
+        let max_borrow_amount_to_liquidate =
+            (total_borrow_amount * LIQUIDATION_CLOSE_FACTOR) / PRECISION;
+        amount_to_liquidate = if amount_to_liquidate > max_borrow_amount_to_liquidate {
+            max_borrow_amount_to_liquidate
+        } else {
+            amount_to_liquidate
+        };
+
+        let mut collateral_vault = __get_vault(&env, &collateral);
+
+        let mut collateral_amount_to_liquidate = 0 as u128;
+        let mut liquidation_reward = 0;
+
+        {
+            let user_total_collateral_amount =
+                __to_amount(collateral_vault.total_asset, collateral_shares, false);
+
+            let collateral_price = __get_asset_price(&env, &collateral);
+            let borrow_token_price = __get_asset_price(&env, &borrow_token);
+
+            collateral_amount_to_liquidate =
+                (amount_to_liquidate * borrow_token_price) / collateral_price;
+            let max_liquidation_reward =
+                (collateral_amount_to_liquidate * LIQUIDATION_REWARD) / PRECISION;
+
+            if collateral_amount_to_liquidate > user_total_collateral_amount {
+                collateral_amount_to_liquidate = user_total_collateral_amount;
+                amount_to_liquidate =
+                    (user_total_collateral_amount * collateral_price) / borrow_token_price;
+            } else {
+                let collateral_balance_after =
+                    user_total_collateral_amount - collateral_amount_to_liquidate;
+                liquidation_reward = if max_liquidation_reward > collateral_balance_after {
+                    collateral_balance_after
+                } else {
+                    max_liquidation_reward
+                }
+            }
+
+            // Update borrow vault
+            let repaid_borrow_shares =
+                __to_shares(borrow_vault.total_borrow, amount_to_liquidate, false);
+
+            borrow_vault.total_borrow.shares -= repaid_borrow_shares;
+            borrow_vault.total_borrow.amount -= amount_to_liquidate;
+
+            // Update collateral vault
+            let liquidated_collateral_shares = __to_shares(
+                collateral_vault.total_asset,
+                collateral_amount_to_liquidate + liquidation_reward,
+                false,
+            );
+
+            collateral_vault.total_asset.shares -= liquidated_collateral_shares;
+            collateral_vault.total_asset.amount -=
+                collateral_amount_to_liquidate + liquidation_reward;
+
+            __set_borrow_shares(
+                &env,
+                &account,
+                &borrow_token,
+                (borrow_shares - repaid_borrow_shares),
+            );
+            __set_collateral_shares(
+                &env,
+                &account,
+                &collateral,
+                (collateral_shares - liquidated_collateral_shares),
+            );
+        }
+
+        // Repay borrowed amount
+        token::Client::new(&env, &borrow_token).transfer(
+            &from,
+            &env.current_contract_address(),
+            &(amount_to_liquidate as i128),
+        );
+
+        // Repay collateral and liquidation reward to liquidator
+        token::Client::new(&env, &collateral).transfer(
+            &env.current_contract_address(),
+            &from,
+            &((collateral_amount_to_liquidate + liquidation_reward) as i128),
+        );
+
+        // Save vaults
+        __set_vault(&env, &collateral, &collateral_vault);
+        __set_vault(&env, &borrow_token, &borrow_vault);
     }
 }
 
@@ -236,4 +350,14 @@ fn __health_factor(user: &Address) {
 
 fn __get_user_data(user: &Address) {
     !todo!("Get user data todo")
+}
+
+fn __get_asset_price(env: &Env, asset: &Address) -> u128 {
+    let pricefeed = __get_pricefeed(&env, &asset);
+
+    let client = PriceFeed::new(env, &pricefeed);
+
+    let result = client.get_latest_price(asset);
+
+    result.0 / result.1 as u128
 }

@@ -1,7 +1,6 @@
 #![allow(unused)]
 use soroban_sdk::{contract, contractimpl, contracttype, Address, Env};
 
-use crate::assertions::*;
 use crate::storage::*;
 use interface::offer_manager::*;
 
