@@ -17,6 +17,10 @@ pub struct LendingPool;
 
 #[contractimpl]
 impl ILendingPool for LendingPool {
+    fn add_pricefeed(env: Env, asset: Address, pricefeed: Address) {
+        __set_pricefeed(&env, &asset, &pricefeed);
+    }
+
     fn supply(env: Env, asset: Address, amount: u128, from: Address) {
         from.require_auth();
         __accrue_interest(&env, &asset);
