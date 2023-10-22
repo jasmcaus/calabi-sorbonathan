@@ -4,7 +4,13 @@
 
 Public key: `GAIM4S6HDNGDW4R7452E3SGOSZ3UOAXXGHXEILCDRS4U7KZHRQAMJVOZ`
 
+```
+Local deployments:
+Asset: CC7Q7J4MJDEAXNSIWKGZZLTGM5J7SQ23V4LGLU5WOWVV4B7HYM7CGWKW
+
+Futurenet deployments:
 Contract: CDXJNGQNV66Q2DXAGBUSGWGFV6YKZU4EGDY4ZBRZHFTKMPMMQHTNWWFE
+```
 
 ```bash
 sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6  -y
@@ -46,6 +52,17 @@ Deployments:
 
 ```
 
+```md
+Token deployments:
+make optimize
+soroban contract deploy --wasm contracts/target/wasm32-unknown-unknown/release/token.optimized.wasm --source alice
+
+# Initialize
+soroban contract invoke --wasm contracts/target/wasm32-unknown-unknown/release/token.wasm --id 1 -- initialize --admin GAIM4S6HDNGDW4R7452E3SGOSZ3UOAXXGHXEILCDRS4U7KZHRQAMJVOZ --decimal 6 --name "USDT" --symbol "USDT"
+
+# Mint
+soroban contract invoke --wasm contracts/target/wasm32-unknown-unknown/release/token.wasm --id 2 -- mint --to GBLPQPPE7B5DFNNR5FKIVIXJCRZUEBNRHMNHCLZZYNZV7DP6WZUS2LED --amount "5"
+```
 
 
 # Astro Starter Kit: Basics

@@ -16,7 +16,9 @@ testutils = []
 [dependencies]
 soroban-sdk = { workspace = true }
 interface = { workspace = true }
+pricefeed_core = { workspace = true }
 
 [dev_dependencies]
 soroban-sdk = { workspace = true, features = ["testutils"] }
 interface = { workspace = true, features = ["testutils"] }
+pricefeed_core = { workspace = true, features = ["testutils"] }

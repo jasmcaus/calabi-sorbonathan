@@ -19,6 +19,7 @@ soroban-sdk = { version = "20.0.0-rc2" }
 soroban-token-sdk = { version = "20.0.0-rc2" }
 
 interface = { path = "interface" }
+pricefeed_core = { path = "pricefeed" }
 core = { path = "core" }
 token = { path = "token" }
 

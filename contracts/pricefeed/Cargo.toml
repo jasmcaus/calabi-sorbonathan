@@ -1,5 +1,5 @@
 [package]
-name = "pricefeed"
+name = "pricefeed_core"
 version.workspace = true
 authors = ["Stellar Development Foundation <info@stellar.org>"]
 license = "Apache-2.0"
@@ -9,6 +9,9 @@ publish = false
 [lib]
 crate-type = ["cdylib"]
 doctest = false
+
+[features]
+testutils = []
 
 [dependencies]
 soroban-sdk = { workspace = true }

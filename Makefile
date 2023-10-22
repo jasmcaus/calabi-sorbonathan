@@ -25,8 +25,14 @@ build:
 deploy:
 	soroban contract deploy --wasm contracts/target/wasm32-unknown-unknown/release/token.optimized.wasm --source alice --network testnet
 
+test:
+	cd contracts/core; cargo test; cd ../..
+
 optimize:
-	cd contracts; soroban contract optimize --wasm target/wasm32-unknown-unknown/release/token.wasm; cd .. 
+	soroban contract optimize --wasm contracts/target/wasm32-unknown-unknown/release/token.wasm
+
+invoke:
+	soroban contract invoke --wasm contracts/target/wasm32-unknown-unknown/release/token.wasm --id 1 -- initialize --admin GAIM4S6HDNGDW4R7452E3SGOSZ3UOAXXGHXEILCDRS4U7KZHRQAMJVOZ --decimal 6 --name "USDT" --symbol "USDT"
 
 generate:
 	soroban contract bindings typescript --network testnet --contract-id $(shell cat ./.contractId) --output-dir @amorphous-soroban-client --overwrite; python postGenerate.py
